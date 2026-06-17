@@ -19,7 +19,11 @@ const fetcher = async () => {
 };
 
 export default function DashboardCategories() {
-  const { data: categories, error, isLoading, mutate } = useSWR("/api/categories", fetcher);
+  const { data: categories, error, isLoading, mutate } = useSWR("/api/categories", fetcher, {
+    revalidateOnFocus: false,       // don't refetch when tab regains focus
+    revalidateOnReconnect: false,   // don't refetch on network reconnect
+    dedupingInterval: 30000,        // reuse cached data for 30 seconds
+  });
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);

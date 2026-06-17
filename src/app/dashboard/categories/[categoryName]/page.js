@@ -24,7 +24,11 @@ export default function CategoryDrillDown() {
   // params.categoryName is URL encoded
   const categoryName = decodeURIComponent(params.categoryName);
 
-  const { data: allItems, error, isLoading, mutate } = useSWR("/api/food-items", fetcher);
+  const { data: allItems, error, isLoading, mutate } = useSWR("/api/food-items", fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 30000,
+  });
   
   // Filter items specifically for this category
   const categoryItems = allItems?.filter((item) => item.category_name === categoryName) || [];
