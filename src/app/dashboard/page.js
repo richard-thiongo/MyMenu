@@ -118,6 +118,7 @@ export default function DashboardCategories() {
           {categories.map((cat) => (
             <Link
               key={cat.category_id}
+              prefetch={true}
               href={`/dashboard/categories/${encodeURIComponent(cat.category_name)}`}
               className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface-alt p-6 transition-all hover:border-primary-400 hover:shadow-lg hover:shadow-primary-500/10"
             >
