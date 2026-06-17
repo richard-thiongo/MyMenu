@@ -1,50 +1,50 @@
+"use client";
+
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import useSWR from "swr";
 import { api } from "@/lib/api";
 import { groupItemsByCategory } from "@/lib/utils";
 import PublicItemList from "@/components/PublicItemList";
 import EmptyState from "@/components/EmptyState";
+import Skeleton from "@/components/Skeleton";
 import { FiArrowLeft, FiCoffee } from "react-icons/fi";
 import ThemeToggle from "@/components/ThemeToggle";
 import Link from "next/link";
 
-export async function generateMetadata({ params }) {
-  const resolvedParams = await params;
-  const decodedName = decodeURIComponent(resolvedParams.restaurantName);
-  const decodedCategory = decodeURIComponent(resolvedParams.categoryName);
-  return {
-    title: `${decodedCategory} - ${decodedName} | Menu`,
-    description: `View the ${decodedCategory} menu for ${decodedName}`,
-  };
-}
+const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
-export default async function PublicCategoryPage({ params }) {
-  const resolvedParams = await params;
-  const restaurantName = decodeURIComponent(resolvedParams.restaurantName);
-  const categoryName = decodeURIComponent(resolvedParams.categoryName);
+export default function PublicCategoryPage() {
+  const params = useParams();
+  const restaurantName = decodeURIComponent(params.restaurantName);
+  const categoryName = decodeURIComponent(params.categoryName);
 
-  let menuData = {};
-  let errorMsg = null;
+  // Same SWR key as the parent page — hits the cache instantly if already loaded
+  const { data: menuData, error, isLoading } = useSWR(
+    `public-menu/${restaurantName}`,
+    () => fetcher(restaurantName),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000,
+    }
+  );
 
-  try {
-    menuData = await api.getRestaurantMenu(restaurantName);
-  } catch (err) {
-    errorMsg = err.message;
-  }
-
-  const { food_items = [], primary_color } = menuData;
-
+  const { food_items = [], primary_color } = menuData || {};
   const groupedItems = groupItemsByCategory(food_items);
   const categoryItems = groupedItems[categoryName] || [];
-
   const themeColor = primary_color || null;
+
+  useEffect(() => {
+    document.title = `${categoryName} - ${restaurantName} | Menu`;
+  }, [restaurantName, categoryName]);
 
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text">
-      {/* Inject per-restaurant primary color via CSS variable */}
       {themeColor && (
         <style>{`:root { --theme-primary: ${themeColor}; }`}</style>
       )}
 
-      {/* Public Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
           <Link
@@ -59,7 +59,6 @@ export default async function PublicCategoryPage({ params }) {
         </div>
       </header>
 
-      {/* Main Menu Content */}
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link
@@ -74,12 +73,18 @@ export default async function PublicCategoryPage({ params }) {
           </h1>
         </div>
 
-        {errorMsg || categoryItems.length === 0 ? (
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-28 w-full" />
+            ))}
+          </div>
+        ) : error || categoryItems.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
             <EmptyState
-              title={errorMsg ? "Restaurant Not Found" : "Category is Empty"}
+              title={error ? "Restaurant Not Found" : "Category is Empty"}
               description={
-                errorMsg
+                error
                   ? "We couldn't find a menu for this restaurant. Please check the URL."
                   : `There are no items in ${categoryName} yet.`
               }
@@ -91,7 +96,6 @@ export default async function PublicCategoryPage({ params }) {
         )}
       </main>
 
-      {/* Footer Branding */}
       <footer className="mt-12 border-t border-border py-8 text-center">
         <p className="flex flex-col items-center gap-2 text-sm text-text-muted">
           <span>

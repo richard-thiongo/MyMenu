@@ -1,35 +1,34 @@
+"use client";
+
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import useSWR from "swr";
 import { api } from "@/lib/api";
 import { groupItemsByCategory } from "@/lib/utils";
 import EmptyState from "@/components/EmptyState";
+import Skeleton from "@/components/Skeleton";
 import { FiCoffee, FiFolder } from "react-icons/fi";
 import ThemeToggle from "@/components/ThemeToggle";
 import Link from "next/link";
 
-export async function generateMetadata({ params }) {
-  const resolvedParams = await params;
-  const decodedName = decodeURIComponent(resolvedParams.restaurantName);
-  return {
-    title: `${decodedName} | Menu`,
-    description: `View the digital menu for ${decodedName}`,
-  };
-}
+const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
-export default async function PublicMenuPage({ params }) {
-  const resolvedParams = await params;
-  const restaurantName = decodeURIComponent(resolvedParams.restaurantName);
+export default function PublicMenuPage() {
+  const params = useParams();
+  const restaurantName = decodeURIComponent(params.restaurantName);
 
-  let menuData = {};
-  let errorMsg = null;
+  const { data: menuData, error, isLoading } = useSWR(
+    `public-menu/${restaurantName}`,
+    () => fetcher(restaurantName),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60000, // cache for 1 minute
+    }
+  );
 
-  try {
-    menuData = await api.getRestaurantMenu(restaurantName);
-  } catch (err) {
-    errorMsg = err.message;
-  }
+  const { food_items = [], primary_color, categories: categoryMeta = [] } = menuData || {};
 
-  const { food_items = [], primary_color, categories: categoryMeta = [] } = menuData;
-
-  // Build a lookup map of category name -> image_url
   const categoryImageMap = categoryMeta.reduce((acc, cat) => {
     acc[cat.category_name] = cat.image_url;
     return acc;
@@ -40,14 +39,16 @@ export default async function PublicMenuPage({ params }) {
 
   const themeColor = primary_color || null;
 
+  useEffect(() => {
+    document.title = `${restaurantName} | Menu`;
+  }, [restaurantName]);
+
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text">
-      {/* Inject per-restaurant primary color via CSS variable */}
       {themeColor && (
         <style>{`:root { --theme-primary: ${themeColor}; }`}</style>
       )}
 
-      {/* Public Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-5xl items-center justify-between">
           <h1 className="truncate text-xl font-extrabold text-primary-500">
@@ -59,19 +60,25 @@ export default async function PublicMenuPage({ params }) {
         </div>
       </header>
 
-      {/* Main Menu Content */}
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
         <p className="mb-8 text-lg text-text-muted">
           Welcome to <span className="font-semibold text-text">{restaurantName}</span>. Hope you enjoy our hospitality!
         </p>
 
         <h2 className="mb-6 text-2xl font-bold text-text">Menu</h2>
-        {errorMsg || categories.length === 0 ? (
+
+        {isLoading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-40 w-full" />
+            ))}
+          </div>
+        ) : error || categories.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
             <EmptyState
-              title={errorMsg ? "Restaurant Not Found" : "Menu is Empty"}
+              title={error ? "Restaurant Not Found" : "Menu is Empty"}
               description={
-                errorMsg
+                error
                   ? "We couldn't find a menu for this restaurant. Please check the URL."
                   : "This restaurant hasn't added any items to their digital menu yet."
               }
@@ -117,7 +124,6 @@ export default async function PublicMenuPage({ params }) {
         )}
       </main>
 
-      {/* Footer Branding */}
       <footer className="mt-12 border-t border-border py-8 text-center">
         <p className="flex flex-col items-center gap-2 text-sm text-text-muted">
           <span>
