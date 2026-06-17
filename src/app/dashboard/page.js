@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import useSWR from "swr";
+import useSWR, { preload } from "swr";
 import toast from "react-hot-toast";
 import { FiPlus, FiFolder, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { api } from "@/lib/api";
@@ -13,13 +13,21 @@ import ConfirmModal from "@/components/ConfirmModal";
 import { useStatus } from "@/providers/StatusProvider";
 
 // SWR fetcher
-const fetcher = async () => {
+const categoriesFetcher = async () => {
   const res = await api.getCategories();
   return res.data || [];
 };
 
+const foodItemsFetcher = async () => {
+  const res = await api.getFoodItems();
+  return res.data || [];
+};
+
+// Preload food items immediately so navigating into a category is instant
+preload("/api/food-items", foodItemsFetcher);
+
 export default function DashboardCategories() {
-  const { data: categories, error, isLoading, mutate } = useSWR("/api/categories", fetcher, {
+  const { data: categories, error, isLoading, mutate } = useSWR("/api/categories", categoriesFetcher, {
     revalidateOnFocus: false,       // don't refetch when tab regains focus
     revalidateOnReconnect: false,   // don't refetch on network reconnect
     dedupingInterval: 30000,        // reuse cached data for 30 seconds

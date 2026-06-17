@@ -27,6 +27,8 @@ export default function PublicMenuPage() {
     }
   );
 
+  const isActuallyLoading = isLoading || (!menuData && !error);
+
   const { food_items = [], primary_color, categories: categoryMeta = [] } = menuData || {};
 
   const categoryImageMap = categoryMeta.reduce((acc, cat) => {
@@ -67,7 +69,7 @@ export default function PublicMenuPage() {
 
         <h2 className="mb-6 text-2xl font-bold text-text">Menu</h2>
 
-        {isLoading ? (
+        {isActuallyLoading ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} className="h-40 w-full" />

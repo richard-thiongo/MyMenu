@@ -19,7 +19,6 @@ export default function PublicCategoryPage() {
   const restaurantName = decodeURIComponent(params.restaurantName);
   const categoryName = decodeURIComponent(params.categoryName);
 
-  // Same SWR key as the parent page — hits the cache instantly if already loaded
   const { data: menuData, error, isLoading } = useSWR(
     `public-menu/${restaurantName}`,
     () => fetcher(restaurantName),
@@ -29,6 +28,8 @@ export default function PublicCategoryPage() {
       dedupingInterval: 60000,
     }
   );
+
+  const isActuallyLoading = isLoading || (!menuData && !error);
 
   const { food_items = [], primary_color } = menuData || {};
   const groupedItems = groupItemsByCategory(food_items);
@@ -73,7 +74,7 @@ export default function PublicCategoryPage() {
           </h1>
         </div>
 
-        {isLoading ? (
+        {isActuallyLoading ? (
           <div className="grid gap-4 sm:grid-cols-2">
             {[1, 2, 3, 4].map((i) => (
               <Skeleton key={i} className="h-28 w-full" />
