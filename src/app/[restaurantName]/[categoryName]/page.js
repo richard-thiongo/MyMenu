@@ -30,7 +30,7 @@ export default function PublicCategoryPage() {
     }
   );
 
-  const isActuallyLoading = isLoading || isValidating || (!menuData && !error);
+  const isActuallyLoading = !menuData && (!error || isValidating);
 
   const { food_items = [], primary_color } = menuData || {};
   const groupedItems = groupItemsByCategory(food_items);
@@ -64,6 +64,7 @@ export default function PublicCategoryPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link
+            prefetch={true}
             href={`/${encodeURIComponent(restaurantName)}`}
             className="mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-primary-500/20 bg-primary-500/10 text-primary-500 transition-all hover:bg-primary-500 hover:text-white hover:shadow-md"
             title="Back to Menu"

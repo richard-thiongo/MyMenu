@@ -28,9 +28,9 @@ export default function PublicMenuPage() {
     }
   );
 
-  // Stay in loading state during initial fetch AND during error retries
-  // so the error EmptyState never flashes while SWR is retrying in background
-  const isActuallyLoading = isLoading || isValidating || (!menuData && !error);
+  // Only show the skeleton if we don't have data yet. 
+  // If we have an error, keep showing the skeleton while SWR retries (isValidating).
+  const isActuallyLoading = !menuData && (!error || isValidating);
 
   const { food_items = [], primary_color, categories: categoryMeta = [] } = menuData || {};
 
@@ -97,6 +97,7 @@ export default function PublicMenuPage() {
               return (
                 <Link
                   key={category}
+                  prefetch={true}
                   href={`/${encodeURIComponent(restaurantName)}/${encodeURIComponent(category)}`}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface-alt p-6 transition-all hover:border-primary-400 hover:shadow-lg hover:shadow-primary-500/10"
                 >
