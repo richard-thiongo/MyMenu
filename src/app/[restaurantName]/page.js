@@ -17,17 +17,20 @@ export default function PublicMenuPage() {
   const params = useParams();
   const restaurantName = decodeURIComponent(params.restaurantName);
 
-  const { data: menuData, error, isLoading } = useSWR(
+  const { data: menuData, error, isLoading, isValidating } = useSWR(
     `public-menu/${restaurantName}`,
     () => fetcher(restaurantName),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      dedupingInterval: 60000, // cache for 1 minute
+      dedupingInterval: 60000,
+      errorRetryCount: 2,
     }
   );
 
-  const isActuallyLoading = isLoading || (!menuData && !error);
+  // Stay in loading state during initial fetch AND during error retries
+  // so the error EmptyState never flashes while SWR is retrying in background
+  const isActuallyLoading = isLoading || isValidating || (!menuData && !error);
 
   const { food_items = [], primary_color, categories: categoryMeta = [] } = menuData || {};
 

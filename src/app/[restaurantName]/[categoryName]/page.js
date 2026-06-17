@@ -19,17 +19,18 @@ export default function PublicCategoryPage() {
   const restaurantName = decodeURIComponent(params.restaurantName);
   const categoryName = decodeURIComponent(params.categoryName);
 
-  const { data: menuData, error, isLoading } = useSWR(
+  const { data: menuData, error, isLoading, isValidating } = useSWR(
     `public-menu/${restaurantName}`,
     () => fetcher(restaurantName),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       dedupingInterval: 60000,
+      errorRetryCount: 2,
     }
   );
 
-  const isActuallyLoading = isLoading || (!menuData && !error);
+  const isActuallyLoading = isLoading || isValidating || (!menuData && !error);
 
   const { food_items = [], primary_color } = menuData || {};
   const groupedItems = groupItemsByCategory(food_items);
