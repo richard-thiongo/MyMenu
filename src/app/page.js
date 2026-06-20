@@ -30,7 +30,7 @@ export default function Home() {
             className="rounded-lg sm:h-10 sm:w-10"
             priority
           />
-          <span className="text-lg font-bold tracking-tight text-primary-500 sm:text-xl">
+          <span className="rounded-lg border border-primary-500/20 bg-primary-500/10 px-3 py-1 text-lg font-bold tracking-tight text-primary-500 dark:text-white sm:text-xl">
             Kenyan.menu
           </span>
         </div>
@@ -59,9 +59,9 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col items-center gap-4 sm:gap-6">
-            <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              Welcome to{" "}
-              <span className="bg-gradient-to-r from-primary-500 to-primary-400 bg-clip-text text-transparent block sm:inline">
+            <h1 className="mt-4 flex flex-col items-center gap-3 text-3xl font-extrabold leading-tight tracking-tight sm:flex-row sm:gap-4 sm:text-5xl lg:text-6xl">
+              <span>Welcome to</span>
+              <span className="inline-block rounded-2xl bg-primary-500 px-6 py-2 text-white shadow-lg shadow-primary-500/25">
                 Kenyan.menu
               </span>
             </h1>
