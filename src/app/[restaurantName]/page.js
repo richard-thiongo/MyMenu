@@ -81,11 +81,13 @@ export default function PublicMenuPage() {
         ) : error || categories.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
             <EmptyState
-              title={error ? "Restaurant Not Found" : "Menu is Empty"}
+              title={error?.status === 403 ? "Menu Unavailable" : (error ? "Restaurant Not Found" : "Menu is Empty")}
               description={
-                error
-                  ? "We couldn't find a menu for this restaurant. Please check the URL."
-                  : "This restaurant hasn't added any items to their digital menu yet."
+                error?.status === 403
+                  ? "This menu is currently unavailable. Please check back later."
+                  : (error
+                    ? "We couldn't find a menu for this restaurant. Please check the URL."
+                    : "This restaurant hasn't added any items to their digital menu yet.")
               }
               icon={FiCoffee}
             />

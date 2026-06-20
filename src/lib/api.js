@@ -79,6 +79,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+  submitPayment: (data) =>
+    fetchWithAuth("/api/restaurants/submit-payment", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   // --- PUBLIC ---
   getRestaurantMenu: async (restaurantName) => {
@@ -89,10 +94,12 @@ export const api = {
       )}`,
       { cache: 'no-store' }
     );
+    const json = await res.json().catch(() => ({}));
     if (!res.ok) {
-      throw new Error("Restaurant not found or menu is empty.");
+      const err = new Error(json.message || "Restaurant not found or menu is empty.");
+      err.status = res.status;
+      throw err;
     }
-    const json = await res.json();
     return json.data || {};
   },
 

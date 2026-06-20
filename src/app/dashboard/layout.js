@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight, FiCreditCard, FiAlertCircle } from "react-icons/fi";
 import { LuQrCode } from "react-icons/lu";
 import useAuthStore from "@/hooks/useAuthStore";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -13,7 +13,7 @@ import ShareMenuModal from "@/components/ShareMenuModal";
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { restaurantName, primaryColor, logout } = useAuthStore();
+  const { restaurantName, primaryColor, logout, isPaid, subscriptionExpiresAt } = useAuthStore();
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -22,6 +22,19 @@ export default function DashboardLayout({ children }) {
     logout();
     router.push("/signin");
   };
+
+  useEffect(() => {
+    import("@/lib/api").then(({ api }) => {
+      api.getProfile().then((res) => {
+        if (res && res.data) {
+          useAuthStore.setState({ 
+            isPaid: res.data.is_paid, 
+            subscriptionExpiresAt: res.data.subscription_expires_at 
+          });
+        }
+      }).catch(() => {});
+    });
+  }, []);
 
   return (
     <AuthGuard>
@@ -77,6 +90,20 @@ export default function DashboardLayout({ children }) {
                 >
                   <FiSettings size={18} className="shrink-0" />
                   {!isCollapsed && <span className="truncate">Settings</span>}
+                </Link>
+                <Link
+                  href="/dashboard/payments"
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${
+                    isCollapsed ? "justify-center" : "gap-3"
+                  } ${
+                    pathname === "/dashboard/payments"
+                      ? "bg-primary-500/10 text-primary-500"
+                      : "text-text-muted hover:text-text"
+                  }`}
+                  title="Payments"
+                >
+                  <FiCreditCard size={18} className="shrink-0" />
+                  {!isCollapsed && <span className="truncate">Payments</span>}
                 </Link>
                 <Link
                   href={`/${restaurantName}`}
@@ -155,6 +182,17 @@ export default function DashboardLayout({ children }) {
         {/* Main Content Area */}
         <div className={`flex-1 transition-all duration-300 ${isCollapsed ? "md:pl-20" : "md:pl-64"} flex flex-col min-h-screen`}>
           <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8 max-w-5xl w-full mx-auto">
+            {(!isPaid || (subscriptionExpiresAt && new Date(subscriptionExpiresAt) < new Date())) && (
+              <div className="mb-6 rounded-lg bg-amber-500/10 p-4 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <FiAlertCircle className="h-5 w-5 shrink-0" />
+                  <p className="text-sm font-medium">Your subscription is inactive. Your public menu is currently hidden.</p>
+                </div>
+                <Link href="/dashboard/payments" className="shrink-0 text-sm font-bold underline hover:text-amber-600 dark:hover:text-amber-300">
+                  Verify Payment
+                </Link>
+              </div>
+            )}
             {/* Restaurant Name Title at the Top of the Body */}
             <div className="mb-8 border-b border-border pb-6">
               <h1 className="text-3xl font-extrabold tracking-tight text-text">
@@ -208,6 +246,14 @@ export default function DashboardLayout({ children }) {
             >
               <FiSettings size={18} />
               Settings
+            </Link>
+            <Link
+              href="/dashboard/payments"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${pathname === '/dashboard/payments' ? 'bg-primary-500/10 text-primary-500' : 'text-text hover:bg-surface-alt'}`}
+            >
+              <FiCreditCard size={18} />
+              Payments
             </Link>
             <Link
               href={`/${restaurantName}`}
