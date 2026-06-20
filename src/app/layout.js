@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "MyMenu",
+  title: "Kenyan.menu",
   description: "Your smart digital menu companion",
 };
 

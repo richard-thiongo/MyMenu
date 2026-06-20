@@ -1,8 +1,22 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import useAuthStore from "@/hooks/useAuthStore";
 
 export default function Home() {
+  const router = useRouter();
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [token, router]);
+
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text">
       {/* Header */}
@@ -10,14 +24,14 @@ export default function Home() {
         <div className="flex items-center gap-2 sm:gap-3">
           <Image
             src="/logo.png"
-            alt="MyMenu logo"
+            alt="Kenyan.menu logo"
             width={32}
             height={32}
             className="rounded-lg sm:h-10 sm:w-10"
             priority
           />
           <span className="text-lg font-bold tracking-tight text-primary-500 sm:text-xl">
-            MyMenu
+            Kenyan.menu
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -37,7 +51,7 @@ export default function Home() {
             <div className="absolute -inset-4 rounded-3xl bg-primary-500/10 blur-2xl" />
             <Image
               src="/logo.png"
-              alt="MyMenu brand"
+              alt="Kenyan.menu brand"
               width={100}
               height={100}
               className="relative rounded-2xl sm:h-[120px] sm:w-[120px]"
@@ -48,7 +62,7 @@ export default function Home() {
             <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               Welcome to{" "}
               <span className="bg-gradient-to-r from-primary-500 to-primary-400 bg-clip-text text-transparent block sm:inline">
-                MyMenu
+                Kenyan.menu
               </span>
             </h1>
             <p className="max-w-xs sm:max-w-md lg:max-w-xl text-base sm:text-lg leading-relaxed text-text-muted">
@@ -77,7 +91,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-border bg-surface-alt px-4 py-6 sm:px-6 lg:px-8 text-center text-xs sm:text-sm text-text-muted">
-        MyMenu
+        Kenyan.menu
       </footer>
     </div>
   );

@@ -8,11 +8,21 @@ import { FiLock, FiUser, FiMapPin, FiLoader, FiEye, FiEyeOff, FiDroplet, FiX } f
 import { api } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
 import ColorPicker from "@/components/ColorPicker";
+import useAuthStore from "@/hooks/useAuthStore";
+
 
 import { useStatus } from "@/providers/StatusProvider";
 
 export default function SignupPage() {
   const router = useRouter();
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [token, router]);
+
   
   const [formData, setFormData] = useState({
     restaurant_name: "",
@@ -66,7 +76,7 @@ export default function SignupPage() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4">
         <Link href="/" className="text-xl font-bold text-primary-500">
-          MyMenu
+          Kenyan.menu
         </Link>
         <ThemeToggle />
       </header>

@@ -14,6 +14,7 @@ import { useStatus } from "@/providers/StatusProvider";
 export default function SigninPage() {
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
+  const token = useAuthStore((state) => state.token);
   
   const [formData, setFormData] = useState({
     restaurant_name: "",
@@ -23,6 +24,13 @@ export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const { showLoading, hideLoading, showError } = useStatus();
+
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [token, router]);
 
   useEffect(() => {
     const saved = localStorage.getItem("mymenu-remembered-credentials");
@@ -48,12 +56,13 @@ export default function SigninPage() {
     showLoading("Signing in...");
     try {
       const res = await api.login(formData);
-      // The API returns { message, data: { token, restaurant } }
+      // The API returns { message, data: { token, refreshToken, restaurant } }
       if (res.data && res.data.token) {
         const token = res.data.token;
+        const refreshToken = res.data.refreshToken;
         const name = res.data.restaurant?.restaurant_name || formData.restaurant_name;
         const primaryColor = res.data.restaurant?.primary_color || null;
-        login(token, name, primaryColor);
+        login(token, refreshToken, name, primaryColor);
 
         if (rememberMe) {
           localStorage.setItem("mymenu-remembered-credentials", JSON.stringify({
@@ -82,7 +91,7 @@ export default function SigninPage() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4">
         <Link href="/" className="text-xl font-bold text-primary-500">
-          MyMenu
+          Kenyan.menu
         </Link>
         <ThemeToggle />
       </header>

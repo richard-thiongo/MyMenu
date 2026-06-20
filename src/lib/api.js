@@ -4,13 +4,16 @@ import useAuthStore from "@/hooks/useAuthStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-async function fetchWithAuth(endpoint, options = {}) {
+async function fetchWithAuth(endpoint, options = {}, retries = 1) {
   const { token } = useAuthStore.getState();
 
   const headers = {
-    "Content-Type": "application/json",
     ...options.headers,
   };
+
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = headers["Content-Type"] || "application/json";
+  }
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
@@ -21,8 +24,32 @@ async function fetchWithAuth(endpoint, options = {}) {
     headers,
   });
 
-  // If the token is invalid or expired, log out automatically
-  if (response.status === 401 || response.status === 403) {
+  // If the token is invalid or expired, attempt a refresh
+  if (response.status === 401 && retries > 0) {
+    const { refreshToken, updateTokens, logout } = useAuthStore.getState();
+    if (refreshToken) {
+      try {
+        const refreshRes = await fetch(`${API_URL}/api/restaurants/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken })
+        });
+        if (refreshRes.ok) {
+          const json = await refreshRes.json();
+          updateTokens(json.data.token, json.data.refreshToken);
+          return fetchWithAuth(endpoint, options, 0); // Retry with new token
+        } else {
+          logout();
+          throw new Error('Session expired. Please log in again.');
+        }
+      } catch (err) {
+        logout();
+        throw new Error('Session expired. Please log in again.');
+      }
+    } else {
+      logout();
+    }
+  } else if (response.status === 401 || response.status === 403) {
     useAuthStore.getState().logout();
   }
 
@@ -111,23 +138,11 @@ export const api = {
     const formData = new FormData();
     formData.append("image", file);
 
-    const { token } = useAuthStore.getState();
-    if (!token) {
-      throw new Error("No token found. Please sign in.");
-    }
-
-    const res = await fetch(`${API_URL}/api/upload`, {
+    const json = await fetchWithAuth("/api/upload", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: formData,
     });
-
-    const json = await res.json();
-    if (!res.ok) {
-      throw new Error(json.message || "Failed to upload image");
-    }
+    
     return json;
   },
 };

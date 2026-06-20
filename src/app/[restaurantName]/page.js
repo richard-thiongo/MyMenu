@@ -135,7 +135,7 @@ export default function PublicMenuPage() {
           <span>
             Powered by{" "}
             <Link href="/" className="font-bold text-primary-500 transition-colors hover:text-primary-600">
-              MyMenu
+              Kenyan.menu
             </Link>
           </span>
         </p>
