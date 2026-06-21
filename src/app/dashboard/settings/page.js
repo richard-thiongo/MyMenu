@@ -12,11 +12,11 @@ import ColorPicker from "@/components/ColorPicker";
 const AccordionItem = ({ id, title, description, icon: Icon, children, expandedSection, setExpandedSection }) => {
   const isExpanded = expandedSection === id;
   return (
-    <div className="rounded-2xl border border-border bg-surface-alt shadow-sm overflow-hidden transition-all duration-300">
+    <div className="rounded-2xl border border-border bg-surface-alt shadow-sm transition-all duration-300 relative">
       <button
         type="button"
         onClick={() => setExpandedSection(isExpanded ? null : id)}
-        className="w-full flex items-center justify-between p-6 bg-surface-alt hover:bg-surface-elevated transition-colors text-left"
+        className={`w-full flex items-center justify-between p-6 bg-surface-alt hover:bg-surface-elevated transition-colors text-left rounded-t-2xl ${!isExpanded ? 'rounded-b-2xl' : ''}`}
       >
         <div className="flex items-center gap-4">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500">
@@ -32,7 +32,7 @@ const AccordionItem = ({ id, title, description, icon: Icon, children, expandedS
         </div>
       </button>
       {isExpanded && (
-        <div className="px-6 pb-6 border-t border-border pt-6">
+        <div className="px-6 pb-6 border-t border-border pt-6 rounded-b-2xl relative">
           {children}
         </div>
       )}
@@ -172,7 +172,7 @@ export default function SettingsPage() {
               />
             </div>
 
-            <div className="flex justify-end pt-4">
+            <div className="sticky bottom-[72px] md:bottom-0 z-30 flex justify-end p-4 -mx-6 -mb-6 mt-4 border-t border-border bg-surface-alt/95 backdrop-blur-md rounded-b-2xl shadow-[0_-8px_10px_-4px_rgba(0,0,0,0.05)]">
               <button
                 type="submit"
                 disabled={isLoading}
@@ -226,7 +226,7 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-4">
+            <div className="sticky bottom-[72px] md:bottom-0 z-30 flex justify-end p-4 -mx-6 -mb-6 mt-4 border-t border-border bg-surface-alt/95 backdrop-blur-md rounded-b-2xl shadow-[0_-8px_10px_-4px_rgba(0,0,0,0.05)]">
               <button
                 type="submit"
                 disabled={isPasswordLoading || newPassword.length < 8}

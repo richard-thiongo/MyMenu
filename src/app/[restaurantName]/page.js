@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 import { groupItemsByCategory } from "@/lib/utils";
 import EmptyState from "@/components/EmptyState";
 import Skeleton from "@/components/Skeleton";
-import { FiCoffee, FiFolder } from "react-icons/fi";
+import { FiCoffee, FiFolder, FiHome, FiGrid } from "react-icons/fi";
 import ThemeToggle from "@/components/ThemeToggle";
 import Link from "next/link";
 
@@ -141,7 +141,7 @@ export default function PublicMenuPage() {
         )}
       </main>
 
-      <footer className="mt-12 border-t border-border py-8 text-center">
+      <footer className="mt-12 border-t border-border py-8 pb-24 sm:pb-8 text-center">
         <p className="flex flex-col items-center gap-2 text-sm text-text-muted">
           <span>
             Powered by{" "}
@@ -151,6 +151,23 @@ export default function PublicMenuPage() {
           </span>
         </p>
       </footer>
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-surface/90 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-md sm:hidden">
+        <Link 
+          href={`/${encodeURIComponent(restaurantName)}`}
+          className="flex flex-col items-center gap-1 text-primary-500 transition-colors p-2"
+        >
+          <FiGrid size={20} />
+          <span className="text-[10px] font-medium uppercase tracking-wider">Menu</span>
+        </Link>
+        <Link 
+          href="/"
+          className="flex flex-col items-center gap-1 text-text-muted hover:text-text transition-colors p-2"
+        >
+          <FiHome size={20} />
+          <span className="text-[10px] font-medium uppercase tracking-wider">Home</span>
+        </Link>
+      </nav>
     </div>
   );
 }

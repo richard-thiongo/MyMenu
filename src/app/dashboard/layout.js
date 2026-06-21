@@ -15,8 +15,8 @@ export default function DashboardLayout({ children }) {
   const router = useRouter();
   const { restaurantName, primaryColor, logout, isPaid, subscriptionExpiresAt } = useAuthStore();
   const [isShareOpen, setIsShareOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -27,12 +27,12 @@ export default function DashboardLayout({ children }) {
     import("@/lib/api").then(({ api }) => {
       api.getProfile().then((res) => {
         if (res && res.data) {
-          useAuthStore.setState({ 
-            isPaid: res.data.is_paid, 
-            subscriptionExpiresAt: res.data.subscription_expires_at 
+          useAuthStore.setState({
+            isPaid: res.data.is_paid,
+            subscriptionExpiresAt: res.data.subscription_expires_at
           });
         }
-      }).catch(() => {});
+      }).catch(() => { });
     });
   }, []);
 
@@ -45,9 +45,8 @@ export default function DashboardLayout({ children }) {
         )}
 
         {/* Sidebar for Desktop (md and up) */}
-        <aside className={`hidden md:flex md:flex-col md:fixed md:inset-y-0 md:z-20 border-r border-border bg-surface p-4 transition-all duration-300 ${
-          isCollapsed ? "w-20" : "w-64"
-        }`}>
+        <aside className={`hidden md:flex md:flex-col md:fixed md:inset-y-0 md:z-20 border-r border-border bg-surface p-4 transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"
+          }`}>
           <div className="flex flex-col h-full justify-between">
             <div>
               {/* Collapse/Expand Toggle Button (No MyMenu brand text) */}
@@ -65,13 +64,11 @@ export default function DashboardLayout({ children }) {
               <nav className="flex flex-col gap-2">
                 <Link
                   href="/dashboard"
-                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${
-                    isCollapsed ? "justify-center" : "gap-3"
-                  } ${
-                    pathname === "/dashboard"
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                    } ${pathname === "/dashboard"
                       ? "bg-primary-500/10 text-primary-500"
                       : "text-text-muted hover:text-text"
-                  }`}
+                    }`}
                   title="Categories"
                 >
                   <FiCoffee size={18} className="shrink-0" />
@@ -79,13 +76,11 @@ export default function DashboardLayout({ children }) {
                 </Link>
                 <Link
                   href="/dashboard/settings"
-                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${
-                    isCollapsed ? "justify-center" : "gap-3"
-                  } ${
-                    pathname === "/dashboard/settings"
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                    } ${pathname === "/dashboard/settings"
                       ? "bg-primary-500/10 text-primary-500"
                       : "text-text-muted hover:text-text"
-                  }`}
+                    }`}
                   title="Settings"
                 >
                   <FiSettings size={18} className="shrink-0" />
@@ -93,13 +88,11 @@ export default function DashboardLayout({ children }) {
                 </Link>
                 <Link
                   href="/dashboard/payments"
-                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${
-                    isCollapsed ? "justify-center" : "gap-3"
-                  } ${
-                    pathname === "/dashboard/payments"
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                    } ${pathname === "/dashboard/payments"
                       ? "bg-primary-500/10 text-primary-500"
                       : "text-text-muted hover:text-text"
-                  }`}
+                    }`}
                   title="Payments"
                 >
                   <FiCreditCard size={18} className="shrink-0" />
@@ -108,9 +101,8 @@ export default function DashboardLayout({ children }) {
                 <Link
                   href={`/${restaurantName}`}
                   target="_blank"
-                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-text-muted hover:bg-primary-500/10 hover:text-primary-500 transition-all duration-200 ${
-                    isCollapsed ? "justify-center" : "gap-3"
-                  }`}
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-text-muted hover:bg-primary-500/10 hover:text-primary-500 transition-all duration-200 ${isCollapsed ? "justify-center" : "gap-3"
+                    }`}
                   title="View Public Menu"
                 >
                   <FiShare2 size={18} className="shrink-0" />
@@ -123,15 +115,14 @@ export default function DashboardLayout({ children }) {
             <div className="border-t border-border pt-4 flex flex-col gap-3">
               <button
                 onClick={() => setIsShareOpen(true)}
-                className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-primary-500 bg-primary-500/10 hover:bg-primary-500 hover:text-white transition-all duration-200 ${
-                  isCollapsed ? "justify-center" : "gap-3"
-                }`}
+                className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-primary-500 bg-primary-500/10 hover:bg-primary-500 hover:text-white transition-all duration-200 ${isCollapsed ? "justify-center" : "gap-3"
+                  }`}
                 title="Share / QR"
               >
                 <LuQrCode size={18} className="shrink-0" />
                 {!isCollapsed && <span>Share QR</span>}
               </button>
-              
+
               {isCollapsed ? (
                 <div className="flex items-center justify-center p-2 bg-surface rounded-lg border border-border">
                   <ThemeToggle />
@@ -144,10 +135,9 @@ export default function DashboardLayout({ children }) {
               )}
 
               <button
-                onClick={handleLogout}
-                className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-text hover:bg-red-500/10 hover:text-red-500 transition-all duration-200 border border-border bg-surface-alt ${
-                  isCollapsed ? "justify-center" : "gap-3"
-                }`}
+                onClick={() => setIsLogoutConfirmOpen(true)}
+                className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-text hover:bg-red-500/10 hover:text-red-500 transition-all duration-200 border border-border bg-surface-alt ${isCollapsed ? "justify-center" : "gap-3"
+                  }`}
                 title="Logout"
               >
                 <FiLogOut size={18} className="shrink-0" />
@@ -163,25 +153,28 @@ export default function DashboardLayout({ children }) {
             Dashboard
           </span>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <button
               onClick={() => setIsShareOpen(true)}
               className="flex items-center gap-2 rounded-lg bg-primary-500/10 px-3 py-2 text-sm font-medium text-primary-500 transition-colors hover:bg-primary-500 hover:text-white"
+              title="Share"
             >
               <LuQrCode size={16} />
+              <span className="text-xs font-bold">Share</span>
             </button>
-            <ThemeToggle />
             <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface-alt text-text transition-colors hover:bg-surface-elevated"
+              onClick={() => setIsLogoutConfirmOpen(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-surface-alt text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 transition-colors"
+              title="Logout"
             >
-              <FiMenu size={20} />
+              <FiLogOut size={18} />
             </button>
           </div>
         </header>
 
         {/* Main Content Area */}
         <div className={`flex-1 transition-all duration-300 ${isCollapsed ? "md:pl-20" : "md:pl-64"} flex flex-col min-h-screen`}>
-          <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8 max-w-5xl w-full mx-auto">
+          <main className="flex-1 px-4 py-8 pb-24 md:pb-8 sm:px-6 lg:px-8 max-w-5xl w-full mx-auto">
             {(!isPaid || (subscriptionExpiresAt && new Date(subscriptionExpiresAt) < new Date())) && (
               <div className="mb-6 rounded-lg bg-amber-500/10 p-4 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -205,87 +198,73 @@ export default function DashboardLayout({ children }) {
             {children}
           </main>
         </div>
-
-        {/* Mobile Slide-out Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div 
-            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm md:hidden transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-        )}
-
-        {/* Mobile Slide-out Panel */}
-        <div 
-          className={`fixed inset-y-0 right-0 z-50 w-64 bg-surface shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <div className="flex items-center justify-between p-5 border-b border-border">
-            <span className="font-bold text-text text-lg">Menu</span>
-            <button 
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 -mr-2 text-text-muted hover:text-text hover:bg-surface-alt rounded-lg transition-colors"
-            >
-              <FiX size={20} />
-            </button>
-          </div>
-          
-          <nav className="flex flex-col gap-2 p-4 text-sm font-medium flex-1">
-            <Link
-              href="/dashboard"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${pathname === '/dashboard' ? 'bg-primary-500/10 text-primary-500' : 'text-text hover:bg-surface-alt'}`}
-            >
-              <FiCoffee size={18} />
-              Categories
-            </Link>
-            <Link
-              href="/dashboard/settings"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${pathname === '/dashboard/settings' ? 'bg-primary-500/10 text-primary-500' : 'text-text hover:bg-surface-alt'}`}
-            >
-              <FiSettings size={18} />
-              Settings
-            </Link>
-            <Link
-              href="/dashboard/payments"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${pathname === '/dashboard/payments' ? 'bg-primary-500/10 text-primary-500' : 'text-text hover:bg-surface-alt'}`}
-            >
-              <FiCreditCard size={18} />
-              Payments
-            </Link>
-            <Link
-              href={`/${restaurantName}`}
-              target="_blank"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center gap-3 rounded-lg px-4 py-3 text-text hover:bg-surface-alt transition-colors"
-            >
-              <FiShare2 size={18} />
-              View Public Menu ↗
-            </Link>
-            
-            <div className="mt-auto border-t border-border pt-4">
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleLogout();
-                }}
-                className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-red-500 hover:bg-red-500/10 transition-colors"
-              >
-                <FiLogOut size={18} />
-                Logout
-              </button>
-            </div>
-          </nav>
-        </div>
+        {/* Mobile Bottom Navigation (hidden on md and up) */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-surface/90 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <Link
+            href="/dashboard"
+            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+          >
+            <FiCoffee size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-wider">Menu</span>
+          </Link>
+          <Link
+            href="/dashboard/payments"
+            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/payments' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+          >
+            <FiCreditCard size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-wider">Billing</span>
+          </Link>
+          <Link
+            href="/dashboard/settings"
+            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/settings' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+          >
+            <FiSettings size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-wider">Settings</span>
+          </Link>
+        </nav>
 
         {/* Share Modal */}
-        <ShareMenuModal 
-          isOpen={isShareOpen} 
-          onClose={() => setIsShareOpen(false)} 
-          restaurantName={restaurantName} 
+        <ShareMenuModal
+          isOpen={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          restaurantName={restaurantName}
         />
+
+        {/* Logout Confirmation Modal */}
+        {isLogoutConfirmOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
+            <div
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+              onClick={() => setIsLogoutConfirmOpen(false)}
+            />
+            <div className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-border bg-surface p-6 text-center shadow-2xl animate-in zoom-in-95">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 text-red-500">
+                <FiLogOut size={24} />
+              </div>
+              <h3 className="mb-2 text-xl font-bold text-text">Sign Out</h3>
+              <p className="mb-6 text-sm text-text-muted">
+                Are you sure you want to log out of your account? You will need to sign in again to access your dashboard.
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  onClick={() => setIsLogoutConfirmOpen(false)}
+                  className="flex-1 rounded-xl border border-border bg-surface-alt py-3 font-bold text-text transition-colors hover:bg-surface-elevated active:scale-95"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setIsLogoutConfirmOpen(false);
+                    handleLogout();
+                  }}
+                  className="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white transition-colors hover:bg-red-600 active:scale-95 shadow-lg shadow-red-500/30"
+                >
+                  Yes, Log Out
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AuthGuard>
   );
