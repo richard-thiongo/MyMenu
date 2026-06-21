@@ -21,9 +21,9 @@ export default function PublicMenuPage() {
     `public-menu/${restaurantName}`,
     () => fetcher(restaurantName),
     {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      dedupingInterval: 60000,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      dedupingInterval: 5000,
       errorRetryCount: 2,
     }
   );
@@ -40,7 +40,16 @@ export default function PublicMenuPage() {
   }, {});
 
   const groupedItems = groupItemsByCategory(food_items);
-  const categories = Object.keys(groupedItems);
+  
+  // Use all official categories created by the restaurant, in order.
+  const categories = categoryMeta.map(cat => cat.category_name);
+  
+  // Also add any categories from groupedItems that somehow aren't in categoryMeta (e.g. Uncategorized)
+  Object.keys(groupedItems).forEach(cat => {
+    if (!categories.includes(cat)) {
+      categories.push(cat);
+    }
+  });
 
   const themeColor = primary_color || null;
 

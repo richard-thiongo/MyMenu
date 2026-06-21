@@ -62,7 +62,7 @@ const PRESET_COLORS = [
   "#fff1f2", "#ffe4e6", "#fecdd3", "#fda4af", "#fb7185", "#f43f5e",
   "#e11d48", "#be123c", "#9f1239", "#881337", "#4c0519",
 
-  // ===== Brown (NEW) =====
+  // ===== Brown =====
   "#efebe9", "#d7ccc8", "#bcaaa4", "#8d6e63", "#795548",
   "#6d4c41", "#5d4037", "#4e342e", "#3e2723",
 ];
@@ -79,8 +79,8 @@ export default function ColorPicker({ color, onChange, disabled }) {
             disabled={disabled}
             onClick={() => onChange(preset)}
             className={`flex h-10 w-10 items-center justify-center rounded-full transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${color.toLowerCase() === preset.toLowerCase()
-                ? "ring-2 ring-primary-500 ring-offset-2 ring-offset-surface"
-                : "hover:scale-110 shadow-sm"
+              ? "ring-2 ring-primary-500 ring-offset-2 ring-offset-surface"
+              : "hover:scale-110 shadow-sm"
               }`}
             style={{ backgroundColor: preset }}
             aria-label={`Select color ${preset}`}

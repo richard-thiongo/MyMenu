@@ -15,12 +15,8 @@ export default function ThemeProvider({ children }) {
     const stored = localStorage.getItem("mymenu-theme");
     if (stored === "dark" || stored === "light") {
       setTheme(stored);
-    } else {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      setTheme(prefersDark ? "dark" : "light");
     }
+    // Default is light — no system preference check
     setMounted(true);
   }, []);
 

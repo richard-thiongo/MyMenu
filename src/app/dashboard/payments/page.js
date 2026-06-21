@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FiCreditCard, FiCheckCircle, FiLoader } from "react-icons/fi";
+import { FiCreditCard, FiCheckCircle, FiLoader, FiCopy } from "react-icons/fi";
 import { api } from "@/lib/api";
 import { useStatus } from "@/providers/StatusProvider";
 import useAuthStore from "@/hooks/useAuthStore";
@@ -16,6 +16,11 @@ export default function PaymentsPage() {
 
   const isSubscriptionActive = isPaid && (!subscriptionExpiresAt || new Date(subscriptionExpiresAt) > new Date());
 
+  const handleCopy = (text, label) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copied to clipboard!`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!paymentMessage.trim()) {
@@ -25,7 +30,7 @@ export default function PaymentsPage() {
 
     setIsLoading(true);
     showLoading("Submitting payment verification...");
-    
+
     try {
       await api.submitPayment({ paymentMessage });
       setIsSubmitted(true);
@@ -65,17 +70,72 @@ export default function PaymentsPage() {
       </div>
 
       <div className="rounded-xl border border-border bg-surface p-6 shadow-sm">
-        <h3 className="text-lg font-bold text-text mb-2">Submit Payment Details</h3>
-        <p className="text-sm text-text-muted mb-6">
-          Paste the full payment confirmation message (e.g. M-Pesa SMS) or transaction code below so the admin can verify your payment and activate your 31-day subscription.
-        </p>
+        <div className="mb-6">
+          <h3 className="mb-2 text-lg font-bold text-text">How to Pay</h3>
+          <p className="text-sm text-text-muted">
+            Subscription is <strong className="text-primary-500">Ksh 1,500/month</strong> (or <strong className="text-primary-500">Ksh 2,000/month</strong> if you have over 90 food items).
+          </p>
+        </div>
+
+        <div className="mb-8 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-lg border border-border bg-surface-alt p-5">
+            <h4 className="mb-3 font-semibold text-text">Option 1: Pochi La Biashara</h4>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-text-muted">
+              <li>Go to M-PESA menu and select <strong>Pochi La Biashara</strong></li>
+              <li className="flex items-center flex-wrap gap-1">
+                Send to Phone:
+                <button
+                  onClick={() => handleCopy("0704286209", "Phone number")}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-primary-500/10 px-2 py-1 font-bold text-primary-500 transition-colors hover:bg-primary-500 hover:text-white"
+                  type="button"
+                  title="Copy Phone Number"
+                >
+                  0704286209 <FiCopy className="h-3.5 w-3.5" />
+                </button>
+              </li>
+              <li>Enter amount and complete payment</li>
+            </ol>
+          </div>
+
+          <div className="rounded-lg border border-border bg-surface-alt p-5">
+            <h4 className="mb-3 font-semibold text-text">Option 2: Paybill</h4>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-text-muted">
+              <li>Go to M-PESA &gt; Lipa na M-PESA &gt; <strong>Pay Bill</strong></li>
+              <li className="flex items-center flex-wrap gap-1">
+                Business Number:
+                <button
+                  onClick={() => handleCopy("303030", "Business number")}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-primary-500/10 px-2 py-1 font-bold text-primary-500 transition-colors hover:bg-primary-500 hover:text-white"
+                  type="button"
+                  title="Copy Business Number"
+                >
+                  303030 <FiCopy className="h-3.5 w-3.5" />
+                </button>
+              </li>
+              <li className="flex items-center flex-wrap gap-1">
+                Account Number:
+                <button
+                  onClick={() => handleCopy("2056697449", "Account number")}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-primary-500/10 px-2 py-1 font-bold text-primary-500 transition-colors hover:bg-primary-500 hover:text-white"
+                  type="button"
+                  title="Copy Account Number"
+                >
+                  2056697449 <FiCopy className="h-3.5 w-3.5" />
+                </button>
+              </li>
+              <li>Enter amount and complete payment</li>
+            </ol>
+          </div>
+        </div>
+
+        <h3 className="mb-4 text-lg font-bold text-text">Verify Payment</h3>
 
         {isSubmitted ? (
           <div className="text-center p-6 border border-dashed border-primary-500/50 rounded-lg bg-primary-500/5">
             <FiCheckCircle className="mx-auto h-10 w-10 text-primary-500 mb-3" />
             <h4 className="text-lg font-medium text-text">Submission Received</h4>
             <p className="text-sm text-text-muted mt-1">We have sent your details to the admin. Your subscription will be activated shortly upon verification.</p>
-            <button 
+            <button
               onClick={() => setIsSubmitted(false)}
               className="mt-4 text-primary-500 text-sm hover:underline"
             >
@@ -85,21 +145,21 @@ export default function PaymentsPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text-muted mb-2" htmlFor="paymentMessage">
-                Transaction Code / Payment Message
+              <label className="block text-sm font-bold text-text mb-2" htmlFor="paymentMessage">
+                Paste Transaction Code or SMS Here
               </label>
               <textarea
                 id="paymentMessage"
-                rows={5}
-                className="w-full rounded-lg border border-border bg-surface p-4 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 resize-y"
-                placeholder="Paste the SMS or transaction code here..."
+                rows={4}
+                className="w-full rounded-lg border-2 border-primary-500/30 bg-surface-alt p-4 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y shadow-inner"
+                placeholder="Paste here..."
                 value={paymentMessage}
                 onChange={(e) => setPaymentMessage(e.target.value)}
                 disabled={isLoading}
                 required
               />
             </div>
-            
+
             <button
               type="submit"
               disabled={isLoading || !paymentMessage.trim()}

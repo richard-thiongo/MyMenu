@@ -88,6 +88,10 @@ export default function SigninPage() {
     }
   };
 
+  if (token) {
+    return null;
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text">
       {/* Header */}

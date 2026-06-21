@@ -16,8 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Kenyan.menu",
-  description: "Your smart digital menu companion",
+  title: "Kenyan.menu | Create a Digital Menu for Your Restaurant",
+  description: "Build a stunning digital menu in minutes. Perfect for restaurants, hotels, cafes, and bars in Kenya. Generate QR codes and shareable links instantly.",
+  keywords: ["digital menu", "restaurant menu app", "QR code menu", "Kenya restaurant menu", "Kenyan.menu", "contactless menu"],
 };
 
 export default function RootLayout({ children }) {
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
               (function() {
                 try {
                   var theme = localStorage.getItem('mymenu-theme');
-                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
                   }
                 } catch(e) {}
@@ -42,12 +43,37 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+
       </head>
       <body className="min-h-full flex flex-col bg-surface text-text transition-colors duration-300">
+        {/* JSON-LD Structured Data for AI Agents & Search Engines */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "Kenyan.menu",
+              "operatingSystem": "Web",
+              "applicationCategory": "BusinessApplication",
+              "offers": {
+                "@type": "Offer",
+                "price": "1500.00",
+                "priceCurrency": "KES"
+              },
+              "description": "Digital menu platform for restaurants, hotels, and cafes in Kenya to generate QR codes and shareable links instantly.",
+              "url": "https://kenyan.menu",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Kenyan.menu"
+              }
+            })
+          }}
+        />
         <ThemeProvider>
           <StatusProvider>
             {children}
-            <Toaster 
+            <Toaster
               position="top-center"
               toastOptions={{
                 duration: 3000,

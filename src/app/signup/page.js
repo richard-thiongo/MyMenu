@@ -34,6 +34,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isColorModalOpen, setIsColorModalOpen] = useState(false);
   const [tempColor, setTempColor] = useState("#6366f1");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { showLoading, hideLoading, showError } = useStatus();
 
   const openColorModal = () => {
@@ -70,6 +71,10 @@ export default function SignupPage() {
       hideLoading();
     }
   };
+
+  if (token) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text">
@@ -193,10 +198,28 @@ export default function SignupPage() {
             </div>
 
             <div className="sticky bottom-0 z-10 border-t border-border bg-surface-alt/95 backdrop-blur-sm px-8 py-6 -mx-8 -mb-8 mt-8 rounded-b-2xl">
+              {/* Terms Consent */}
+              <div className="flex items-start gap-3 rounded-lg border border-border bg-surface-alt p-4">
+                <input
+                  id="agree-terms"
+                  type="checkbox"
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-primary-500 cursor-pointer"
+                />
+                <label htmlFor="agree-terms" className="text-xs text-text-muted leading-relaxed cursor-pointer">
+                  I have read and agree to the{" "}
+                  <Link href="/terms" target="_blank" className="font-semibold text-primary-500 hover:underline">Terms and Conditions</Link>
+                  {" "}and the{" "}
+                  <Link href="/privacy" target="_blank" className="font-semibold text-primary-500 hover:underline">Privacy Policy</Link>.
+                  I consent to Kenyan.menu processing my business information as described therein, in accordance with the Kenya Data Protection Act 2019.
+                </label>
+              </div>
+
               <button
                 type="submit"
-                disabled={isLoading}
-                className="flex w-full justify-center items-center rounded-lg bg-primary-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-600 shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+                disabled={isLoading || !agreedToTerms}
+                className="flex w-full justify-center items-center rounded-lg bg-primary-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-600 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
