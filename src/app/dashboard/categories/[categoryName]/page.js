@@ -146,7 +146,9 @@ export default function CategoryDrillDown() {
                 <div>
                   <div className="flex items-start justify-between">
                     <h3 className="text-lg font-bold text-text line-clamp-1">{item.food_name}</h3>
-                    <span className="font-semibold text-primary-500">KES {parseFloat(item.price).toFixed(2)}</span>
+                    {item.price != null && (
+                      <span className="font-semibold text-primary-500">KES {parseFloat(item.price).toFixed(2)}</span>
+                    )}
                   </div>
                   {item.description && (
                     <p className="mt-2 text-sm text-text-muted line-clamp-2">{item.description}</p>

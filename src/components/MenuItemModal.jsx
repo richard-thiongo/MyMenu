@@ -32,7 +32,7 @@ export default function MenuItemModal({ isOpen, onClose, onSubmit, initialData =
       await onSubmit({
         ...formData,
         img_url: finalImageUrl,
-        price: parseFloat(formData.price),
+        price: formData.price !== "" ? parseFloat(formData.price) : null,
       });
     } catch (error) {
       showError(error.message || "Oops! Something went wrong. Please try again.");
@@ -76,7 +76,7 @@ export default function MenuItemModal({ isOpen, onClose, onSubmit, initialData =
 
           <div>
             <label htmlFor="price" className="mb-1 block text-sm font-medium text-text-muted">
-              Price
+              Price <span className="text-xs text-text-muted font-normal">(Optional)</span>
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -87,9 +87,8 @@ export default function MenuItemModal({ isOpen, onClose, onSubmit, initialData =
                 type="number"
                 step="0.01"
                 min="0"
-                required
                 className="block w-full rounded-lg border border-border bg-surface pl-10 pr-4 py-2 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                placeholder="0.00"
+                placeholder="Leave blank if no price"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 disabled={isLoading}
@@ -171,7 +170,7 @@ export default function MenuItemModal({ isOpen, onClose, onSubmit, initialData =
             </button>
             <button
               type="submit"
-              disabled={isLoading || !formData.food_name || !formData.price}
+              disabled={isLoading || !formData.food_name}
               className="flex items-center rounded-lg bg-primary-500 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-600 disabled:opacity-70"
             >
               {isLoading ? (

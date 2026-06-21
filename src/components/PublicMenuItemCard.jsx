@@ -17,7 +17,9 @@ export default function PublicMenuItemCard({ item }) {
         <div>
           <div className="flex items-start justify-between">
             <h3 className="text-lg font-bold text-text line-clamp-2 pr-2">{item.food_name}</h3>
-            <span className="font-semibold text-primary-500 shrink-0">KES {parseFloat(item.price).toFixed(2)}</span>
+            {item.price != null && (
+              <span className="font-semibold text-primary-500 shrink-0">KES {parseFloat(item.price).toFixed(2)}</span>
+            )}
           </div>
           {item.description && (
             <p className="mt-1 text-sm text-text-muted line-clamp-3">{item.description}</p>

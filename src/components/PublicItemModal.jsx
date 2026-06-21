@@ -54,9 +54,11 @@ export default function PublicItemModal({ isOpen, item, onClose }) {
           <div className="flex items-start justify-between gap-4">
             <h2 className="text-2xl font-bold text-text">{item.food_name}</h2>
           </div>
-          <p className="mt-2 text-xl font-bold text-primary-500">
-            KES {parseFloat(item.price).toFixed(2)}
-          </p>
+          {item.price != null && (
+            <p className="mt-2 text-xl font-bold text-primary-500">
+              KES {parseFloat(item.price).toFixed(2)}
+            </p>
+          )}
 
           {item.description && (
             <div className="mt-6 border-t border-border pt-4">
