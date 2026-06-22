@@ -41,7 +41,7 @@ const AccordionItem = ({ id, title, description, icon: Icon, children, expandedS
 };
 
 export default function SettingsPage() {
-  const { primaryColor, restaurantName, login, token } = useAuthStore();
+  const { primaryColor, restaurantName, login, token, refreshToken, isPaid, subscriptionExpiresAt } = useAuthStore();
   const [color, setColor] = useState(primaryColor || "#1800ad");
   const [isLoading, setIsLoading] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -67,8 +67,9 @@ export default function SettingsPage() {
     showLoading("Updating settings...");
     try {
       await api.updateProfile({ primary_color: color });
-      // Persist new color into auth store so it takes effect immediately
-      login(token, restaurantName, color);
+      // Only update primaryColor in the store — do NOT call login() as it would
+      // overwrite restaurantName and other fields if arguments are mismatched.
+      useAuthStore.setState({ primaryColor: color });
       toast.success("Brand color updated!");
     } catch (err) {
       showError(err.message || "Failed to update profile.");
