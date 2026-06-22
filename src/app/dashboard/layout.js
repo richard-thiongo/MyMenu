@@ -27,9 +27,13 @@ export default function DashboardLayout({ children }) {
     import("@/lib/api").then(({ api }) => {
       api.getProfile().then((res) => {
         if (res && res.data) {
+          // Always sync from the server — this heals any corrupted localStorage values
+          // (e.g. restaurantName showing a hex color due to a previous login() arg mismatch)
           useAuthStore.setState({
+            restaurantName: res.data.restaurant_name ?? useAuthStore.getState().restaurantName,
+            primaryColor: res.data.primary_color ?? useAuthStore.getState().primaryColor,
             isPaid: res.data.is_paid,
-            subscriptionExpiresAt: res.data.subscription_expires_at
+            subscriptionExpiresAt: res.data.subscription_expires_at,
           });
         }
       }).catch(() => { });
