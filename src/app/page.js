@@ -332,14 +332,14 @@ export default function Home() {
             <h2 className="text-3xl font-extrabold text-text mb-3">Need help?</h2>
             <p className="text-text-muted mb-10">We are here for you. Reach out anytime.</p>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-              <a href="mailto:richardthiongo0@gmail.com" className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text hover:border-primary-500 hover:text-primary-500 transition-all w-full sm:w-auto justify-center">
-                <FiMail className="h-5 w-5 shrink-0" />
+              <div className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text w-full sm:w-auto justify-center select-all cursor-text">
+                <FiMail className="h-5 w-5 shrink-0 text-primary-500" />
                 richardthiongo0@gmail.com
-              </a>
-              <a href="tel:+254704286209" className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text hover:border-primary-500 hover:text-primary-500 transition-all w-full sm:w-auto justify-center">
-                <FiPhone className="h-5 w-5 shrink-0" />
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text w-full sm:w-auto justify-center select-all cursor-text">
+                <FiPhone className="h-5 w-5 shrink-0 text-primary-500" />
                 +254 704 286 209
-              </a>
+              </div>
             </div>
           </div>
         </section>
