@@ -15,7 +15,7 @@ export default function TermsPage() {
       <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
           <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg" />
-          <span className="rounded-lg border border-primary-500/20 bg-primary-500/10 px-3 py-1 text-lg font-bold tracking-tight text-primary-500">
+          <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500">
             Kenyan.menu
           </span>
         </Link>
@@ -134,7 +134,7 @@ export default function TermsPage() {
               For questions regarding these Terms, contact us at:
             </p>
             <div className="mt-3 rounded-xl border border-border bg-surface-alt p-5 space-y-1">
-              <p><strong className="text-text">Email:</strong> richardthiongo0@gmail.com</p>
+              <p><strong className="text-text">Email:</strong> kenyamenu8@gmail.com</p>
               <p><strong className="text-text">Phone:</strong> +254 704 286 209</p>
             </div>
           </section>

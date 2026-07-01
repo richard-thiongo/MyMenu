@@ -51,7 +51,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 sm:gap-3">
           <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg sm:h-10 sm:w-10" priority />
-          <span className="rounded-lg border border-primary-500/20 bg-primary-500/10 px-3 py-1 text-lg font-bold tracking-tight text-primary-500 dark:text-white sm:text-xl">
+          <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500 dark:text-white">
             Kenyan.menu
           </span>
         </div>
@@ -334,7 +334,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <div className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text w-full sm:w-auto justify-center select-all cursor-text">
                 <FiMail className="h-5 w-5 shrink-0 text-primary-500" />
-                richardthiongo0@gmail.com
+                kenyamenu8@gmail.com
               </div>
               <div className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text w-full sm:w-auto justify-center select-all cursor-text">
                 <FiPhone className="h-5 w-5 shrink-0 text-primary-500" />

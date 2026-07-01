@@ -80,7 +80,7 @@ export default function SignupPage() {
     <div className="flex min-h-screen flex-col bg-surface text-text">
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4">
-        <Link href="/" className="text-xl font-bold text-primary-500">
+        <Link href="/" className="font-logo text-3xl text-primary-500">
           Kenyan.menu
         </Link>
         <ThemeToggle />
@@ -197,9 +197,9 @@ export default function SignupPage() {
               <p className="mt-2 text-xs text-text-muted">This color will theme your public menu page.</p>
             </div>
 
-            <div className="sticky bottom-0 z-10 border-t border-border bg-surface-alt/95 backdrop-blur-sm px-8 py-6 -mx-8 -mb-8 mt-8 rounded-b-2xl">
+            <div className="flex flex-col gap-4 border-t border-border bg-surface-alt px-8 py-6 -mx-8 -mb-8 mt-8 rounded-b-2xl">
               {/* Terms Consent */}
-              <div className="flex items-start gap-3 rounded-lg border border-border bg-surface-alt p-4">
+              <div className="flex items-start gap-3 rounded-lg border border-border bg-surface p-4">
                 <input
                   id="agree-terms"
                   type="checkbox"
@@ -230,13 +230,13 @@ export default function SignupPage() {
                   "Sign Up"
                 )}
               </button>
-            </div>
-            
-            <div className="text-center text-sm text-text-muted">
-              Already have an account?{" "}
-              <Link href="/signin" className="font-medium text-primary-500 hover:text-primary-600">
-                Sign In
-              </Link>
+
+              <div className="text-center text-sm text-text-muted mt-2">
+                Already have an account?{" "}
+                <Link href="/signin" className="font-medium text-primary-500 hover:text-primary-600">
+                  Sign In
+                </Link>
+              </div>
             </div>
           </form>
         </div>

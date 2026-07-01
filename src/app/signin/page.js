@@ -96,7 +96,7 @@ export default function SigninPage() {
     <div className="flex min-h-screen flex-col bg-surface text-text">
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4">
-        <Link href="/" className="text-xl font-bold text-primary-500">
+        <Link href="/" className="font-logo text-3xl text-primary-500">
           Kenyan.menu
         </Link>
         <ThemeToggle />

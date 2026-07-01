@@ -46,7 +46,7 @@ This repository contains the **frontend** built with **Next.js (App Router)** an
 | Basic | KES 1,500 (~$11.50 USD) | Up to 69 food items |
 | Advanced | KES 2,000 (~$15.40 USD) | 70+ food items |
 
-Payment is done manually via M-Pesa after menu creation. The restaurant sends proof to `richardthiongo0@gmail.com` or calls `+254704286209` for activation.
+Payment is done manually via M-Pesa after menu creation. The restaurant sends proof to `kenyamenu8@gmail.com` or calls `+254704286209` for activation.
 
 ---
 

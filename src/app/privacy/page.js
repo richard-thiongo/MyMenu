@@ -15,7 +15,7 @@ export default function PrivacyPage() {
       <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
           <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg" />
-          <span className="rounded-lg border border-primary-500/20 bg-primary-500/10 px-3 py-1 text-lg font-bold tracking-tight text-primary-500">
+          <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500">
             Kenyan.menu
           </span>
         </Link>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
               Kenyan.menu is the data controller for personal information collected through this platform. We are responsible for how your personal data is collected, stored, used, and protected, in accordance with the Kenya Data Protection Act No. 24 of 2019.
             </p>
             <div className="mt-3 rounded-xl border border-border bg-surface-alt p-5 space-y-1 text-sm">
-              <p><strong className="text-text">Contact:</strong> richardthiongo0@gmail.com</p>
+              <p><strong className="text-text">Contact:</strong> kenyamenu8@gmail.com</p>
               <p><strong className="text-text">Phone:</strong> +254 704 286 209</p>
             </div>
           </section>
@@ -120,7 +120,7 @@ export default function PrivacyPage() {
               <li><strong className="text-text">Right to Withdraw Consent</strong> — where processing is based on consent, you may withdraw it at any time</li>
             </ul>
             <p className="mt-3">
-              To exercise any of these rights, contact us at <a href="mailto:richardthiongo0@gmail.com" className="text-primary-500 hover:underline">richardthiongo0@gmail.com</a>. We will respond within 21 days as required by law.
+              To exercise any of these rights, contact us at <a href="mailto:kenyamenu8@gmail.com" className="text-primary-500 hover:underline">kenyamenu8@gmail.com</a>. We will respond within 21 days as required by law.
             </p>
           </section>
 
