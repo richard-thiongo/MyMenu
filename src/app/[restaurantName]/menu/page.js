@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { groupItemsByCategory } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
 import { FiHome, FiShoppingCart, FiCheck, FiX, FiRefreshCw, FiMinus, FiPlus } from "react-icons/fi";
+import { BiDish } from "react-icons/bi";
 import Link from "next/link";
 import Skeleton from "@/components/Skeleton";
 import { socket } from "@/lib/socket";
@@ -335,7 +336,7 @@ export default function UnifiedMenuPage() {
           <div className="absolute inset-0 rounded-full border-[3px] border-dashed border-green-400 animate-[spin_4s_linear_infinite]"></div>
 
           <div className="relative z-10">
-            <FiShoppingCart size={24} />
+            <BiDish size={26} />
             <span className="absolute -top-3 -right-4 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-sm border-2 border-white/20">
               {totalCartItems}
             </span>
