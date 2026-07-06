@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight, FiCreditCard, FiAlertCircle } from "react-icons/fi";
+import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight, FiCreditCard, FiAlertCircle, FiClipboard } from "react-icons/fi";
 import { LuQrCode } from "react-icons/lu";
 import useAuthStore from "@/hooks/useAuthStore";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -77,6 +77,18 @@ export default function DashboardLayout({ children }) {
                 >
                   <FiCoffee size={18} className="shrink-0" />
                   {!isCollapsed && <span className="truncate">Categories</span>}
+                </Link>
+                <Link
+                  href="/dashboard/orders"
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                    } ${pathname === "/dashboard/orders"
+                      ? "bg-primary-500/10 text-primary-500"
+                      : "text-text-muted hover:text-text"
+                    }`}
+                  title="Orders"
+                >
+                  <FiClipboard size={18} className="shrink-0" />
+                  {!isCollapsed && <span className="truncate">Orders</span>}
                 </Link>
                 <Link
                   href="/dashboard/settings"
@@ -210,6 +222,13 @@ export default function DashboardLayout({ children }) {
           >
             <FiCoffee size={20} />
             <span className="text-[10px] font-medium uppercase tracking-wider">Menu</span>
+          </Link>
+          <Link
+            href="/dashboard/orders"
+            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/orders' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+          >
+            <FiClipboard size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-wider">Orders</span>
           </Link>
           <Link
             href="/dashboard/payments"

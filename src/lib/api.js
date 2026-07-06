@@ -152,4 +152,12 @@ export const api = {
     
     return json;
   },
+
+  // --- ORDERS ---
+  getTodaysOrders: () => fetchWithAuth("/api/orders/restaurant/today"),
+  updateOrderStatus: (id, status) => 
+    fetchWithAuth(`/api/orders/${id}/status`, {
+      method: "PUT",
+      body: JSON.stringify({ status })
+    }),
 };

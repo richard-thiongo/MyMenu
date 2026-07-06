@@ -83,6 +83,33 @@ export default function CategoryDrillDown() {
     }
   };
 
+  const handleToggleVisibility = async (item) => {
+    const newValue = item.is_available === false ? true : false;
+    // Optimistic update: flip the flag in cached data immediately
+    mutate(
+      (current) =>
+        current?.map((i) =>
+          i.food_id === item.food_id ? { ...i, is_available: newValue } : i
+        ),
+      false
+    );
+    try {
+      await api.updateFoodItem(item.food_id, {
+        food_name: item.food_name,
+        price: item.price,
+        description: item.description,
+        img_url: item.img_url,
+        category_name: item.category_name,
+        is_available: newValue,
+      });
+      toast.success(newValue ? "Item is now visible" : "Item hidden from menu");
+    } catch (err) {
+      // Revert on failure
+      mutate();
+      toast.error("Failed to update visibility");
+    }
+  };
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-8">
@@ -96,7 +123,7 @@ export default function CategoryDrillDown() {
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-text flex items-center gap-2">
+            <h1 className="font-[family-name:var(--font-playfair)] text-2xl font-bold text-text flex items-center gap-2">
               {categoryName}
             </h1>
             <p className="mt-1 text-sm text-text-muted">
@@ -137,39 +164,64 @@ export default function CategoryDrillDown() {
                 ) : (
                   <FiImage className="h-10 w-10 text-text-muted opacity-30" />
                 )}
-                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                   {/* We'll handle edit/delete below for mobile visibility instead of absolute hover */}
-                </div>
+                {/* Hidden overlay */}
+                {item.is_available === false && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <span className="rounded-full bg-surface/90 px-3 py-1 text-xs font-bold text-text-muted tracking-wide uppercase">Hidden</span>
+                  </div>
+                )}
               </div>
               
               <div className="flex flex-1 flex-col justify-between p-5">
                 <div>
-                  <div className="flex items-start justify-between">
-                    <h3 className="text-lg font-bold text-text line-clamp-1">{item.food_name}</h3>
-                    {item.price != null && (
-                      <span className="font-semibold text-primary-500">KES {parseFloat(item.price).toFixed(2)}</span>
-                    )}
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-[family-name:var(--font-playfair)] text-lg font-bold text-text line-clamp-1">{item.food_name}</h3>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      {item.price != null && (
+                        <span className="font-semibold text-primary-500">KES {parseFloat(item.price).toFixed(2)}</span>
+                      )}
+                      {item.is_available === false && (
+                        <span className="rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wide">Hidden</span>
+                      )}
+                    </div>
                   </div>
                   {item.description && (
                     <p className="mt-2 text-sm text-text-muted line-clamp-2">{item.description}</p>
                   )}
                 </div>
                 
-                <div className="mt-4 flex items-center justify-end gap-2 border-t border-border pt-4">
+                <div className="mt-4 flex items-center justify-between gap-2 border-t border-border pt-4">
+                  {/* Inline visibility toggle */}
                   <button
-                    onClick={() => handleOpenModal(item)}
-                    className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-surface-elevated hover:text-primary-500 transition-colors"
+                    onClick={() => handleToggleVisibility(item)}
+                    title={item.is_available === false ? "Show on public menu" : "Hide from public menu"}
+                    className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors focus:outline-none ${
+                      item.is_available === false ? 'bg-border' : 'bg-primary-500'
+                    }`}
                   >
-                    <FiEdit2 size={14} />
-                    Edit
+                    <span
+                      className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${
+                        item.is_available === false ? 'translate-x-1' : 'translate-x-[18px]'
+                      }`}
+                    />
                   </button>
-                  <button
-                    onClick={() => handleDeleteItem(item.food_id, item.food_name)}
-                    className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-surface-elevated hover:text-red-500 transition-colors"
-                  >
-                    <FiTrash2 size={14} />
-                    Delete
-                  </button>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleOpenModal(item)}
+                      className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-surface-elevated hover:text-primary-500 transition-colors"
+                    >
+                      <FiEdit2 size={14} />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteItem(item.food_id, item.food_name)}
+                      className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium text-text-muted hover:bg-surface-elevated hover:text-red-500 transition-colors"
+                    >
+                      <FiTrash2 size={14} />
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -12,6 +12,7 @@ export default function MenuItemModal({ isOpen, onClose, onSubmit, initialData =
     description: initialData?.description || "",
     img_url: initialData?.img_url || "",
     category_name: initialData?.category_name || defaultCategory,
+    is_available: initialData?.is_available !== undefined ? initialData.is_available : true,
   });
   const [imageFile, setImageFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -157,6 +158,28 @@ export default function MenuItemModal({ isOpen, onClose, onSubmit, initialData =
                 disabled={isLoading}
               />
             </label>
+          </div>
+
+          {/* Visibility Toggle */}
+          <div className="flex items-center justify-between rounded-xl border border-border bg-surface-alt px-4 py-3">
+            <div>
+              <p className="text-sm font-medium text-text">Visible on Public Menu</p>
+              <p className="text-xs text-text-muted mt-0.5">When off, customers cannot see this item</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setFormData(f => ({ ...f, is_available: !f.is_available }))}
+              disabled={isLoading}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus:outline-none ${
+                formData.is_available ? 'bg-primary-500' : 'bg-surface-alt border-2 border-border'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md ring-1 ring-black/5 transition-transform ${
+                  formData.is_available ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">

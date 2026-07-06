@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Caveat } from "next/font/google";
+import { Geist, Geist_Mono, Caveat, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { Toaster } from "react-hot-toast";
@@ -20,6 +20,11 @@ const caveat = Caveat({
   subsets: ["latin"],
 });
 
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
 export const metadata = {
   title: "Kenyan.menu | Create a Digital Menu for Your Restaurant",
   description: "Build a stunning digital menu in minutes. Perfect for restaurants, hotels, cafes, and bars in Kenya. Generate QR codes and shareable links instantly.",
@@ -28,11 +33,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} h-full antialiased`}
-    >
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${playfair.variable} h-full antialiased`}
+      >
       <head>
         <script
           dangerouslySetInnerHTML={{

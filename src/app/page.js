@@ -144,7 +144,7 @@ export default function Home() {
               <FiStar className="h-4 w-4 text-yellow-400" />
               Digital menus for Kenya
             </div>
-            <h1 className="reveal delay-100 text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl mb-6">
+            <h1 className="reveal delay-100 font-[family-name:var(--font-playfair)] text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl mb-6">
               Your menu,
               <span className="block text-primary-400">everywhere.</span>
             </h1>
@@ -167,7 +167,7 @@ export default function Home() {
           <div className="mx-auto max-w-5xl">
             <div className="reveal mb-16 text-center">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Services</p>
-              <h2 className="text-3xl font-extrabold text-text sm:text-4xl">Who is it for?</h2>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">Who is it for?</h2>
             </div>
             <div className="grid sm:grid-cols-2 gap-8 items-stretch">
               <div className="reveal reveal-scale relative overflow-hidden rounded-3xl shadow-2xl">
@@ -197,7 +197,7 @@ export default function Home() {
           <div className="mx-auto max-w-5xl">
             <div className="reveal mb-16 text-center">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">What we offer</p>
-              <h2 className="text-3xl font-extrabold text-text sm:text-4xl">What do you get?</h2>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">What do you get?</h2>
             </div>
             <div className="grid sm:grid-cols-3 gap-6">
               {[
@@ -222,7 +222,7 @@ export default function Home() {
           <div className="mx-auto max-w-5xl">
             <div className="reveal mb-16 text-center">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Use cases</p>
-              <h2 className="text-3xl font-extrabold text-text sm:text-4xl">Where can you use it?</h2>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">Where can you use it?</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
@@ -262,7 +262,7 @@ export default function Home() {
           <div className="relative z-10 mx-auto max-w-3xl text-center">
             <div className="reveal">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-300 mb-4">Why it matters</p>
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-6">Does your menu impress?</h2>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl sm:text-5xl font-extrabold text-white mb-6">Does your menu impress?</h2>
               <p className="text-white/75 text-lg leading-relaxed mb-8">
                 Customers decide in seconds. A clean, fast, visual menu keeps them interested — and coming back.
               </p>
@@ -278,7 +278,7 @@ export default function Home() {
           <div className="mx-auto max-w-4xl text-center">
             <div className="reveal mb-16">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Pricing</p>
-              <h2 className="text-3xl font-extrabold text-text sm:text-4xl">How much does it cost?</h2>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">How much does it cost?</h2>
               <p className="mt-3 text-text-muted">Create your menu for free. Pay only when you are ready to publish it.</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-8 text-left">
@@ -329,7 +329,7 @@ export default function Home() {
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-surface-alt border-t border-border">
           <div className="reveal mx-auto max-w-xl text-center">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Support</p>
-            <h2 className="text-3xl font-extrabold text-text mb-3">Need help?</h2>
+            <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text mb-3">Need help?</h2>
             <p className="text-text-muted mb-10">We are here for you. Reach out anytime.</p>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <div className="flex items-center gap-3 rounded-2xl border-2 border-border bg-surface px-6 py-4 font-semibold text-text w-full sm:w-auto justify-center select-all cursor-text">
