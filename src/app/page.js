@@ -132,9 +132,11 @@ export default function Home() {
 
         {/* ── HERO ── */}
         <section className="relative overflow-hidden min-h-[85vh] flex items-center">
-          {/* Background image with overlay */}
-          <div className="absolute inset-0">
-            <Image src="/restaurant 1.jpg" alt="Restaurant" fill className="object-cover" priority />
+          {/* Parallax Background */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-fixed bg-no-repeat"
+            style={{ backgroundImage: "url('/restaurant 1.jpg')" }}
+          >
             <div className="absolute inset-0 bg-black/60" />
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
           </div>
@@ -287,10 +289,10 @@ export default function Home() {
               <div className="reveal reveal-scale rounded-3xl border-2 border-border bg-surface p-8 hover:border-primary-500/40 hover:shadow-xl transition-all">
                 <h3 className="text-xl font-bold text-text mb-1">Basic</h3>
                 <div className="flex items-end gap-2 mt-4 mb-1">
-                  <span className="text-4xl font-extrabold text-text">1,500 KES</span>
+                  <span className="text-4xl font-extrabold text-text">2,300 KES</span>
                   <span className="text-text-muted mb-1">/mo</span>
                 </div>
-                <p className="text-sm text-primary-500 font-semibold mb-8">~ $12 USD / month</p>
+                <p className="text-sm text-primary-500 font-semibold mb-8">~ $18 USD / month</p>
                 <ul className="space-y-3 mb-10">
                   {["Unlimited scans", "Branded QR Code", "Up to 90 items"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-sm font-medium text-text-muted">
@@ -308,10 +310,10 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold text-text mb-1">Advanced</h3>
                 <div className="flex items-end gap-2 mt-4 mb-1">
-                  <span className="text-4xl font-extrabold text-text">2,000 KES</span>
+                  <span className="text-4xl font-extrabold text-text">3,000 KES</span>
                   <span className="text-text-muted mb-1">/mo</span>
                 </div>
-                <p className="text-sm text-primary-500 font-semibold mb-8">~ $16 USD / month</p>
+                <p className="text-sm text-primary-500 font-semibold mb-8">~ $23 USD / month</p>
                 <ul className="space-y-3 mb-10">
                   {["Everything in Basic", "90+ food items", "Unlimited categories"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-sm font-medium text-text-muted">

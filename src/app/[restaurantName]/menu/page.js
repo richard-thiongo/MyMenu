@@ -51,7 +51,7 @@ export default function UnifiedMenuPage() {
   const [cart, setCart] = useState({});
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState("");
-  
+
   // --- Order Status State ---
   const [orderId, setOrderId] = useState(null);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
@@ -102,7 +102,7 @@ export default function UnifiedMenuPage() {
     setCart((prev) => {
       const currentObj = prev[item.food_id];
       const newQuantity = (currentObj ? currentObj.quantity : 0) + delta;
-      
+
       if (newQuantity <= 0) {
         const newCart = { ...prev };
         delete newCart[item.food_id];
@@ -215,18 +215,18 @@ export default function UnifiedMenuPage() {
             <p className="text-sm text-text-muted font-medium">{greeting}</p>
           </div>
           <div className="flex items-center gap-3">
-             {orderId && (
-               <button 
-                 onClick={() => setIsStatusModalOpen(true)}
-                 className="px-3 py-1 text-xs font-bold bg-surface-alt rounded-full text-text border border-border"
-               >
-                 View Order
-               </button>
-             )}
-             <ThemeToggle />
+            {orderId && (
+              <button
+                onClick={() => setIsStatusModalOpen(true)}
+                className="px-3 py-1 text-xs font-bold bg-surface-alt rounded-full text-text border border-border"
+              >
+                View Order
+              </button>
+            )}
+            <ThemeToggle />
           </div>
         </div>
-        
+
         {/* Category Pills (Horizontal Scroll) */}
         <div className="mx-auto max-w-2xl mt-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map(cat => (
@@ -248,7 +248,7 @@ export default function UnifiedMenuPage() {
           if (items.length === 0) return null;
           return (
             <div key={cat} id={`category-${cat}`} className="mb-10 scroll-mt-36">
-              <h2 
+              <h2
                 className="mb-4 text-2xl font-bold text-text border-b border-border pb-2"
                 style={{ fontFamily: 'var(--font-playfair), serif' }}
               >
@@ -258,15 +258,28 @@ export default function UnifiedMenuPage() {
                 {items.map(item => {
                   const cartObj = cart[item.food_id];
                   return (
-                    <div key={item.food_id} className="flex gap-4 rounded-xl border border-border bg-surface-alt p-4 shadow-sm">
+                    <div key={item.food_id} className="relative flex gap-4 rounded-xl overflow-hidden p-4 shadow-sm bg-surface-alt">
+                      {/* Blurred background image */}
                       {item.img_url && (
-                        <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-surface">
+                        <div
+                          className="absolute inset-0 scale-110 blur-md"
+                          style={{ backgroundImage: `url(${item.img_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                        />
+                      )}
+                      {/* Dark / Light mode overlay */}
+                      <div className="absolute inset-0 bg-white/80 dark:bg-black/75" />
+
+                      {/* Thumbnail */}
+                      {item.img_url && (
+                        <div className="relative z-10 h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg">
                           <img src={item.img_url} alt={item.food_name} className="h-full w-full object-cover" />
                         </div>
                       )}
-                      <div className="flex flex-1 flex-col justify-between">
+
+                      {/* Content */}
+                      <div className="relative z-10 flex flex-1 flex-col justify-between">
                         <div>
-                          <h3 
+                          <h3
                             className="font-bold text-lg text-text"
                             style={{ fontFamily: 'var(--font-playfair), serif' }}
                           >
@@ -278,7 +291,7 @@ export default function UnifiedMenuPage() {
                           <span className="font-bold text-primary-600">
                             {item.price ? `KES ${item.price}` : ''}
                           </span>
-                          
+
                           {orders_enabled && (
                             <div className="flex items-center gap-2">
                               {cartObj ? (
@@ -294,7 +307,7 @@ export default function UnifiedMenuPage() {
                               ) : (
                                 <button
                                   onClick={() => updateQuantity(item, 1)}
-                                  className="rounded-full bg-primary-500 px-4 py-1.5 text-sm font-bold text-white shadow-sm hover:bg-primary-600 transition-colors"
+                                  className="rounded-full bg-primary-500/80 px-4 py-1.5 text-sm font-bold text-white shadow-sm hover:bg-primary-600/90 transition-colors"
                                 >
                                   Order
                                 </button>
@@ -320,7 +333,7 @@ export default function UnifiedMenuPage() {
         >
           {/* Rotating Dashed Border */}
           <div className="absolute inset-0 rounded-full border-[3px] border-dashed border-green-400 animate-[spin_4s_linear_infinite]"></div>
-          
+
           <div className="relative z-10">
             <FiShoppingCart size={24} />
             <span className="absolute -top-3 -right-4 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-sm border-2 border-white/20">
@@ -340,16 +353,16 @@ export default function UnifiedMenuPage() {
                 <FiX size={24} />
               </button>
             </div>
-            
+
             <div className="overflow-y-auto p-4 flex-1">
               {Object.values(cart).map(c => (
                 <div key={c.item.food_id} className="flex justify-between items-start py-4 border-b border-border last:border-0 gap-4">
                   <div className="flex-1">
                     <p className="font-bold text-text">{c.item.food_name}</p>
                     <p className="text-sm text-primary-600 font-semibold mb-2">{c.item.price ? `KES ${c.item.price}` : ''}</p>
-                    <input 
-                      type="text" 
-                      placeholder="Add instructions (e.g. no onions)" 
+                    <input
+                      type="text"
+                      placeholder="Add instructions (e.g. no onions)"
                       value={c.special_instructions || ''}
                       onChange={(e) => updateInstructions(c.item.food_id, e.target.value)}
                       className="w-full text-xs sm:text-sm bg-surface-alt border border-border rounded-lg px-3 py-2 text-text placeholder-text-muted focus:outline-none focus:border-primary-400"
@@ -373,7 +386,7 @@ export default function UnifiedMenuPage() {
                 <span>Total:</span>
                 <span className="text-primary-600">KES {totalCartPrice}</span>
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-semibold mb-1 text-text">Table Number</label>
                 <input
@@ -392,7 +405,7 @@ export default function UnifiedMenuPage() {
                 disabled={isSubmitting}
                 className="w-full rounded-full bg-primary-500 py-4 text-lg font-bold text-white shadow-md hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
               >
-                {isSubmitting ? "Sending..." : "Done"} 
+                {isSubmitting ? "Sending..." : "Done"}
                 {!isSubmitting && <FiCheck />}
               </button>
             </div>
@@ -406,22 +419,41 @@ export default function UnifiedMenuPage() {
           <div className="w-full max-w-sm bg-surface rounded-2xl shadow-2xl p-6 text-center border border-border">
             <div className="mb-4 flex justify-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-500/10 text-primary-500">
-                 {orderStatusData?.status === 'confirmed' || orderStatusData?.status === 'in_progress' ? (
-                   <FiCheck size={32} className="animate-in zoom-in duration-300" />
-                 ) : (
-                   <FiRefreshCw size={32} className="animate-spin" />
-                 )}
+                {orderStatusData?.status === 'confirmed' || orderStatusData?.status === 'in_progress' ? (
+                  <FiCheck size={32} className="animate-in zoom-in duration-300" />
+                ) : (
+                  <FiRefreshCw size={32} className="animate-spin" />
+                )}
               </div>
             </div>
             <h2 className="text-2xl font-extrabold text-text mb-2">
               {orderStatusData?.status === 'pending' ? 'Order Pending' : 'Order Confirmed!'}
             </h2>
             <p className="text-text-muted mb-6">
-              {orderStatusData?.status === 'pending' 
+              {orderStatusData?.status === 'pending'
                 ? 'We have received your order and are waiting for the restaurant to confirm it.'
                 : 'The restaurant has confirmed your order. It will be ready soon!'}
             </p>
-            
+
+            {orderStatusData?.items && orderStatusData.items.length > 0 && (
+              <div className="text-left bg-surface-alt rounded-xl p-4 mb-6 max-h-48 overflow-y-auto">
+                <h3 className="font-bold text-text border-b border-border pb-2 mb-3">Your Items</h3>
+                <ul className="space-y-3">
+                  {orderStatusData.items.map((item, idx) => (
+                    <li key={idx} className="flex justify-between items-start text-sm">
+                      <div className="flex-1">
+                        <span className="font-semibold text-text">{item.quantity}x {item.food_name}</span>
+                        {item.special_instructions && (
+                          <p className="text-text-muted text-xs mt-0.5">Note: {item.special_instructions}</p>
+                        )}
+                      </div>
+                      {item.price && <span className="font-semibold text-primary-600 ml-3">KES {item.price * item.quantity}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => mutateOrderStatus()}
