@@ -85,7 +85,9 @@ export default function LanguageSwitcher({ className = "", openUpwards = false, 
         <button
           onClick={() => setIsOpen((o) => !o)}
           className={`flex items-center rounded-full border border-border bg-surface text-sm font-medium text-text shadow-sm transition-all hover:border-primary-500 hover:text-primary-500 focus:outline-none ${
-            iconOnly ? "p-2 justify-center" : "gap-1.5 px-2.5 py-1.5 justify-between w-full"
+            iconOnly 
+              ? "p-2 justify-center" 
+              : "p-2 sm:px-2.5 sm:py-1.5 gap-0 sm:gap-1.5 justify-between"
           }`}
           aria-label="Select language"
         >
@@ -97,7 +99,7 @@ export default function LanguageSwitcher({ className = "", openUpwards = false, 
           </div>
           {!iconOnly && (
             <FiChevronDown
-              className={`h-3.5 w-3.5 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+              className={`hidden sm:block h-3.5 w-3.5 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
             />
           )}
         </button>
