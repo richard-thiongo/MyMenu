@@ -29,10 +29,11 @@
   --color-border-strong: var(--theme-border-strong);
 
   /* Fonts */
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
   --font-logo: var(--font-caveat);
   --font-heading: var(--font-playfair);
+  --font-body: var(--font-dm-sans);
   /* Tailwind token: font-heading maps to Playfair Display */
   --font-family-heading: var(--font-playfair);
 }
@@ -60,6 +61,15 @@
     --theme-text-inverse: #0a0a0a;
     --theme-border: #333333;
     --theme-border-strong: #444444;
+  }
+
+  /* Apply DM Sans for body/small text, Playfair for display/headings */
+  body {
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), serif;
   }
 }
 
@@ -102,3 +112,18 @@
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
+
+/* Google Translate — suppress auto-injected banner and tooltip */
+.skiptranslate,
+.skiptranslate iframe,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}

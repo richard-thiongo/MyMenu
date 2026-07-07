@@ -1,6 +1,7 @@
-import { Geist, Geist_Mono, Caveat, Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono, Caveat, Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
+import GoogleTranslateLoader from "@/components/GoogleTranslateLoader";
 import { Toaster } from "react-hot-toast";
 
 import StatusProvider from "@/providers/StatusProvider";
@@ -25,6 +26,12 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata = {
   title: "Kenyan.menu | Create a Digital Menu for Your Restaurant",
   description: "Build a stunning digital menu in minutes. Perfect for restaurants, hotels, cafes, and bars in Kenya. Generate QR codes and shareable links instantly.",
@@ -36,7 +43,7 @@ export default function RootLayout({ children }) {
       <html
         lang="en"
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${playfair.variable} h-full antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${playfair.variable} ${dmSans.variable} h-full antialiased`}
       >
       <head>
         <script
@@ -83,6 +90,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <StatusProvider>
             {children}
+            <GoogleTranslateLoader />
             <Toaster
               position="top-center"
               toastOptions={{

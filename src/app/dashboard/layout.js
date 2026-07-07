@@ -9,13 +9,14 @@ import useAuthStore from "@/hooks/useAuthStore";
 import ThemeToggle from "@/components/ThemeToggle";
 import AuthGuard from "@/components/AuthGuard";
 import ShareMenuModal from "@/components/ShareMenuModal";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const { restaurantName, primaryColor, logout, isPaid, subscriptionExpiresAt } = useAuthStore();
   const [isShareOpen, setIsShareOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const handleLogout = () => {
@@ -49,70 +50,62 @@ export default function DashboardLayout({ children }) {
         )}
 
         {/* Sidebar for Desktop (md and up) */}
-        <aside className={`hidden md:flex md:flex-col md:fixed md:inset-y-0 md:z-20 border-r border-border bg-surface p-4 transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"
+        <aside 
+          onMouseEnter={() => setIsCollapsed(false)}
+          onMouseLeave={() => setIsCollapsed(true)}
+          className={`hidden md:flex md:flex-col md:fixed md:inset-y-0 md:z-20 border-r border-border bg-surface p-4 transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"
           }`}>
           <div className="flex flex-col h-full justify-between">
             <div>
-              {/* Collapse/Expand Toggle Button (No MyMenu brand text) */}
-              <div className={`flex items-center ${isCollapsed ? "justify-center" : "justify-end"} mb-8 px-2`}>
-                <button
-                  onClick={() => setIsCollapsed(!isCollapsed)}
-                  className="p-2 rounded-lg border border-border text-text hover:bg-surface-alt transition-colors"
-                  title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-                >
-                  {isCollapsed ? <FiChevronRight size={18} /> : <FiChevronLeft size={18} />}
-                </button>
-              </div>
-
               {/* Desktop Nav Links */}
               <nav className="flex flex-col gap-2">
                 <Link
                   href="/dashboard"
                   className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
                     } ${pathname === "/dashboard"
-                      ? "bg-primary-500/10 text-primary-500"
+                      ? "bg-primary-500 text-white"
                       : "text-text-muted hover:text-text"
                     }`}
                   title="Categories"
                 >
                   <FiCoffee size={18} className="shrink-0" />
-                  {!isCollapsed && <span className="truncate">Categories</span>}
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Categories</span>
                 </Link>
                 <Link
                   href="/dashboard/orders"
                   className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
                     } ${pathname === "/dashboard/orders"
-                      ? "bg-primary-500/10 text-primary-500"
+                      ? "bg-primary-500 text-white"
                       : "text-text-muted hover:text-text"
                     }`}
                   title="Orders"
                 >
                   <FiClipboard size={18} className="shrink-0" />
-                  {!isCollapsed && <span className="truncate">Orders</span>}
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Orders</span>
                 </Link>
                 <Link
                   href="/dashboard/settings"
                   className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
                     } ${pathname === "/dashboard/settings"
-                      ? "bg-primary-500/10 text-primary-500"
+                      ? "bg-primary-500 text-white"
                       : "text-text-muted hover:text-text"
                     }`}
                   title="Settings"
                 >
                   <FiSettings size={18} className="shrink-0" />
-                  {!isCollapsed && <span className="truncate">Settings</span>}
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Settings</span>
                 </Link>
                 <Link
                   href="/dashboard/payments"
                   className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
                     } ${pathname === "/dashboard/payments"
-                      ? "bg-primary-500/10 text-primary-500"
+                      ? "bg-primary-500 text-white"
                       : "text-text-muted hover:text-text"
                     }`}
                   title="Payments"
                 >
                   <FiCreditCard size={18} className="shrink-0" />
-                  {!isCollapsed && <span className="truncate">Payments</span>}
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Payments</span>
                 </Link>
                 <Link
                   href={`/${restaurantName}`}
@@ -122,7 +115,7 @@ export default function DashboardLayout({ children }) {
                   title="View Public Menu"
                 >
                   <FiShare2 size={18} className="shrink-0" />
-                  {!isCollapsed && <span className="truncate">View Public Menu ↗</span>}
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>View Public Menu ↗</span>
                 </Link>
               </nav>
             </div>
@@ -136,19 +129,18 @@ export default function DashboardLayout({ children }) {
                 title="Share / QR"
               >
                 <LuQrCode size={18} className="shrink-0" />
-                {!isCollapsed && <span>Share QR</span>}
+                <span className={isCollapsed ? 'hidden' : 'block'}>Share QR</span>
               </button>
 
-              {isCollapsed ? (
-                <div className="flex items-center justify-center p-2 bg-surface rounded-lg border border-border">
-                  <ThemeToggle />
-                </div>
-              ) : (
-                <div className="flex items-center justify-between px-4 py-2 bg-surface rounded-lg border border-border">
-                  <span className="text-sm font-medium text-text-muted">Theme</span>
-                  <ThemeToggle />
-                </div>
-              )}
+              <div className={`flex items-center ${isCollapsed ? "justify-center p-2" : "justify-between px-4 py-2"} bg-surface rounded-lg border border-border`}>
+                <span className={`text-sm font-medium text-text-muted ${isCollapsed ? 'hidden' : 'block'}`}>Theme</span>
+                <ThemeToggle />
+              </div>
+
+              {/* Language switcher — desktop sidebar only */}
+              <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3"}`}>
+                <LanguageSwitcher className={isCollapsed ? "scale-75 origin-center" : "w-full"} />
+              </div>
 
               <button
                 onClick={() => setIsLogoutConfirmOpen(true)}
@@ -157,7 +149,7 @@ export default function DashboardLayout({ children }) {
                 title="Logout"
               >
                 <FiLogOut size={18} className="shrink-0" />
-                {!isCollapsed && <span>Logout</span>}
+                <span className={isCollapsed ? 'hidden' : 'block'}>Logout</span>
               </button>
             </div>
           </div>

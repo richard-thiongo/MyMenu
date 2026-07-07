@@ -20,6 +20,7 @@ import {
   FiMenu,
   FiX,
 } from "react-icons/fi";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 function useReveal() {
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function Home() {
           <Link href="/signin" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-primary-500 transition-colors">
             Log in <FiArrowRight className="h-4 w-4" />
           </Link>
+          <LanguageSwitcher />
           <ThemeToggle />
           <button 
             className="md:hidden p-2 text-text hover:text-primary-500 transition-colors"

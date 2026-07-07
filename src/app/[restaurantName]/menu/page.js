@@ -11,6 +11,8 @@ import { BiDish } from "react-icons/bi";
 import Link from "next/link";
 import Skeleton from "@/components/Skeleton";
 import { socket } from "@/lib/socket";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import MenuDivider from "@/components/MenuDivider";
 
 const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
@@ -215,7 +217,7 @@ export default function UnifiedMenuPage() {
             <h1 className="text-xl font-extrabold text-primary-500">{restaurantName}</h1>
             <p className="text-sm text-text-muted font-medium">{greeting}</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {orderId && (
               <button
                 onClick={() => setIsStatusModalOpen(true)}
@@ -224,6 +226,7 @@ export default function UnifiedMenuPage() {
                 View Order
               </button>
             )}
+            <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </div>
@@ -250,11 +253,12 @@ export default function UnifiedMenuPage() {
           return (
             <div key={cat} id={`category-${cat}`} className="mb-10 scroll-mt-36">
               <h2
-                className="mb-4 text-2xl font-bold text-text border-b border-border pb-2"
+                className="text-2xl font-bold text-text"
                 style={{ fontFamily: 'var(--font-playfair), serif' }}
               >
                 {cat}
               </h2>
+              <MenuDivider color={themeColor} />
               <div className="flex flex-col gap-4">
                 {items.map(item => {
                   const cartObj = cart[item.food_id];
