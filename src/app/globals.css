@@ -122,6 +122,7 @@
 }
 body {
   top: 0px !important;
+  position: static !important;
 }
 .goog-text-highlight {
   background-color: transparent !important;

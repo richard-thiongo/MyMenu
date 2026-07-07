@@ -139,7 +139,7 @@ export default function DashboardLayout({ children }) {
 
               {/* Language switcher — desktop sidebar only */}
               <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3"}`}>
-                <LanguageSwitcher className={isCollapsed ? "scale-75 origin-center" : "w-full"} />
+                <LanguageSwitcher openUpwards={true} iconOnly={isCollapsed} className={isCollapsed ? "" : "w-full"} />
               </div>
 
               <button

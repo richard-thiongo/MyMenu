@@ -17,18 +17,18 @@ const LANGUAGES = [
 ];
 
 function selectGoogleLanguage(langCode) {
-  const el = document.querySelector("#google_translate_element select");
+  const el = document.querySelector(".goog-te-combo");
   if (!el) return;
   el.value = langCode;
-  el.dispatchEvent(new Event("change"));
+  el.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-export default function LanguageSwitcher({ className = "" }) {
+export default function LanguageSwitcher({ className = "", openUpwards = false, iconOnly = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(LANGUAGES[0]);
   const ref = useRef(null);
 
-  // Close on click outside
+  // Close on click outside & sync state
   useEffect(() => {
     function handleClickOutside(e) {
       if (ref.current && !ref.current.contains(e.target)) {
@@ -36,24 +36,40 @@ export default function LanguageSwitcher({ className = "" }) {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    // Sync state across multiple dropdowns
+    const handleSync = (e) => setSelected(e.detail);
+    window.addEventListener("lang-sync", handleSync);
+
+    // Set initial state from Google Translate cookie
+    const match = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+    if (match && match[1]) {
+      const code = match[1];
+      const found = LANGUAGES.find((l) => l.code.toLowerCase() === code.toLowerCase());
+      if (found) setSelected(found);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("lang-sync", handleSync);
+    };
   }, []);
 
   const handleSelect = (lang) => {
+    if (selected.code === lang.code) {
+      setIsOpen(false);
+      return;
+    }
     setSelected(lang);
     setIsOpen(false);
+    
+    // Broadcast to other LanguageSwitcher instances
+    window.dispatchEvent(new CustomEvent("lang-sync", { detail: lang }));
     if (lang.code === "en") {
-      // Reset to original
-      const iframe = document.querySelector(".goog-te-banner-frame");
-      if (iframe) {
-        const btn = iframe.contentWindow?.document.querySelector(".goog-close-link");
-        if (btn) btn.click();
-      }
-      const combo = document.querySelector("#google_translate_element select");
-      if (combo) {
-        combo.value = "";
-        combo.dispatchEvent(new Event("change"));
-      }
+      // To reliably reset Google Translate, we must clear the cookie and reload
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${window.location.hostname}; path=/;`;
+      window.location.reload();
     } else {
       selectGoogleLanguage(lang.code);
     }
@@ -68,26 +84,35 @@ export default function LanguageSwitcher({ className = "" }) {
       <div ref={ref} className={`relative ${className}`}>
         <button
           onClick={() => setIsOpen((o) => !o)}
-          className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1.5 text-sm font-medium text-text shadow-sm transition-all hover:border-primary-500 hover:text-primary-500 focus:outline-none"
+          className={`flex items-center rounded-full border border-border bg-surface text-sm font-medium text-text shadow-sm transition-all hover:border-primary-500 hover:text-primary-500 focus:outline-none ${
+            iconOnly ? "p-2 justify-center" : "gap-1.5 px-2.5 py-1.5 justify-between w-full"
+          }`}
           aria-label="Select language"
         >
-          <FiGlobe className="h-4 w-4 shrink-0 text-primary-500" />
-          <span className="hidden sm:inline">{selected.label}</span>
-          <FiChevronDown
-            className={`h-3.5 w-3.5 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-          />
+          <div className="flex items-center gap-1.5">
+            <FiGlobe className="h-4 w-4 shrink-0 text-primary-500" />
+            {!iconOnly && (
+              <span className="hidden sm:inline-block sm:w-20 sm:text-left sm:truncate">{selected.label}</span>
+            )}
+          </div>
+          {!iconOnly && (
+            <FiChevronDown
+              className={`h-3.5 w-3.5 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+            />
+          )}
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 z-[9999] mt-2 w-44 origin-top-right overflow-hidden rounded-xl border border-border bg-surface shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+          <div className={`absolute ${openUpwards ? "bottom-full mb-2 origin-bottom-left left-0" : "top-full mt-2 origin-top-right right-0"} z-[9999] w-44 overflow-hidden rounded-xl border border-border bg-surface shadow-2xl animate-in fade-in zoom-in-95 duration-150`}>
             <ul className="max-h-72 overflow-y-auto py-1">
               {LANGUAGES.map((lang) => (
                 <li key={lang.code}>
                   <button
+                    disabled={selected.code === lang.code}
                     onClick={() => handleSelect(lang)}
                     className={`flex w-full items-center gap-2.5 px-3 py-2 text-sm transition-colors hover:bg-primary-500/10 hover:text-primary-500 ${
                       selected.code === lang.code
-                        ? "bg-primary-500/10 text-primary-500 font-semibold"
+                        ? "bg-primary-500/10 text-primary-500 font-semibold cursor-default"
                         : "text-text"
                     }`}
                   >
