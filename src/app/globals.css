@@ -112,19 +112,3 @@
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
-
-/* Google Translate — suppress auto-injected banner and tooltip */
-.skiptranslate,
-.skiptranslate iframe,
-#goog-gt-tt,
-.goog-te-balloon-frame {
-  display: none !important;
-}
-body {
-  top: 0px !important;
-  position: static !important;
-}
-.goog-text-highlight {
-  background-color: transparent !important;
-  box-shadow: none !important;
-}

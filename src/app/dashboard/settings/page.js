@@ -8,8 +8,6 @@ import toast from "react-hot-toast";
 
 import { useStatus } from "@/providers/StatusProvider";
 import ColorPicker from "@/components/ColorPicker";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { FiGlobe } from "react-icons/fi";
 
 const AccordionItem = ({ id, title, description, icon: Icon, children, expandedSection, setExpandedSection }) => {
   const isExpanded = expandedSection === id;
@@ -135,20 +133,6 @@ export default function SettingsPage() {
         <p className="mt-1 text-sm text-text-muted">
           Manage your restaurant profile and branding.
         </p>
-      </div>
-
-      {/* Language Switcher — mobile only (sidebar handles desktop) */}
-      <div className="md:hidden mb-4 rounded-2xl border border-border bg-surface-alt shadow-sm p-5">
-        <div className="flex items-center gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-500">
-            <FiGlobe size={20} />
-          </div>
-          <div className="flex-1">
-            <h2 className="text-base font-semibold text-text">Language</h2>
-            <p className="text-sm text-text-muted">Change the display language.</p>
-          </div>
-          <LanguageSwitcher />
-        </div>
       </div>
 
       <div className="space-y-4">

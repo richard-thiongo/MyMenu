@@ -9,7 +9,6 @@ import useAuthStore from "@/hooks/useAuthStore";
 import ThemeToggle from "@/components/ThemeToggle";
 import AuthGuard from "@/components/AuthGuard";
 import ShareMenuModal from "@/components/ShareMenuModal";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
@@ -135,11 +134,6 @@ export default function DashboardLayout({ children }) {
               <div className={`flex items-center ${isCollapsed ? "justify-center p-2" : "justify-between px-4 py-2"} bg-surface rounded-lg border border-border`}>
                 <span className={`text-sm font-medium text-text-muted ${isCollapsed ? 'hidden' : 'block'}`}>Theme</span>
                 <ThemeToggle />
-              </div>
-
-              {/* Language switcher — desktop sidebar only */}
-              <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3"}`}>
-                <LanguageSwitcher openUpwards={true} iconOnly={isCollapsed} className={isCollapsed ? "" : "w-full"} />
               </div>
 
               <button

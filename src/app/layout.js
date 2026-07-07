@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono, Caveat, Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
-import GoogleTranslateLoader from "@/components/GoogleTranslateLoader";
 import { Toaster } from "react-hot-toast";
 
 import StatusProvider from "@/providers/StatusProvider";
@@ -90,7 +89,6 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <StatusProvider>
             {children}
-            <GoogleTranslateLoader />
             <Toaster
               position="top-center"
               toastOptions={{

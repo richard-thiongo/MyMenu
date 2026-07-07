@@ -11,7 +11,6 @@ import { BiDish } from "react-icons/bi";
 import Link from "next/link";
 import Skeleton from "@/components/Skeleton";
 import { socket } from "@/lib/socket";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import MenuDivider from "@/components/MenuDivider";
 
 const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
@@ -226,7 +225,6 @@ export default function UnifiedMenuPage() {
                 View Order
               </button>
             )}
-            <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </div>
