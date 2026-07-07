@@ -16,12 +16,6 @@ const LANGUAGES = [
   { code: "pt", label: "Português", flag: "🇧🇷" },
 ];
 
-function selectGoogleLanguage(langCode) {
-  const el = document.querySelector(".goog-te-combo");
-  if (!el) return;
-  el.value = langCode;
-  el.dispatchEvent(new Event("change", { bubbles: true }));
-}
 
 export default function LanguageSwitcher({ className = "", openUpwards = false, iconOnly = false }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,14 +59,18 @@ export default function LanguageSwitcher({ className = "", openUpwards = false, 
     
     // Broadcast to other LanguageSwitcher instances
     window.dispatchEvent(new CustomEvent("lang-sync", { detail: lang }));
+    
+    // Set the Google Translate cookie manually for 100% reliability
     if (lang.code === "en") {
-      // To reliably reset Google Translate, we must clear the cookie and reload
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${window.location.hostname}; path=/;`;
-      window.location.reload();
     } else {
-      selectGoogleLanguage(lang.code);
+      document.cookie = `googtrans=/en/${lang.code}; path=/;`;
+      document.cookie = `googtrans=/en/${lang.code}; domain=${window.location.hostname}; path=/;`;
     }
+
+    // Force a page refresh to guarantee Google Translate processes the entire DOM cleanly
+    window.location.reload();
   };
 
   return (
@@ -87,7 +85,7 @@ export default function LanguageSwitcher({ className = "", openUpwards = false, 
           className={`flex items-center rounded-full border border-border bg-surface text-sm font-medium text-text shadow-sm transition-all hover:border-primary-500 hover:text-primary-500 focus:outline-none ${
             iconOnly 
               ? "p-2 justify-center" 
-              : "p-2 sm:px-2.5 sm:py-1.5 gap-0 sm:gap-1.5 justify-between"
+              : "p-2 sm:px-2.5 sm:py-1.5 gap-1 sm:gap-1.5 justify-between"
           }`}
           aria-label="Select language"
         >
@@ -99,7 +97,7 @@ export default function LanguageSwitcher({ className = "", openUpwards = false, 
           </div>
           {!iconOnly && (
             <FiChevronDown
-              className={`hidden sm:block h-3.5 w-3.5 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+              className={`block h-3.5 w-3.5 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
             />
           )}
         </button>
