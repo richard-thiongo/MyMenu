@@ -73,7 +73,7 @@ export default function PaymentsPage() {
         <div className="mb-6">
           <h3 className="mb-2 text-lg font-bold text-text">How to Pay</h3>
           <p className="text-sm text-text-muted">
-            Subscription is <strong className="text-primary-500">Ksh 1,500/month</strong> (or <strong className="text-primary-500">Ksh 2,000/month</strong> if you have over 90 food items).
+            Subscription is <strong className="text-primary-500">Ksh 2,300/month</strong> (or <strong className="text-primary-500">Ksh 3,000/month</strong> if you have over 90 food items).
           </p>
         </div>
 
