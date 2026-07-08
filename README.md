@@ -31,13 +31,14 @@ This repository contains the **frontend** built with **Next.js (App Router)** an
 2. **Sign Up** — A restaurant owner registers by providing a restaurant name, location, password, and brand color. They must accept the Terms and Conditions and Privacy Policy before submitting.
 3. **Sign In** — Owners log in with their restaurant name and password. A "Remember Me" option saves credentials locally for faster future logins.
 4. **Dashboard** — After signing in, the owner reaches their private dashboard. They can:
+   - Receive and manage **Live Orders** (toggle ordering on/off, view incoming orders in real time, and confirm them)
    - Create and manage **categories** (e.g., Starters, Mains, Desserts)
    - Add **food items** (with images, prices, and descriptions) inside each category
    - Open a **Share / QR Code** modal from the header to get a shareable public link
    - Visit **Settings** to update their brand color (with live preview) or reset their password
    - Go to **Payments** to view their plan status and payment instructions
    - On mobile, navigate via a **bottom tab bar** (Menu, Billing, Settings) and log out from the header
-5. **Public Menu Page** — Anyone with the link (`/[restaurantName]`) can browse the menu. Categories are listed first; clicking a category shows its food items. The entire page is themed with the restaurant's chosen brand color. A **bottom tab navigation** is present on mobile for quick navigation.
+5. **Public Menu Page** — Anyone with the link (`/[restaurantName]`) can browse the menu. Categories are listed first; clicking a category shows its food items. The entire page is themed with the restaurant's chosen brand color. Customers can **place orders** directly from their device, track their order status via a rich real-time loading UI, and view their **daily order history** (persisted locally across refreshes). A **bottom tab navigation** is present on mobile for quick navigation.
 
 ### Pricing
 
@@ -178,6 +179,9 @@ src/app/
     ├── page.js                    # Dashboard home — lists all categories as cards with
     │                              #   images; supports creating, editing, and deleting
     │                              #   categories via CategoryModal and ConfirmModal
+    ├── orders/
+    │   └── page.js                # Orders management — toggle digital ordering, view today's orders
+    │                              #   in real time via WebSockets, and confirm them with loading states
     ├── payments/
     │   └── page.js                # Payments page — displays plan status (Basic/Advanced),
     │                              #   pricing details, and M-Pesa payment instructions
