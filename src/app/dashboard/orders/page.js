@@ -11,6 +11,7 @@ import { socket } from "@/lib/socket";
 export default function OrdersPage() {
   const [ordersEnabled, setOrdersEnabled] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
+  const [confirmingOrderId, setConfirmingOrderId] = useState(null);
 
   const { data: orders, error, isLoading, mutate } = useSWR(
     "/api/orders/restaurant/today",
@@ -59,12 +60,15 @@ export default function OrdersPage() {
   };
 
   const handleConfirmOrder = async (orderId) => {
+    setConfirmingOrderId(orderId);
     try {
       await api.updateOrderStatus(orderId, 'confirmed');
       mutate(); // Refresh the list
     } catch (err) {
       console.error("Failed to update status", err);
       alert("Failed to confirm order.");
+    } finally {
+      setConfirmingOrderId(null);
     }
   };
 
@@ -150,9 +154,22 @@ export default function OrdersPage() {
               {order.status === 'pending' && (
                 <button
                   onClick={() => handleConfirmOrder(order.id)}
-                  className="w-full mt-auto bg-primary-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 hover:bg-primary-600 active:scale-95 transition-all shadow-md shadow-primary-500/20"
+                  disabled={confirmingOrderId === order.id}
+                  className={`w-full mt-auto bg-primary-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-all shadow-md shadow-primary-500/20 ${
+                    confirmingOrderId === order.id 
+                      ? 'opacity-75 cursor-not-allowed' 
+                      : 'hover:bg-primary-600 active:scale-95'
+                  }`}
                 >
-                  <FiCheck size={18} /> Confirm Order
+                  {confirmingOrderId === order.id ? (
+                    <>
+                      <FiRefreshCw className="animate-spin" size={18} /> Confirming...
+                    </>
+                  ) : (
+                    <>
+                      <FiCheck size={18} /> Confirm Order
+                    </>
+                  )}
                 </button>
               )}
             </div>
