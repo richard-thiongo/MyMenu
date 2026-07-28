@@ -7,11 +7,11 @@ export default function KeyboardAvoidingWrapper({ children }) {
 
   return (
     <div
-      className="w-full flex-1 flex flex-col overflow-y-auto"
+      className="w-full flex-1 flex flex-col overflow-y-auto overflow-x-hidden"
       style={{
-        maxHeight: keyboardOffset > 0 ? `calc(100vh - ${keyboardOffset}px)` : "100vh",
-        height: "100%",
-        transition: "max-height 0.15s ease-out",
+        height: keyboardOffset > 0 ? `calc(100vh - ${keyboardOffset}px)` : "100vh",
+        maxHeight: "100vh",
+        transition: "height 0.15s ease-out",
       }}
     >
       {children}
