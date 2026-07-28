@@ -37,6 +37,8 @@ export const metadata = {
   keywords: ["digital menu", "restaurant menu app", "QR code menu", "Kenya restaurant menu", "Kenyan.menu", "contactless menu"],
 };
 
+import KeyboardAvoidingWrapper from "@/components/KeyboardAvoidingWrapper";
+
 export default function RootLayout({ children }) {
   return (
       <html
@@ -88,7 +90,9 @@ export default function RootLayout({ children }) {
         />
         <ThemeProvider>
           <StatusProvider>
-            {children}
+            <KeyboardAvoidingWrapper>
+              {children}
+            </KeyboardAvoidingWrapper>
             <Toaster
               position="top-center"
               toastOptions={{

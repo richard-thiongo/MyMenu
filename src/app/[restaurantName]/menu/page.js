@@ -14,6 +14,7 @@ import { LuHistory } from "react-icons/lu";
 import Skeleton from "@/components/Skeleton";
 import { socket } from "@/lib/socket";
 import MenuDivider from "@/components/MenuDivider";
+import useKeyboardOffset from "@/hooks/useKeyboardOffset";
 
 const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
@@ -79,8 +80,7 @@ function HistoryOrderRow({ entry, onView }) {
       if (!res.ok) return null;
       const json = await res.json();
       return json.data;
-    },
-    { refreshInterval: 15000 }
+    }
   );
 
   const status = data?.status || "pending";
@@ -161,6 +161,9 @@ export default function UnifiedMenuPage() {
   // Draggable cart button state
   const [cartPos, setCartPos] = useState(null); // null = default bottom-right corner
   const dragRef = useRef({ active: false, startX: 0, startY: 0, originX: 0, originY: 0, moved: false });
+  const [isHistoryBouncing, setIsHistoryBouncing] = useState(false);
+
+  const keyboardOffset = useKeyboardOffset();
 
   // ── On mount: restore active order + history ─────────────────────────────
   // Drag handlers for the floating cart button
@@ -229,6 +232,32 @@ export default function UnifiedMenuPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Total items count in history (sum of items inside all historical orders)
+  const totalHistoryItemsCount = useMemo(() => {
+    // Each entry has `itemNames` which represents the items ordered.
+    // If table/items list details are saved in entry, let's sum them up.
+    return orderHistory.reduce((acc, entry) => {
+      // In handleOrderSubmit, entry.itemNames is an array of names representing ordered items.
+      // If we don't have exact quantities stored in history entries, the length of itemNames is the item count.
+      return acc + (entry.itemNames ? entry.itemNames.length : 0);
+    }, 0);
+  }, [orderHistory]);
+
+  // Modal folding close animation state
+  const [isHistoryClosing, setIsHistoryClosing] = useState(false);
+  const [foldTarget, setFoldTarget] = useState({ x: 0, y: 0 });
+
+  const startHistoryCloseAnimation = () => {
+    setIsHistoryOpen(false);
+    setIsHistoryClosing(false);
+    
+    // Trigger history button to beat once and shimmer
+    setIsHistoryBouncing(true);
+    setTimeout(() => {
+      setIsHistoryBouncing(false);
+    }, 1800); // Duration matches the beat + shimmer animation cycle
+  };
 
   // ── SWR: active order status ─────────────────────────────────────────────
   const { data: orderStatusData, mutate: mutateOrderStatus } = useSWR(
@@ -405,6 +434,67 @@ export default function UnifiedMenuPage() {
       };
       saveHistory([newEntry, ...orderHistory]);
 
+      // ── Fly-to-History Animation ─────────────────────────────────────────
+      // Locate the destination (History button)
+      const historyBtn = document.getElementById("history-clock-btn");
+      const targetRect = historyBtn
+        ? historyBtn.getBoundingClientRect()
+        : { left: window.innerWidth - 120, top: 20, width: 44, height: 44 };
+
+      const targetX = targetRect.left + targetRect.width / 2 - 25;
+      const targetY = targetRect.top + targetRect.height / 2 - 25;
+
+      // Capture all item images in the cart
+      const cartItemsWithImages = Object.values(cart).filter((c) => c.item.img_url);
+      
+      // Let's launch a fly animation for each image
+      cartItemsWithImages.forEach((c, index) => {
+        const flyId = Date.now() + Math.random() + index;
+        // Start from viewport center area (since placing order happens from cart modal)
+        const startX = window.innerWidth / 2 - 25;
+        const startY = window.innerHeight / 2 - 25;
+
+        // Set last ordered image as history button background
+        if (index === cartItemsWithImages.length - 1) {
+          setLastAddedImage(c.item.img_url);
+        }
+
+        const newFlyItem = {
+          id: flyId,
+          imgUrl: c.item.img_url,
+          currentX: startX,
+          currentY: startY,
+          scale: 1,
+          opacity: 1,
+          rotation: 0,
+        };
+
+        setFlyingItems((prev) => [...prev, newFlyItem]);
+
+        setTimeout(() => {
+          setFlyingItems((prev) =>
+            prev.map((f) =>
+              f.id === flyId
+                ? {
+                    ...f,
+                    currentX: targetX,
+                    currentY: targetY,
+                    scale: 0.25,
+                    opacity: 0.8,
+                    rotation: 360,
+                  }
+                : f
+            )
+          );
+        }, 50 + index * 100);
+
+        setTimeout(() => {
+          setFlyingItems((prev) => prev.filter((f) => f.id !== flyId));
+          setIsHistoryBouncing(true);
+          setTimeout(() => setIsHistoryBouncing(false), 350);
+        }, 750 + index * 100);
+      });
+
       setCart({});
       setIsCartModalOpen(false);
       setIsStatusModalOpen(true);
@@ -440,14 +530,22 @@ export default function UnifiedMenuPage() {
     localStorage.removeItem(storageKey);
     setOrderHistory([]);
     setOrderId(null);
-    setIsHistoryOpen(false);
+    setIsHistoryClosing(true);
+    setTimeout(() => {
+      setIsHistoryOpen(false);
+      setIsHistoryClosing(false);
+    }, 450);
   };
 
   // ── Jump to a specific order from history ────────────────────────────────
   const viewOrderFromHistory = (id) => {
     setOrderId(id);
-    setIsHistoryOpen(false);
-    setIsStatusModalOpen(true);
+    setIsHistoryClosing(true);
+    setTimeout(() => {
+      setIsHistoryOpen(false);
+      setIsHistoryClosing(false);
+      setIsStatusModalOpen(true);
+    }, 450);
   };
 
   const scrollToCategory = (cat) => {
@@ -513,6 +611,19 @@ export default function UnifiedMenuPage() {
           transform: scale(1.3);
           transition: transform 0.2s ease;
         }
+        @keyframes history-beat-shimmer {
+          0% { transform: scale(1); }
+          14% { transform: scale(1.22); }
+          28% { transform: scale(0.95); }
+          42% { transform: scale(1.08); }
+          56% { transform: scale(1); }
+          70% { filter: brightness(1) drop-shadow(0 0 0px var(--theme-primary)); }
+          85% { filter: brightness(1.4) drop-shadow(0 0 8px var(--theme-primary)); }
+          100% { filter: brightness(1) drop-shadow(0 0 0px var(--theme-primary)); }
+        }
+        .history-trigger-anim {
+          animation: history-beat-shimmer 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
       `}</style>
 
       {/* ── Header ───────────────────────────────────────────────────────── */}
@@ -530,7 +641,9 @@ export default function UnifiedMenuPage() {
                 id="history-clock-btn"
                 onClick={() => setIsHistoryOpen(true)}
                 aria-label="View order history"
-                className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden shadow-md active:scale-95 transition-all ring-1 ring-border"
+                className={`relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden shadow-md active:scale-95 ring-1 ring-border transition-all ${
+                  isHistoryBouncing ? "history-trigger-anim" : ""
+                }`}
               >
                 {/* Background — last added image or gradient fallback */}
                 {lastAddedImage ? (
@@ -550,7 +663,7 @@ export default function UnifiedMenuPage() {
                 </span>
                 {/* Badge showing count */}
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-500 text-[9px] font-bold text-white shadow z-20">
-                  {orderHistory.length}
+                  {totalHistoryItemsCount}
                 </span>
               </button>
             )}
@@ -727,7 +840,10 @@ export default function UnifiedMenuPage() {
 
       {/* ── Cart modal ───────────────────────────────────────────────────── */}
       {isCartModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4">
+        <div 
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4 transition-all duration-200"
+          style={keyboardOffset > 0 ? { paddingBottom: `${keyboardOffset + 12}px` } : {}}
+        >
           <div className="w-full max-w-lg bg-surface rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh] sm:max-h-[85vh]">
             <div className="p-4 border-b border-border flex justify-between items-center bg-surface-alt">
               <h2 className="text-lg sm:text-xl font-bold text-text">Your Order</h2>
@@ -978,11 +1094,11 @@ export default function UnifiedMenuPage() {
       {/* ── History Modal ─────────────────────────────────────────────────── */}
       {isHistoryOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={() => setIsHistoryOpen(false)}
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 opacity-100"
+          onClick={startHistoryCloseAnimation}
         >
           <div
-            className="w-full sm:max-w-md bg-surface rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[75vh] sm:max-h-[80vh]"
+            className="w-full sm:max-w-md bg-surface rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[75vh] sm:max-h-[80vh] animate-in slide-in-from-bottom-5 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Pull handle — mobile only */}
@@ -998,7 +1114,7 @@ export default function UnifiedMenuPage() {
                 </div>
                 <div>
                   <h2 className="font-bold text-text text-base leading-tight">Order History</h2>
-                  <p className="text-xs text-text-muted">{orderHistory.length} order{orderHistory.length !== 1 ? "s" : ""} today</p>
+                  <p className="text-xs text-text-muted">{totalHistoryItemsCount} item{totalHistoryItemsCount !== 1 ? "s" : ""} today</p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -1013,7 +1129,7 @@ export default function UnifiedMenuPage() {
                   </button>
                 )}
                 <button
-                  onClick={() => setIsHistoryOpen(false)}
+                  onClick={startHistoryCloseAnimation}
                   className="p-2 text-text-muted hover:text-text rounded-xl hover:bg-surface-alt transition-colors"
                   aria-label="Close"
                 >
