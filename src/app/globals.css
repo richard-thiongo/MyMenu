@@ -45,8 +45,8 @@
     --theme-surface: #ffffff;
     --theme-surface-alt: #f3f0fb;
     --theme-surface-elevated: #ffffff;
-    --theme-text: #1a1a2e;
-    --theme-text-muted: #6b6b80;
+    --theme-text: #000000;
+    --theme-text-muted: #333344;
     --theme-text-inverse: #f0eeff;
     --theme-border: #e4e0ee;
     --theme-border-strong: #c8c2d9;
