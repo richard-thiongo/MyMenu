@@ -151,7 +151,7 @@ export default function Home() {
               <span className="block text-primary-400">everywhere.</span>
             </h1>
             <p className="reveal delay-200 mx-auto max-w-xl text-lg text-white/80 mb-10">
-              Build a stunning digital menu in minutes. Share via QR code or link.
+              Build a stunning digital menu in minutes. Get your own branded link — no website needed. Customers can scan to browse and order directly from their phones.
             </p>
             <div className="reveal delay-300 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link id="cta-explore" href="/signup" className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-primary-500 px-8 py-4 text-base font-bold text-white transition-all hover:bg-primary-600 hover:shadow-xl hover:shadow-primary-500/30 active:scale-95">
@@ -178,7 +178,7 @@ export default function Home() {
                 <div className="absolute bottom-0 left-0 p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-primary-400 mb-1">For</p>
                   <h3 className="text-2xl font-extrabold text-white">Restaurants &amp; Hotels</h3>
-                  <p className="mt-1 text-sm text-white/70">Full menus, categories, and item details.</p>
+                  <p className="mt-1 text-sm text-white/70">Full menus, digital table ordering, and status tracking.</p>
                 </div>
               </div>
               <div className="reveal reveal-scale delay-200 relative overflow-hidden rounded-3xl shadow-2xl">
@@ -187,7 +187,7 @@ export default function Home() {
                 <div className="absolute bottom-0 left-0 p-6">
                   <p className="text-xs font-bold uppercase tracking-widest text-primary-400 mb-1">Also for</p>
                   <h3 className="text-2xl font-extrabold text-white">Cafes, Bars &amp; Food Trucks</h3>
-                  <p className="mt-1 text-sm text-white/70">Fast setup, no technical skills needed.</p>
+                  <p className="mt-1 text-sm text-white/70">Fast setup, QR codes, and instant customer ordering.</p>
                 </div>
               </div>
             </div>
@@ -201,11 +201,12 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">What we offer</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">What do you get?</h2>
             </div>
-            <div className="grid sm:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { icon: FiGrid, title: "Digital Menu", desc: "Categories, items, images, prices — all in one place." },
-                { icon: FiMonitor, title: "QR Code", desc: "A scannable code generated automatically for your menu." },
-                { icon: FiLink, title: "Shareable Link", desc: "A branded URL: kenyan.menu/YourRestaurant" },
+                { icon: FiGrid, title: "Interactive Menu", desc: "Show categories, food items, images, and prices in real-time." },
+                { icon: FiMonitor, title: "QR Code Generator", desc: "A clean scannable code generated automatically for tables." },
+                { icon: FiLink, title: "Your Own Link", desc: "Get a branded link like mymenu.co.ke/yourplace — share it anywhere. No website required." },
+                { icon: FiCreditCard, title: "Digital Ordering", desc: "Let customers order straight from their seats with real-time status updates." },
               ].map(({ icon: Icon, title, desc }, i) => (
                 <div key={title} className={`reveal delay-${(i + 1) * 100} rounded-2xl border border-border bg-surface p-8 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/5 transition-all`}>
                   <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-500/10">
