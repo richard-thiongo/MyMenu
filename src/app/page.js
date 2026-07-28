@@ -48,7 +48,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-surface text-text">
 
       {/* Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 sm:gap-3">
           <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg sm:h-10 sm:w-10" priority />
           <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500 dark:text-white">
