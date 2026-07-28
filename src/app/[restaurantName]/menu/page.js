@@ -840,11 +840,8 @@ export default function UnifiedMenuPage() {
 
       {/* ── Cart modal ───────────────────────────────────────────────────── */}
       {isCartModalOpen && (
-        <div 
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4 transition-all duration-200"
-          style={keyboardOffset > 0 ? { paddingBottom: `${keyboardOffset + 12}px` } : {}}
-        >
-          <div className="w-full max-w-lg bg-surface rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh] sm:max-h-[85vh]">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4">
+          <div className="w-full max-w-lg bg-surface rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[80vh]">
             <div className="p-4 border-b border-border flex justify-between items-center bg-surface-alt">
               <h2 className="text-lg sm:text-xl font-bold text-text">Your Order</h2>
               <button onClick={() => setIsCartModalOpen(false)} className="p-2 text-text-muted hover:text-text rounded-full hover:bg-surface">

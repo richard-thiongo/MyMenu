@@ -7,13 +7,11 @@ export default function KeyboardAvoidingWrapper({ children }) {
 
   return (
     <div
+      className="w-full flex-1 flex flex-col overflow-y-auto"
       style={{
-        paddingBottom: keyboardOffset > 0 ? `${keyboardOffset}px` : "0px",
-        transition: "padding-bottom 0.15s ease-out",
+        maxHeight: keyboardOffset > 0 ? `calc(100vh - ${keyboardOffset}px)` : "100vh",
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
+        transition: "max-height 0.15s ease-out",
       }}
     >
       {children}
