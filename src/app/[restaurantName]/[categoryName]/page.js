@@ -16,11 +16,12 @@ const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
 export default function PublicCategoryPage() {
   const params = useParams();
-  const restaurantName = decodeURIComponent(params.restaurantName);
-  const categoryName = decodeURIComponent(params.categoryName);
+  const rawRestaurantName = params?.restaurantName ? (Array.isArray(params.restaurantName) ? params.restaurantName[0] : params.restaurantName) : "";
+  const restaurantName = rawRestaurantName ? decodeURIComponent(rawRestaurantName) : "";
+  const categoryName = params?.categoryName ? decodeURIComponent(Array.isArray(params.categoryName) ? params.categoryName[0] : params.categoryName) : "";
 
   const { data: menuData, error, isLoading, isValidating } = useSWR(
-    `public-menu/${restaurantName}`,
+    restaurantName ? `public-menu/${restaurantName}` : null,
     () => fetcher(restaurantName),
     {
       revalidateOnFocus: false,
@@ -85,10 +86,10 @@ export default function PublicCategoryPage() {
         ) : error || categoryItems.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
             <EmptyState
-              title={error ? "Restaurant Not Found" : "Category is Empty"}
+              title={error ? "Menu Not Found" : "Category is Empty"}
               description={
                 error
-                  ? "We couldn't find a menu for this restaurant. Please check the URL."
+                  ? "We couldn't find this menu. Please check the link."
                   : `There are no items in ${categoryName} yet.`
               }
               icon={FiCoffee}

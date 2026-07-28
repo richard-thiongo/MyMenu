@@ -6,16 +6,16 @@ import useSWR from "swr";
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
-import Skeleton from "@/components/Skeleton";
 
 const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
 export default function WelcomePage() {
   const params = useParams();
-  const restaurantName = decodeURIComponent(params.restaurantName);
+  const rawRestaurantName = params?.restaurantName ? (Array.isArray(params.restaurantName) ? params.restaurantName[0] : params.restaurantName) : "";
+  const restaurantName = rawRestaurantName ? decodeURIComponent(rawRestaurantName) : "";
 
-  const { data: menuData, error, isLoading } = useSWR(
-    `public-menu/${restaurantName}`,
+  const { data: menuData, error } = useSWR(
+    restaurantName ? `public-menu/${restaurantName}` : null,
     () => fetcher(restaurantName),
     {
       revalidateOnFocus: false,
@@ -26,7 +26,9 @@ export default function WelcomePage() {
   const themeColor = primary_color || "#1800ad";
 
   useEffect(() => {
-    document.title = `${restaurantName} | Welcome`;
+    if (restaurantName) {
+      document.title = `${restaurantName} | Welcome`;
+    }
   }, [restaurantName]);
 
   return (
@@ -53,19 +55,13 @@ export default function WelcomePage() {
 
       {/* Content wrapper to stay above overlay */}
       <div className="relative z-10 flex flex-col items-center w-full">
-        {isLoading ? (
-          <div className="flex flex-col items-center gap-6">
-            <Skeleton className="h-12 w-64 rounded-xl bg-white/20" />
-            <Skeleton className="h-6 w-80 rounded-lg bg-white/20" />
-            <Skeleton className="h-12 w-48 rounded-full bg-white/20" />
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="flex flex-col items-center gap-4">
             <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold drop-shadow-md">Oops!</h1>
             <p className="text-lg text-white/80 drop-shadow-sm">
               {error?.status === 403
                 ? "This menu is currently unavailable."
-                : "We couldn't find a menu for this restaurant."}
+                : "We couldn't find this menu. Please check the link."}
             </p>
           </div>
         ) : (
@@ -84,7 +80,7 @@ export default function WelcomePage() {
             </div>
 
             <p className="mb-12 text-lg sm:text-xl font-normal text-white/75 leading-relaxed drop-shadow-md max-w-sm">
-              Welcome! We're glad you're here.{" "}
+              Welcome to {restaurantName}! We're glad you're here.{" "}
               <br className="hidden sm:block" />
               Browse our menu and enjoy.
             </p>

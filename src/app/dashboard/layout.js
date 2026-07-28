@@ -5,10 +5,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight, FiCreditCard, FiAlertCircle, FiClipboard } from "react-icons/fi";
 import { LuQrCode } from "react-icons/lu";
+import useSWR from "swr";
 import useAuthStore from "@/hooks/useAuthStore";
 import ThemeToggle from "@/components/ThemeToggle";
 import AuthGuard from "@/components/AuthGuard";
 import ShareMenuModal from "@/components/ShareMenuModal";
+import { api } from "@/lib/api";
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
@@ -17,6 +19,16 @@ export default function DashboardLayout({ children }) {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+
+  // Poll for unconfirmed (pending) orders count every 30s
+  const { data: ordersData } = useSWR(
+    "/api/orders/restaurant/today",
+    api.getTodaysOrders,
+    { refreshInterval: 30000 }
+  );
+  const pendingCount = ordersData?.data
+    ? ordersData.data.filter((o) => o.status === "pending").length
+    : 0;
 
   const handleLogout = () => {
     logout();
@@ -72,14 +84,21 @@ export default function DashboardLayout({ children }) {
                 </Link>
                 <Link
                   href="/dashboard/orders"
-                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                  className={`relative flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
                     } ${pathname === "/dashboard/orders"
                       ? "bg-primary-500 text-white"
                       : "text-text-muted hover:text-text"
                     }`}
                   title="Orders"
                 >
-                  <FiClipboard size={18} className="shrink-0" />
+                  <span className="relative shrink-0">
+                    <FiClipboard size={18} />
+                    {pendingCount > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                        {pendingCount > 9 ? "9+" : pendingCount}
+                      </span>
+                    )}
+                  </span>
                   <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Orders</span>
                 </Link>
                 <Link
@@ -211,9 +230,16 @@ export default function DashboardLayout({ children }) {
           </Link>
           <Link
             href="/dashboard/orders"
-            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/orders' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+            className={`relative flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/orders' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
           >
-            <FiClipboard size={20} />
+            <span className="relative">
+              <FiClipboard size={20} />
+              {pendingCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                  {pendingCount > 9 ? "9+" : pendingCount}
+                </span>
+              )}
+            </span>
             <span className="text-[10px] font-medium uppercase tracking-wider">Orders</span>
           </Link>
           <Link

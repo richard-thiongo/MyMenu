@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import { api } from "@/lib/api";
 import { groupItemsByCategory } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
-  FiCheck, FiX, FiRefreshCw, FiMinus, FiPlus, FiClock,
+  FiCheck, FiX, FiRefreshCw, FiMinus, FiPlus, FiClock, FiTrash2,
 } from "react-icons/fi";
 import { BiDish } from "react-icons/bi";
 import { LuHistory } from "react-icons/lu";
@@ -27,10 +27,10 @@ function getGreeting() {
 // ── Status badge helper ──────────────────────────────────────────────────────
 function StatusBadge({ status }) {
   const map = {
-    pending:     { label: "Pending",     cls: "bg-amber-100  text-amber-700  dark:bg-amber-900/40  dark:text-amber-300" },
-    confirmed:   { label: "Confirmed",   cls: "bg-green-100  text-green-700  dark:bg-green-900/40  dark:text-green-300" },
-    in_progress: { label: "In Progress", cls: "bg-blue-100   text-blue-700   dark:bg-blue-900/40   dark:text-blue-300"  },
-    completed:   { label: "Completed",   cls: "bg-surface-alt text-text-muted" },
+    pending: { label: "Pending", cls: "bg-amber-100  text-amber-700  dark:bg-amber-900/40  dark:text-amber-300" },
+    confirmed: { label: "Confirmed", cls: "bg-green-100  text-green-700  dark:bg-green-900/40  dark:text-green-300" },
+    in_progress: { label: "In Progress", cls: "bg-blue-100   text-blue-700   dark:bg-blue-900/40   dark:text-blue-300" },
+    completed: { label: "Completed", cls: "bg-surface-alt text-text-muted" },
   };
   const { label, cls } = map[status] || { label: status, cls: "bg-surface-alt text-text-muted" };
   return (
@@ -114,10 +114,11 @@ function HistoryOrderRow({ entry, onView }) {
 // ═══════════════════════════════════════════════════════════════════════════
 export default function UnifiedMenuPage() {
   const params = useParams();
-  const restaurantName = decodeURIComponent(params.restaurantName);
+  const rawRestaurantName = params?.restaurantName ? (Array.isArray(params.restaurantName) ? params.restaurantName[0] : params.restaurantName) : "";
+  const restaurantName = rawRestaurantName ? decodeURIComponent(rawRestaurantName) : "";
 
   const { data: menuData, error, isLoading } = useSWR(
-    `public-menu/${restaurantName}`,
+    restaurantName ? `public-menu/${restaurantName}` : null,
     () => fetcher(restaurantName),
     { revalidateOnFocus: true }
   );
@@ -134,23 +135,64 @@ export default function UnifiedMenuPage() {
   const greeting = getGreeting();
 
   // ── Storage keys ────────────────────────────────────────────────────────
-  const storageKey   = `activeOrder_${restaurantName}`;
-  const historyKey   = `orderHistory_${restaurantName}`;
-  const todayStr     = new Date().toLocaleDateString();
+  const storageKey = `activeOrder_${restaurantName}`;
+  const historyKey = `orderHistory_${restaurantName}`;
+  const todayStr = new Date().toLocaleDateString();
 
   // ── State ────────────────────────────────────────────────────────────────
-  const [cart, setCart]                     = useState({});
+  const [cart, setCart] = useState({});
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-  const [tableNumber, setTableNumber]       = useState("");
+  const [tableNumber, setTableNumber] = useState("");
 
-  const [orderId, setOrderId]               = useState(null);
+  const [orderId, setOrderId] = useState(null);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-  const [isHistoryOpen, setIsHistoryOpen]   = useState(false);
-  const [isSubmitting, setIsSubmitting]     = useState(false);
-  const [submitError, setSubmitError]       = useState("");
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // history = array of { id, table, date, placedAt, itemNames[] }
-  const [orderHistory, setOrderHistory]     = useState([]);
+  const [orderHistory, setOrderHistory] = useState([]);
+
+  // Fly-to-cart animation state
+  const [flyingItems, setFlyingItems] = useState([]);
+  const [isCartBouncing, setIsCartBouncing] = useState(false);
+  const [lastAddedImage, setLastAddedImage] = useState(null);
+
+  // Draggable cart button state
+  const [cartPos, setCartPos] = useState(null); // null = default bottom-right corner
+  const dragRef = useRef({ active: false, startX: 0, startY: 0, originX: 0, originY: 0, moved: false });
+
+  // ── On mount: restore active order + history ─────────────────────────────
+  // Drag handlers for the floating cart button
+  const onCartPointerDown = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    dragRef.current = {
+      active: true,
+      moved: false,
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: cartPos ? cartPos.x : rect.left,
+      originY: cartPos ? cartPos.y : rect.top,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onCartPointerMove = (e) => {
+    if (!dragRef.current.active) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) dragRef.current.moved = true;
+    if (!dragRef.current.moved) return;
+    // Clamp within viewport
+    const size = 72;
+    const x = Math.min(Math.max(dragRef.current.originX + dx, 8), window.innerWidth - size - 8);
+    const y = Math.min(Math.max(dragRef.current.originY + dy, 8), window.innerHeight - size - 8);
+    setCartPos({ x, y });
+  };
+
+  const onCartPointerUp = () => {
+    dragRef.current.active = false;
+  };
 
   // ── On mount: restore active order + history ─────────────────────────────
   useEffect(() => {
@@ -185,7 +227,7 @@ export default function UnifiedMenuPage() {
     } catch {
       localStorage.removeItem(historyKey);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ── SWR: active order status ─────────────────────────────────────────────
@@ -230,7 +272,7 @@ export default function UnifiedMenuPage() {
   const updateQuantity = (item, delta) => {
     setCart((prev) => {
       const current = prev[item.food_id];
-      const newQty  = (current ? current.quantity : 0) + delta;
+      const newQty = (current ? current.quantity : 0) + delta;
       if (newQty <= 0) {
         const next = { ...prev };
         delete next[item.food_id];
@@ -246,6 +288,65 @@ export default function UnifiedMenuPage() {
         },
       };
     });
+  };
+
+  // ── Fly-to-cart dropping animation handler ──────────────────────────────
+  const handleAddToCart = (e, item) => {
+    updateQuantity(item, 1);
+
+    // Always update the last added image
+    if (item.img_url) setLastAddedImage(item.img_url);
+
+    if (!e || !e.currentTarget) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const startX = rect.left + rect.width / 2 - 25;
+    const startY = rect.top + rect.height / 2 - 25;
+
+    const targetBtn = document.getElementById("floating-cart-btn");
+    const targetRect = targetBtn
+      ? targetBtn.getBoundingClientRect()
+      : { left: window.innerWidth - 80, top: window.innerHeight - 80, width: 64, height: 64 };
+
+    const targetX = targetRect.left + targetRect.width / 2 - 25;
+    const targetY = targetRect.top + targetRect.height / 2 - 25;
+
+    const flyId = Date.now() + Math.random();
+
+    const newFlyItem = {
+      id: flyId,
+      imgUrl: item.img_url,
+      currentX: startX,
+      currentY: startY,
+      scale: 1,
+      opacity: 1,
+      rotation: 0,
+    };
+
+    setFlyingItems((prev) => [...prev, newFlyItem]);
+
+    setTimeout(() => {
+      setFlyingItems((prev) =>
+        prev.map((f) =>
+          f.id === flyId
+            ? {
+              ...f,
+              currentX: targetX,
+              currentY: targetY,
+              scale: 0.25,
+              opacity: 0.8,
+              rotation: 360,
+            }
+            : f
+        )
+      );
+    }, 30);
+
+    setTimeout(() => {
+      setFlyingItems((prev) => prev.filter((f) => f.id !== flyId));
+      setIsCartBouncing(true);
+      setTimeout(() => setIsCartBouncing(false), 350);
+    }, 730);
   };
 
   const updateInstructions = (food_id, text) => {
@@ -296,10 +397,10 @@ export default function UnifiedMenuPage() {
 
       // Append to history
       const newEntry = {
-        id:        newOrderId,
-        table:     tableNumber,
-        date:      todayStr,
-        placedAt:  new Date().toISOString(),
+        id: newOrderId,
+        table: tableNumber,
+        date: todayStr,
+        placedAt: new Date().toISOString(),
         itemNames: Object.values(cart).map((c) => c.item.food_name),
       };
       saveHistory([newEntry, ...orderHistory]);
@@ -378,6 +479,41 @@ export default function UnifiedMenuPage() {
   return (
     <div className="flex min-h-screen flex-col bg-surface text-text pb-24 relative">
       {themeColor && <style>{`:root { --theme-primary: ${themeColor}; }`}</style>}
+      {/* Conic-gradient rotating ring for cart button — all colors visible simultaneously */}
+      <style>{`
+        @keyframes ring-spin {
+          to { transform: rotate(360deg); }
+        }
+        .neon-ring {
+          background: conic-gradient(
+            from 0deg,
+            #39ff14,
+            #00ffff 20%,
+            #0099ff 38%,
+            #cc00ff 55%,
+            #ff0066 70%,
+            #ffcc00 85%,
+            #39ff14 100%
+          );
+          animation: ring-spin 5s linear infinite;
+          border-radius: 50%;
+        }
+        @keyframes heartbeat {
+          0%, 100% { transform: scale(1); }
+          15%       { transform: scale(1.07); }
+          30%       { transform: scale(1); }
+          45%       { transform: scale(1.04); }
+          60%       { transform: scale(1); }
+        }
+        .cart-heartbeat {
+          animation: heartbeat 2.4s ease-in-out infinite;
+        }
+        .cart-bounce {
+          animation: none;
+          transform: scale(1.3);
+          transition: transform 0.2s ease;
+        }
+      `}</style>
 
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-30 border-b border-border bg-surface/90 px-4 py-3 sm:py-4 backdrop-blur-md">
@@ -388,21 +524,32 @@ export default function UnifiedMenuPage() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* Clock / History button — only shown when history exists */}
+            {/* History button — glass overlay + history icon always visible */}
             {hasHistory && (
               <button
                 id="history-clock-btn"
                 onClick={() => setIsHistoryOpen(true)}
                 aria-label="View order history"
-                className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border-2 border-primary-400 bg-primary-500/10 text-primary-500 shadow-sm hover:bg-primary-500/20 active:scale-95 transition-all"
+                className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden shadow-md active:scale-95 transition-all ring-1 ring-border"
               >
-                {/* Pulsing ring when there is an active order */}
-                {orderId && (
-                  <span className="absolute inset-0 rounded-full animate-ping bg-primary-400/30 pointer-events-none" />
+                {/* Background — last added image or gradient fallback */}
+                {lastAddedImage ? (
+                  <img
+                    src={lastAddedImage}
+                    alt="Last ordered item"
+                    className="absolute inset-0 h-full w-full rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600" />
                 )}
-                <ClockFace size={26} />
+                {/* Glass overlay */}
+                <div className="absolute inset-0 rounded-full bg-black/35 backdrop-blur-[2px]" />
+                {/* History icon */}
+                <span className="relative z-10 text-white">
+                  <LuHistory size={18} />
+                </span>
                 {/* Badge showing count */}
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-500 text-[9px] font-bold text-white shadow">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary-500 text-[9px] font-bold text-white shadow z-20">
                   {orderHistory.length}
                 </span>
               </button>
@@ -487,13 +634,13 @@ export default function UnifiedMenuPage() {
                                   <span className="font-bold text-text min-w-[1rem] text-center text-sm">
                                     {cartObj.quantity}
                                   </span>
-                                  <button onClick={() => updateQuantity(item, 1)} className="p-1 text-primary-500 hover:bg-primary-50 rounded-full">
+                                  <button onClick={(e) => handleAddToCart(e, item)} className="p-1 text-primary-500 hover:bg-primary-50 rounded-full">
                                     <FiPlus size={14} />
                                   </button>
                                 </div>
                               ) : (
                                 <button
-                                  onClick={() => updateQuantity(item, 1)}
+                                  onClick={(e) => handleAddToCart(e, item)}
                                   className="rounded-full bg-primary-500/80 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-bold text-white shadow-sm hover:bg-primary-600/90 transition-colors active:scale-95"
                                 >
                                   Order
@@ -514,19 +661,69 @@ export default function UnifiedMenuPage() {
 
       {/* ── Floating cart button ─────────────────────────────────────────── */}
       {totalCartItems > 0 && !isCartModalOpen && (
-        <button
-          onClick={() => setIsCartModalOpen(true)}
-          className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 group flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary-500 text-white shadow-lg shadow-primary-500/40 transition-transform hover:scale-105 active:scale-95"
+        <div
+          id="floating-cart-btn"
+          className={`fixed z-40 touch-none select-none ${isCartBouncing ? "cart-bounce" : "cart-heartbeat"}`}
+          style={
+            cartPos
+              ? { left: cartPos.x, top: cartPos.y, bottom: "auto", right: "auto" }
+              : { bottom: "1.5rem", right: "1.5rem" }
+          }
+          onPointerDown={onCartPointerDown}
+          onPointerMove={onCartPointerMove}
+          onPointerUp={onCartPointerUp}
         >
-          <div className="absolute inset-0 rounded-full border-[3px] border-dashed border-green-400 animate-[spin_4s_linear_infinite]" />
-          <div className="relative z-10">
-            <BiDish size={24} />
-            <span className="absolute -top-3 -right-4 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-red-500 text-[10px] sm:text-xs font-bold text-white shadow-sm border-2 border-white/20">
-              {totalCartItems}
-            </span>
-          </div>
-        </button>
+          {/* Conic-gradient ring — sits outside button */}
+          <div
+            className="neon-ring pointer-events-none absolute"
+            style={{ inset: "-2px" }}
+          />
+          <button
+            onClick={() => {
+              if (!dragRef.current.moved) setIsCartModalOpen(true);
+            }}
+            className="relative z-10 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary-500 text-white shadow-lg shadow-primary-500/40 overflow-hidden cursor-grab active:cursor-grabbing transition-shadow"
+          >
+            {lastAddedImage ? (
+              <img
+                src={lastAddedImage}
+                alt="Last added item"
+                className="absolute inset-0 h-full w-full rounded-full object-cover"
+              />
+            ) : (
+              <div className="relative z-10">
+                <BiDish size={24} />
+              </div>
+            )}
+          </button>
+          {/* Count badge — on wrapper so overflow-hidden on button never clips it */}
+          <span className="pointer-events-none absolute -top-1 -right-1 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[11px] font-bold text-white shadow-md">
+            {totalCartItems}
+          </span>
+        </div>
       )}
+
+      {/* ── Flying Food Image Overlay Elements ───────────────────────────── */}
+      {flyingItems.map((fly) => (
+        <div
+          key={fly.id}
+          className="fixed z-50 pointer-events-none rounded-full overflow-hidden shadow-2xl border-2 border-primary-500 bg-surface flex items-center justify-center transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1)"
+          style={{
+            left: `${fly.currentX}px`,
+            top: `${fly.currentY}px`,
+            width: "48px",
+            height: "48px",
+            transform: `scale(${fly.scale}) rotate(${fly.rotation}deg)`,
+            opacity: fly.opacity,
+          }}
+        >
+          {fly.imgUrl ? (
+            <img src={fly.imgUrl} alt="Ordering" className="h-full w-full object-cover rounded-full" />
+          ) : (
+            <BiDish className="text-primary-500" size={26} />
+          )}
+        </div>
+      ))}
 
       {/* ── Cart modal ───────────────────────────────────────────────────── */}
       {isCartModalOpen && (
@@ -609,8 +806,6 @@ export default function UnifiedMenuPage() {
                 {/* Animated progress ring */}
                 <div className="flex justify-center mb-5">
                   <div className="relative h-20 w-20 sm:h-24 sm:w-24">
-                    {/* Outer pulsing glow */}
-                    <span className="absolute inset-0 rounded-full bg-primary-400/20 animate-ping" />
                     {/* SVG ring */}
                     <svg className="absolute inset-0 -rotate-90" viewBox="0 0 80 80" aria-hidden="true">
                       <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor"
@@ -629,10 +824,10 @@ export default function UnifiedMenuPage() {
                 </div>
 
                 <h2 className="text-xl sm:text-2xl font-extrabold text-text mb-2">
-                  Waiting for Confirmation
+                  Please Wait as We Confirm
                 </h2>
                 <p className="text-sm text-text-muted mb-5">
-                  Your order has been received. The restaurant is reviewing it now.
+                  We have received your order and we are reviewing it right now.
                 </p>
 
                 {/* Animated bouncing dots */}
@@ -646,19 +841,57 @@ export default function UnifiedMenuPage() {
                   ))}
                 </div>
 
-                {/* Shimmer skeleton: item list placeholder */}
-                <div className="text-left bg-surface-alt rounded-xl p-4 mb-6 space-y-3">
-                  <div className="h-3 w-24 rounded-full bg-border animate-pulse" />
-                  {[0, 1, 2].map((i) => (
-                    <div key={i} className="flex justify-between items-center gap-3">
-                      <div className="flex-1 space-y-1.5">
-                        <div className="h-2.5 rounded-full bg-border animate-pulse" style={{ width: `${60 + i * 12}%` }} />
-                        <div className="h-2 rounded-full bg-border/60 animate-pulse w-1/3" />
+                {/* Real order items list */}
+                {orderStatusData?.items?.length > 0 ? (
+                  <div className="text-left bg-surface-alt rounded-xl p-4 mb-6 max-h-44 overflow-y-auto">
+                    <h3 className="font-bold text-text border-b border-border pb-2 mb-3 text-sm flex justify-between items-center">
+                      <span>Your Order</span>
+                      {(orderStatusData?.table_number || tableNumber) && (
+                        <span className="text-xs font-normal text-text-muted">Table {orderStatusData?.table_number || tableNumber}</span>
+                      )}
+                    </h3>
+                    <ul className="space-y-2.5">
+                      {orderStatusData.items.map((item, idx) => (
+                        <li key={idx} className="flex justify-between items-start text-xs sm:text-sm">
+                          <div className="flex-1">
+                            <span className="font-semibold text-text">
+                              {item.quantity}x {item.food_name || item.item_name || "Item"}
+                            </span>
+                            {item.special_instructions && (
+                              <p className="text-text-muted text-xs mt-0.5">Note: {item.special_instructions}</p>
+                            )}
+                          </div>
+                          {item.price && (
+                            <span className="font-semibold text-primary-600 ml-3">
+                              KES {item.price * item.quantity}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  (() => {
+                    const historyMatch = orderHistory.find((o) => o.id === orderId);
+                    if (!historyMatch) return null;
+                    return (
+                      <div className="text-left bg-surface-alt rounded-xl p-4 mb-6">
+                        <h3 className="font-bold text-text border-b border-border pb-2 mb-3 text-sm flex justify-between items-center">
+                          <span>Your Order</span>
+                          <span className="text-xs font-normal text-text-muted">Table {historyMatch.table}</span>
+                        </h3>
+                        <ul className="space-y-1.5 text-xs sm:text-sm">
+                          {historyMatch.itemNames.map((name, idx) => (
+                            <li key={idx} className="text-text font-medium flex items-center gap-2">
+                              <span className="h-1.5 w-1.5 rounded-full bg-primary-500" />
+                              {name}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <div className="h-2.5 w-12 rounded-full bg-border animate-pulse" />
-                    </div>
-                  ))}
-                </div>
+                    );
+                  })()
+                )}
 
                 <div className="flex flex-col gap-2.5">
                   <button
@@ -681,10 +914,9 @@ export default function UnifiedMenuPage() {
             {(orderStatusData?.status === "confirmed" || orderStatusData?.status === "in_progress" || orderStatusData?.status === "completed") && (
               <div className="p-5 sm:p-6 text-center">
 
-                {/* Success burst */}
+                {/* Success icon */}
                 <div className="flex justify-center mb-4">
                   <div className="relative h-16 w-16 sm:h-20 sm:w-20">
-                    <span className="absolute inset-0 rounded-full bg-green-400/20 animate-ping" />
                     <div className="absolute inset-0 flex items-center justify-center rounded-full bg-green-500/15 text-green-500">
                       <FiCheck size={32} />
                     </div>
@@ -693,7 +925,7 @@ export default function UnifiedMenuPage() {
 
                 <h2 className="text-xl sm:text-2xl font-extrabold text-text mb-2">Order Confirmed!</h2>
                 <p className="text-sm sm:text-base text-text-muted mb-5">
-                  The restaurant has confirmed your order. It will be ready soon!
+                  We have confirmed your order! We are preparing it for you now.
                 </p>
 
                 {/* Items list */}
@@ -743,62 +975,68 @@ export default function UnifiedMenuPage() {
         </div>
       )}
 
-      {/* ── History Modal ────────────────────────────────────────────────── */}
+      {/* ── History Modal ─────────────────────────────────────────────────── */}
       {isHistoryOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-surface rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
-            {/* Modal header */}
-            <div className="p-4 border-b border-border flex items-center justify-between bg-surface-alt">
-              <div className="flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500/10 text-primary-500">
-                  <LuHistory size={16} />
-                </span>
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setIsHistoryOpen(false)}
+        >
+          <div
+            className="w-full sm:max-w-md bg-surface rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[75vh] sm:max-h-[80vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Pull handle — mobile only */}
+            <div className="flex justify-center pt-3 pb-1 sm:hidden">
+              <div className="h-1 w-10 rounded-full bg-border" />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 pt-4 pb-4 border-b border-border">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-500/10 text-primary-500">
+                  <LuHistory size={18} />
+                </div>
                 <div>
-                  <h2 className="font-bold text-text text-base sm:text-lg leading-tight">Order History</h2>
-                  <p className="text-xs text-text-muted">Today&apos;s orders</p>
+                  <h2 className="font-bold text-text text-base leading-tight">Order History</h2>
+                  <p className="text-xs text-text-muted">{orderHistory.length} order{orderHistory.length !== 1 ? "s" : ""} today</p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsHistoryOpen(false)}
-                className="p-2 text-text-muted hover:text-text rounded-full hover:bg-surface"
-              >
-                <FiX size={20} />
-              </button>
-            </div>
-
-            {/* Decorative clock */}
-            <div className="flex justify-center pt-5 pb-2 text-primary-400">
-              <ClockFace size={56} />
-            </div>
-            <p className="text-center text-xs text-text-muted mb-4 px-4">
-              Showing all orders you placed today at <span className="font-semibold">{restaurantName}</span>
-            </p>
-
-            {/* List */}
-            <div className="overflow-y-auto px-4 pb-2 flex-1">
-              {orderHistory.length === 0 ? (
-                <p className="text-center text-sm text-text-muted py-8">No orders yet today.</p>
-              ) : (
-                orderHistory.map((entry) => (
-                  <HistoryOrderRow key={entry.id} entry={entry} onView={viewOrderFromHistory} />
-                ))
-              )}
-            </div>
-
-            {/* Sticky footer — clear button */}
-            {orderHistory.length > 0 && (
-              <div className="p-4 border-t border-border bg-surface-alt shrink-0">
-                <p className="text-xs text-text-muted text-center mb-3">
-                  History clears automatically at midnight.
-                </p>
+              <div className="flex items-center gap-1">
+                {orderHistory.length > 0 && (
+                  <button
+                    onClick={handleClearHistory}
+                    title="Clear history"
+                    aria-label="Clear order history"
+                    className="p-2 text-red-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-colors"
+                  >
+                    <FiTrash2 size={16} />
+                  </button>
+                )}
                 <button
-                  onClick={handleClearHistory}
-                  className="w-full rounded-xl border border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/40 py-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors flex items-center justify-center gap-2"
+                  onClick={() => setIsHistoryOpen(false)}
+                  className="p-2 text-text-muted hover:text-text rounded-xl hover:bg-surface-alt transition-colors"
+                  aria-label="Close"
                 >
-                  <FiX size={15} /> Clear History
+                  <FiX size={18} />
                 </button>
               </div>
-            )}
+            </div>
+
+            {/* Order list */}
+            <div className="overflow-y-auto flex-1 px-4 py-3 pb-6">
+              {orderHistory.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-text-muted gap-3">
+                  <LuHistory size={36} className="opacity-30" />
+                  <p className="text-sm">No orders placed today yet.</p>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  {orderHistory.map((entry) => (
+                    <HistoryOrderRow key={entry.id} entry={entry} onView={viewOrderFromHistory} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
