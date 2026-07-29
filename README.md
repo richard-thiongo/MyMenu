@@ -28,14 +28,14 @@ This repository contains the **frontend** built with **Next.js (App Router)** an
 ### How It Works
 
 1. **Landing Page** — Visitors see a fully animated branded landing page with smooth scroll-reveal sections covering Services, Features, Use Cases, and Pricing. A sticky header with desktop navigation links and a mobile sidebar are included.
-2. **Sign Up** — A restaurant owner registers by providing a restaurant name, location, password, and brand color. They must accept the Terms and Conditions and Privacy Policy before submitting.
-3. **Sign In** — Owners log in with their restaurant name and password. A "Remember Me" option saves credentials locally for faster future logins.
+2. **Sign Up** — A restaurant owner registers through a 5-step interactive wizard by providing their restaurant name, location, brand color, email address, and a secure password. They must accept the Terms and Conditions and Privacy Policy before submitting.
+3. **Sign In** — Owners log in with their restaurant name and password. A "Remember Me" option saves credentials locally for faster future logins. A "Forgot Password?" link allows users to request a secure password reset link via email.
 4. **Dashboard** — After signing in, the owner reaches their private dashboard. They can:
    - Receive and manage **Live Orders** (toggle ordering on/off, view incoming orders in real time, and confirm them)
    - Create and manage **categories** (e.g., Starters, Mains, Desserts)
    - Add **food items** (with images, prices, and descriptions) inside each category
    - Open a **Share / QR Code** modal from the header to get a shareable public link
-   - Visit **Settings** to update their brand color (with live preview) or reset their password
+   - Visit **Settings** to update their brand color (with live preview) or request a password reset link to their registered email
    - Go to **Payments** to view their plan status and payment instructions
    - On mobile, navigate via a **bottom tab bar** (Menu, Billing, Settings) and log out from the header
 5. **Public Menu Page** — Anyone with the link (`/[restaurantName]`) can browse the menu. Categories are listed first; clicking a category shows its food items. The entire page is themed with the restaurant's chosen brand color. Customers can **place orders** directly from their device, track their order status via a rich real-time loading UI, and view their **daily order history** (persisted locally across refreshes). A **bottom tab navigation** is present on mobile for quick navigation.
@@ -147,9 +147,17 @@ src/app/
 │                                  #   localStorage for auto-fill on return visits
 │
 ├── signup/
-│   └── page.js                    # Sign-up page — registration form: restaurant name,
-│                                  #   location, password, brand color picker, and a
-│                                  #   mandatory Terms & Privacy consent checkbox
+│   └── page.js                    # Sign-up page — 5-step registration wizard collecting:
+│                                  #   restaurant name, location, brand color picker, email,
+│                                  #   password, and mandatory Terms & Privacy consent
+│
+├── forgot-password/
+│   └── page.js                    # Forgot password page — asks for registered email and
+│                                  #   triggers a secure 1-hour reset link via Resend API
+│
+├── reset-password/
+│   └── page.js                    # Reset password page — captures the token from the URL,
+│                                  #   allows setting a new password if the token is valid
 │
 ├── terms/
 │   └── page.js                    # Terms and Conditions page — Kenya Data Protection
@@ -190,7 +198,7 @@ src/app/
         └── page.js                # Settings page — accordion-style layout with two
                                    #   sections: "Brand Color" (live preview + color picker
                                    #   with a sticky Save button) and "Reset Password"
-                                   #   (with show/hide toggle and a confirmation modal);
+                                   #   (which requests a reset link via email)
                                    #   brand color updates use setState to surgically patch
                                    #   only primaryColor without corrupting other auth state
 ```

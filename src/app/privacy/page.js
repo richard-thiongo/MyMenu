@@ -53,6 +53,7 @@ export default function PrivacyPage() {
             <h3 className="font-semibold text-text mb-2">From Business Owners (Registered Users)</h3>
             <ul className="list-disc list-inside space-y-2 ml-2 mb-5">
               <li><strong className="text-text">Restaurant Name</strong> — used as your unique identifier and public menu URL slug</li>
+              <li><strong className="text-text">Email Address</strong> — used for account recovery, password resets, and critical platform notifications</li>
               <li><strong className="text-text">Location</strong> — the city or area your business operates in</li>
               <li><strong className="text-text">Password</strong> — stored as a securely hashed value; we never store plain-text passwords</li>
               <li><strong className="text-text">Brand colour preference</strong> — used to theme your public menu page</li>
@@ -134,7 +135,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold text-text mb-3">9. Third-Party Services</h2>
             <p>
-              Our payment verification is conducted manually via M-PESA. We do not directly integrate with or transmit your M-PESA data to Safaricom. You submit a transaction code to us as confirmation. Images uploaded to the platform may be stored via our backend hosting service. We use only reputable infrastructure providers.
+              Our payment verification is conducted manually via M-PESA. We do not directly integrate with or transmit your M-PESA data to Safaricom. You submit a transaction code to us as confirmation. Images uploaded to the platform may be stored via our backend hosting service. We use the Resend API to securely deliver essential transactional emails (e.g., password reset links). We use only reputable infrastructure providers.
             </p>
           </section>
 

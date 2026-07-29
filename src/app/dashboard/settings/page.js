@@ -44,11 +44,10 @@ export default function SettingsPage() {
   const { primaryColor, restaurantName, login, token, refreshToken, isPaid, subscriptionExpiresAt } = useAuthStore();
   const [color, setColor] = useState(primaryColor || "#1800ad");
   const [isLoading, setIsLoading] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [expandedSection, setExpandedSection] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
   const { showLoading, hideLoading, showError } = useStatus();
 
   // Sync if store changes (e.g. after first load)
@@ -81,8 +80,8 @@ export default function SettingsPage() {
 
   const initiatePasswordReset = (e) => {
     e.preventDefault();
-    if (newPassword.length < 8) {
-      showError("Password must be at least 8 characters.");
+    if (!resetEmail) {
+      showError("Please enter your email address.");
       return;
     }
     setIsResetConfirmOpen(true);
@@ -91,35 +90,14 @@ export default function SettingsPage() {
   const confirmPasswordReset = async () => {
     setIsResetConfirmOpen(false);
     setIsPasswordLoading(true);
-    showLoading("Resetting password...");
+    showLoading("Sending reset link...");
     try {
-      await api.resetPassword({ restaurant_name: restaurantName, new_password: newPassword });
-      
-      // Automatically log in with the new password to update authStore token
-      const authRes = await api.login({ restaurant_name: restaurantName, password: newPassword });
-      login(authRes.data.token, authRes.data.restaurant.restaurant_name, authRes.data.restaurant.primary_color);
-
-      // Update remembered credentials if they exist
-      const saved = localStorage.getItem("mymenu-remembered-credentials");
-      if (saved) {
-        try {
-          const creds = JSON.parse(saved);
-          if (creds.restaurant_name === restaurantName) {
-            localStorage.setItem("mymenu-remembered-credentials", JSON.stringify({
-              ...creds,
-              password: newPassword
-            }));
-          }
-        } catch (e) {
-          // ignore
-        }
-      }
-
-      toast.success("Password reset successfully!");
-      setNewPassword("");
+      await api.forgotPassword(resetEmail);
+      toast.success("Reset link sent! Please check your email inbox.");
+      setResetEmail("");
       setExpandedSection(null);
     } catch (err) {
-      showError(err.message || "Failed to reset password.");
+      showError(err.message || "Failed to send reset link.");
     } finally {
       setIsPasswordLoading(false);
       hideLoading();
@@ -201,44 +179,36 @@ export default function SettingsPage() {
           <form onSubmit={initiatePasswordReset} className="space-y-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-text-muted">
-                New Password
+                Email Address
               </label>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <FiLock className="h-5 w-5 text-text-muted" />
                 </div>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type="email"
                   required
-                  minLength={8}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
                   disabled={isPasswordLoading}
                   className="block w-full rounded-lg border border-border bg-surface pl-10 pr-10 py-3 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                  placeholder="Enter new password"
+                  placeholder="e.g. hello@pastapalace.com"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text transition-colors"
-                >
-                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-                </button>
               </div>
             </div>
 
             <div className="sticky bottom-[72px] md:bottom-0 z-30 flex justify-end p-4 -mx-6 -mb-6 mt-4 border-t border-border bg-surface-alt/95 backdrop-blur-md rounded-b-2xl shadow-[0_-8px_10px_-4px_rgba(0,0,0,0.05)]">
               <button
                 type="submit"
-                disabled={isPasswordLoading || newPassword.length < 8}
-                className="flex w-full sm:w-auto justify-center items-center rounded-lg bg-red-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-red-600 shadow-md disabled:opacity-70"
+                disabled={isPasswordLoading || !resetEmail}
+                className="flex w-full sm:w-auto justify-center items-center rounded-lg bg-primary-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-600 shadow-md disabled:opacity-70"
               >
                 {isPasswordLoading ? (
                   <FiLoader className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <FiSave className="mr-2 h-4 w-4" />
                 )}
-                Reset Password
+                Send Reset Link
               </button>
             </div>
           </form>
@@ -249,9 +219,9 @@ export default function SettingsPage() {
       {isResetConfirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity">
           <div className="w-full max-w-sm rounded-2xl bg-surface p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-text mb-2">Confirm Reset</h3>
+            <h3 className="text-xl font-bold text-text mb-2">Send Reset Link?</h3>
             <p className="text-sm text-text-muted mb-6">
-              Are you sure you want to change your password? This will overwrite your current password.
+              Are you sure you want to send a password reset link to <span className="font-medium text-text">{resetEmail}</span>?
             </p>
             <div className="flex items-center gap-3">
               <button
