@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { FiLock, FiUser, FiMapPin, FiLoader, FiEye, FiEyeOff, FiDroplet, FiX, FiMail, FiArrowRight, FiArrowLeft, FiCheck } from "react-icons/fi";
+import emailValidator from "email-validator";
 import { api } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
 import ColorPicker from "@/components/ColorPicker";
@@ -64,9 +65,15 @@ export default function SignupPage() {
       return;
     }
     // Step 3 (Color) always has a default value
-    if (currentStep === 4 && !formData.restaurant_email) {
-      showError("Please enter your email address.");
-      return;
+    if (currentStep === 4) {
+      if (!formData.restaurant_email) {
+        showError("Please enter your email address.");
+        return;
+      }
+      if (!emailValidator.validate(formData.restaurant_email)) {
+        showError("Please enter a valid email address.");
+        return;
+      }
     }
     if (currentStep < totalSteps) {
       setCurrentStep((prev) => prev + 1);

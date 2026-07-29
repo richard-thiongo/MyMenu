@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import emailValidator from "email-validator";
 import { FiMail, FiLoader, FiCheckCircle } from "react-icons/fi";
 import { api } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -17,6 +18,10 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     if (!email) {
       showError("Please enter your email address.");
+      return;
+    }
+    if (!emailValidator.validate(email)) {
+      showError("Please enter a valid email address.");
       return;
     }
 
