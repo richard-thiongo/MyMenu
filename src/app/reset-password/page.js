@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -9,7 +9,7 @@ import { api } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useStatus } from "@/providers/StatusProvider";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -167,5 +167,17 @@ export default function ResetPasswordPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-surface text-text">
+        <FiLoader className="h-8 w-8 animate-spin text-primary-500" />
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
