@@ -182,6 +182,9 @@ export default function SigninPage() {
                     Remember me
                   </label>
                 </div>
+                <Link href="/forgot-password" className="text-sm font-medium text-primary-500 hover:text-primary-600">
+                  Forgot password?
+                </Link>
               </div>
             </div>
 

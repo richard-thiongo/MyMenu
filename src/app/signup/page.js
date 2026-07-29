@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { FiLock, FiUser, FiMapPin, FiLoader, FiEye, FiEyeOff, FiDroplet, FiX } from "react-icons/fi";
+import { FiLock, FiUser, FiMapPin, FiLoader, FiEye, FiEyeOff, FiDroplet, FiX, FiMail } from "react-icons/fi";
 import { api } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
 import ColorPicker from "@/components/ColorPicker";
@@ -26,6 +26,7 @@ export default function SignupPage() {
   
   const [formData, setFormData] = useState({
     restaurant_name: "",
+    restaurant_email: "",
     location: "",
     password: "",
     primary_color: "#6366f1",
@@ -53,7 +54,7 @@ export default function SignupPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.restaurant_name || !formData.location || !formData.password) {
+    if (!formData.restaurant_name || !formData.restaurant_email || !formData.location || !formData.password) {
       showError("Please fill in all fields.");
       return;
     }
@@ -122,6 +123,27 @@ export default function SignupPage() {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-text-muted" htmlFor="restaurant_email">
+                  Email Address
+                </label>
+                <div className="relative mt-1">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <FiMail className="h-5 w-5 text-text-muted" />
+                  </div>
+                  <input
+                    id="restaurant_email"
+                    name="restaurant_email"
+                    type="email"
+                    required
+                    className="block w-full rounded-lg border border-border bg-surface px-10 py-3 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="e.g. hello@pastapalace.com"
+                    value={formData.restaurant_email}
+                    onChange={(e) => setFormData({ ...formData, restaurant_email: e.target.value })}
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-text-muted" htmlFor="location">
                   Location

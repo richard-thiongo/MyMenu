@@ -79,6 +79,16 @@ export const api = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+  forgotPassword: (restaurant_email) =>
+    fetchWithAuth("/api/restaurants/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ restaurant_email }),
+    }),
+  resetPasswordWithToken: (token, new_password) =>
+    fetchWithAuth("/api/restaurants/reset-password-token", {
+      method: "POST",
+      body: JSON.stringify({ token, new_password }),
+    }),
   submitPayment: (data) =>
     fetchWithAuth("/api/restaurants/submit-payment", {
       method: "POST",
