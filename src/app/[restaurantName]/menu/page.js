@@ -616,7 +616,7 @@ export default function UnifiedMenuPage() {
 
   // ════════════════════════════════════════════════════════════════════════
   return (
-    <div className="flex min-h-screen flex-col bg-surface text-text pb-24 relative">
+    <div className="min-h-screen bg-surface text-text pb-24 relative">
       {themeColor && <style>{`:root { --theme-primary: ${themeColor}; }`}</style>}
       {/* Conic-gradient rotating ring for cart button — all colors visible simultaneously */}
       <style>{`
