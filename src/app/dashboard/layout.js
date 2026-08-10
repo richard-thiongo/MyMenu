@@ -21,14 +21,15 @@ export default function DashboardLayout({ children }) {
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   // Poll for unconfirmed (pending) orders count every 30s
-  const { data: ordersData } = useSWR(
-    "/api/orders/restaurant/today",
-    api.getTodaysOrders,
-    { refreshInterval: 30000 }
-  );
-  const pendingCount = ordersData?.data
-    ? ordersData.data.filter((o) => o.status === "pending").length
-    : 0;
+  // const { data: ordersData } = useSWR(
+  //   "/api/orders/restaurant/today",
+  //   api.getTodaysOrders,
+  //   { refreshInterval: 30000 }
+  // );
+  // const pendingCount = ordersData?.data
+  //   ? ordersData.data.filter((o) => o.status === "pending").length
+  //   : 0;
+  const pendingCount = 0;
 
   const handleLogout = () => {
     logout();
@@ -82,7 +83,7 @@ export default function DashboardLayout({ children }) {
                   <FiCoffee size={18} className="shrink-0" />
                   <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Categories</span>
                 </Link>
-                <Link
+                {/* <Link
                   href="/dashboard/orders"
                   className={`relative flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
                     } ${pathname === "/dashboard/orders"
@@ -100,7 +101,7 @@ export default function DashboardLayout({ children }) {
                     )}
                   </span>
                   <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Orders</span>
-                </Link>
+                </Link> */}
                 <Link
                   href="/dashboard/settings"
                   className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
@@ -228,7 +229,7 @@ export default function DashboardLayout({ children }) {
             <FiCoffee size={20} />
             <span className="text-[10px] font-medium uppercase tracking-wider">Menu</span>
           </Link>
-          <Link
+          {/* <Link
             href="/dashboard/orders"
             className={`relative flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/orders' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
           >
@@ -241,7 +242,7 @@ export default function DashboardLayout({ children }) {
               )}
             </span>
             <span className="text-[10px] font-medium uppercase tracking-wider">Orders</span>
-          </Link>
+          </Link> */}
           <Link
             href="/dashboard/payments"
             className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/payments' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}

@@ -73,7 +73,7 @@ export default function PaymentsPage() {
         <div className="mb-6">
           <h3 className="mb-2 text-lg font-bold text-text">How to Pay</h3>
           <p className="text-sm text-text-muted">
-            Subscription is <strong className="text-primary-500">Ksh 2,300/month</strong> (or <strong className="text-primary-500">Ksh 3,000/month</strong> if you have over 90 food items).
+            Subscription is <strong className="text-primary-500">Ksh 1,999/month</strong>.
           </p>
         </div>
 
@@ -128,53 +128,57 @@ export default function PaymentsPage() {
           </div>
         </div>
 
-        <h3 className="mb-4 text-lg font-bold text-text">Verify Payment</h3>
+        {!isSubscriptionActive && (
+          <>
+            <h3 className="mb-4 text-lg font-bold text-text">Verify Payment</h3>
 
-        {isSubmitted ? (
-          <div className="text-center p-6 border border-dashed border-primary-500/50 rounded-lg bg-primary-500/5">
-            <FiCheckCircle className="mx-auto h-10 w-10 text-primary-500 mb-3" />
-            <h4 className="text-lg font-medium text-text">Submission Received</h4>
-            <p className="text-sm text-text-muted mt-1">We have sent your details to the admin. Your subscription will be activated shortly upon verification.</p>
-            <button
-              onClick={() => setIsSubmitted(false)}
-              className="mt-4 text-primary-500 text-sm hover:underline"
-            >
-              Submit another code
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold text-text mb-2" htmlFor="paymentMessage">
-                Paste Transaction Code or SMS Here
-              </label>
-              <textarea
-                id="paymentMessage"
-                rows={4}
-                className="w-full rounded-lg border-2 border-primary-500/30 bg-surface-alt p-4 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y shadow-inner"
-                placeholder="Paste here..."
-                value={paymentMessage}
-                onChange={(e) => setPaymentMessage(e.target.value)}
-                disabled={isLoading}
-                required
-              />
-            </div>
+            {isSubmitted ? (
+              <div className="text-center p-6 border border-dashed border-primary-500/50 rounded-lg bg-primary-500/5">
+                <FiCheckCircle className="mx-auto h-10 w-10 text-primary-500 mb-3" />
+                <h4 className="text-lg font-medium text-text">Submission Received</h4>
+                <p className="text-sm text-text-muted mt-1">We have sent your details to the admin. Your subscription will be activated shortly upon verification.</p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-4 text-primary-500 text-sm hover:underline"
+                >
+                  Submit another code
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-bold text-text mb-2" htmlFor="paymentMessage">
+                    Paste Transaction Code or SMS Here
+                  </label>
+                  <textarea
+                    id="paymentMessage"
+                    rows={4}
+                    className="w-full rounded-lg border-2 border-primary-500/30 bg-surface-alt p-4 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y shadow-inner"
+                    placeholder="Paste here..."
+                    value={paymentMessage}
+                    onChange={(e) => setPaymentMessage(e.target.value)}
+                    disabled={isLoading}
+                    required
+                  />
+                </div>
 
-            <button
-              type="submit"
-              disabled={isLoading || !paymentMessage.trim()}
-              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
-            >
-              {isLoading ? (
-                <>
-                  <FiLoader className="animate-spin h-4 w-4" />
-                  Submitting...
-                </>
-              ) : (
-                "Submit Payment Verification"
-              )}
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={isLoading || !paymentMessage.trim()}
+                  className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-600 disabled:opacity-50"
+                >
+                  {isLoading ? (
+                    <>
+                      <FiLoader className="animate-spin h-4 w-4" />
+                      Submitting...
+                    </>
+                  ) : (
+                    "Submit Payment Verification"
+                  )}
+                </button>
+              </form>
+            )}
+          </>
         )}
       </div>
     </div>

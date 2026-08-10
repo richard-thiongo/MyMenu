@@ -128,33 +128,60 @@ export default function SignupPage() {
   const progressPercent = ((currentStep) / totalSteps) * 100;
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface text-text">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4">
-        <Link href="/" className="font-logo text-3xl text-primary-500">
-          Kenyan.menu
-        </Link>
-        <ThemeToggle />
-      </header>
+    <div className="flex min-h-screen bg-surface text-text overflow-hidden">
+      {/* Left Side - Image/Branding (Hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-primary-900 flex-col justify-center items-center overflow-hidden">
+        <img 
+          src="/retaurant 2.jpg" 
+          alt="Restaurant background" 
+          className="absolute inset-0 h-full w-full object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/40 to-transparent" />
+        
+        <div className="relative z-10 max-w-lg p-12 text-center">
+          <h1 className="text-4xl font-extrabold text-white mb-6 font-[family-name:var(--font-playfair)] tracking-tight">
+            Join Kenyan.menu
+          </h1>
+          <p className="text-lg text-white/80 leading-relaxed">
+            Create your stunning digital menu in minutes, generate QR codes, and start receiving orders instantly.
+          </p>
+        </div>
+      </div>
 
-      {/* Main Content */}
-      <main className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md rounded-2xl border border-border bg-surface-alt shadow-xl overflow-hidden">
-          
-          {/* Progress Bar */}
-          <div className="h-2 w-full bg-surface">
-            <div 
-              className="h-full bg-primary-500 transition-all duration-500 ease-out"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
+      {/* Right Side - Form */}
+      <div className="flex w-full lg:w-1/2 flex-col overflow-y-auto">
+        {/* Header */}
+        <header className="flex items-center justify-between px-6 py-6 lg:px-12 lg:py-8">
+          <Link href="/" className="font-logo text-3xl text-primary-500 transition-transform hover:scale-105">
+            Kenyan.menu
+          </Link>
+          <ThemeToggle />
+        </header>
 
-          <div className="p-8">
+        {/* Main Content */}
+        <main className="flex flex-1 items-center justify-center px-6 sm:px-12 pb-16">
+          <div className="w-full max-w-md overflow-hidden">
+            
+            {/* Numeric Step Indicators */}
+            <div className="flex items-center gap-3 mb-8">
+              {[1, 2, 3, 4, 5].map((step) => (
+                <div 
+                  key={step} 
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-all duration-300 ${
+                    step === currentStep 
+                      ? "bg-primary-500 text-white shadow-md shadow-primary-500/30 scale-110" 
+                      : step < currentStep 
+                        ? "bg-primary-500/20 text-primary-500" 
+                        : "bg-surface text-text-muted border border-border"
+                  }`}
+                >
+                  {step}
+                </div>
+              ))}
+            </div>
+
             <div className="mb-8">
-              <div className="text-xs font-semibold text-primary-500 uppercase tracking-wider mb-2">
-                Step {currentStep} of {totalSteps}
-              </div>
-              <h2 className="text-3xl font-extrabold text-text">
+              <h2 className="text-3xl font-extrabold text-text tracking-tight">
                 {currentStep === 1 && "Restaurant Identity"}
                 {currentStep === 2 && "Location & Presence"}
                 {currentStep === 3 && "Brand Aesthetics"}
@@ -424,8 +451,8 @@ export default function SignupPage() {
 
             </form>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
 
       {/* Color Picker Modal */}
       {isColorModalOpen && (

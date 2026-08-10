@@ -93,24 +93,45 @@ export default function SigninPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface text-text">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4">
-        <Link href="/" className="font-logo text-3xl text-primary-500">
-          Kenyan.menu
-        </Link>
-        <ThemeToggle />
-      </header>
+    <div className="flex min-h-screen bg-surface text-text overflow-hidden">
+      {/* Left Side - Image/Branding (Hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-primary-900 flex-col justify-center items-center overflow-hidden">
+        <img 
+          src="/restaurant 1.jpg" 
+          alt="Restaurant background" 
+          className="absolute inset-0 h-full w-full object-cover opacity-30"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/40 to-transparent" />
+        
+        <div className="relative z-10 max-w-lg p-12 text-center">
+          <h1 className="text-4xl font-extrabold text-white mb-6 font-[family-name:var(--font-playfair)] tracking-tight">
+            Welcome Back!
+          </h1>
+          <p className="text-lg text-white/80 leading-relaxed">
+            Access your dashboard to manage your digital menu, track orders, and grow your business with Kenyan.menu.
+          </p>
+        </div>
+      </div>
 
-      {/* Main Content */}
-      <main className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8 rounded-2xl border border-border bg-surface-alt p-8 shadow-xl">
-          <div>
-            <h2 className="text-center text-3xl font-extrabold text-text">
-              Sign In
-            </h2>
-            <p className="mt-2 text-center text-sm text-text-muted">
-              Access your restaurant dashboard
+      {/* Right Side - Form */}
+      <div className="flex w-full lg:w-1/2 flex-col overflow-y-auto">
+        {/* Header */}
+        <header className="flex items-center justify-between px-6 py-6 lg:px-12 lg:py-8">
+          <Link href="/" className="font-logo text-3xl text-primary-500 transition-transform hover:scale-105">
+            Kenyan.menu
+          </Link>
+          <ThemeToggle />
+        </header>
+
+        {/* Main Content */}
+        <main className="flex flex-1 items-center justify-center px-6 sm:px-12 pb-16">
+          <div className="w-full max-w-sm space-y-8">
+            <div>
+              <h2 className="text-3xl font-extrabold text-text tracking-tight">
+                Sign In
+              </h2>
+            <p className="mt-2 text-sm text-text-muted">
+              Enter your credentials to access your account.
             </p>
           </div>
           
@@ -215,5 +236,6 @@ export default function SigninPage() {
         </div>
       </main>
     </div>
+  </div>
   );
 }

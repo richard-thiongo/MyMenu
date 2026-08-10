@@ -284,45 +284,24 @@ export default function Home() {
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">How much does it cost?</h2>
               <p className="mt-3 text-text-muted">Create your menu for free. Pay only when you are ready to publish it.</p>
             </div>
-            <div className="grid sm:grid-cols-2 gap-8 text-left">
-
-              {/* Basic */}
-              <div className="reveal reveal-scale rounded-3xl border-2 border-border bg-surface p-8 hover:border-primary-500/40 hover:shadow-xl transition-all">
-                <h3 className="text-xl font-bold text-text mb-1">Basic</h3>
+            <div className="flex justify-center text-left">
+              <div className="reveal reveal-scale w-full max-w-md rounded-3xl border-2 border-primary-500 bg-surface p-8 hover:border-primary-500/40 hover:shadow-xl transition-all">
+                <h3 className="text-xl font-bold text-text mb-1">Standard Plan</h3>
                 <div className="flex items-end gap-2 mt-4 mb-1">
-                  <span className="text-4xl font-extrabold text-text">2,300 KES</span>
+                  <span className="text-4xl font-extrabold text-text">1,999 KES</span>
                   <span className="text-text-muted mb-1">/mo</span>
                 </div>
-                <p className="text-sm text-primary-500 font-semibold mb-8">~ $18 USD / month</p>
+                <p className="text-sm text-primary-500 font-semibold mb-8">~ $15 USD / month</p>
                 <ul className="space-y-3 mb-10">
-                  {["Unlimited scans", "Branded QR Code", "Up to 90 items"].map((f) => (
+                  {["Unlimited scans", "Branded QR Code", "Unlimited food items", "Unlimited categories", "Real-time updates"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-sm font-medium text-text-muted">
                       <FiCheck className="h-4 w-4 shrink-0 text-primary-500" /> {f}
                     </li>
                   ))}
                 </ul>
-
-              </div>
-
-              {/* Advanced */}
-              <div className="reveal reveal-scale delay-200 relative rounded-3xl border-2 border-primary-500 bg-primary-500/5 p-8 shadow-lg">
-                <div className="absolute -top-4 right-8 rounded-full bg-primary-500 px-5 py-1.5 text-xs font-extrabold uppercase tracking-widest text-white shadow-lg">
-                  Large Menus
-                </div>
-                <h3 className="text-xl font-bold text-text mb-1">Advanced</h3>
-                <div className="flex items-end gap-2 mt-4 mb-1">
-                  <span className="text-4xl font-extrabold text-text">3,000 KES</span>
-                  <span className="text-text-muted mb-1">/mo</span>
-                </div>
-                <p className="text-sm text-primary-500 font-semibold mb-8">~ $23 USD / month</p>
-                <ul className="space-y-3 mb-10">
-                  {["Everything in Basic", "90+ food items", "Unlimited categories"].map((f) => (
-                    <li key={f} className="flex items-center gap-3 text-sm font-medium text-text-muted">
-                      <FiCheck className="h-4 w-4 shrink-0 text-primary-500" /> {f}
-                    </li>
-                  ))}
-                </ul>
-
+                <Link href="/signup" className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-500 py-3 text-base font-bold text-white transition-all hover:bg-primary-600 active:scale-95">
+                  Start Creating <FiArrowRight className="h-5 w-5" />
+                </Link>
               </div>
             </div>
           </div>

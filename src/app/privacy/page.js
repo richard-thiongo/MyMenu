@@ -55,7 +55,7 @@ export default function PrivacyPage() {
               <li><strong className="text-text">Restaurant Name</strong> — used as your unique identifier and public menu URL slug</li>
               <li><strong className="text-text">Email Address</strong> — used for account recovery, password resets, and critical platform notifications</li>
               <li><strong className="text-text">Location</strong> — the city or area your business operates in</li>
-              <li><strong className="text-text">Password</strong> — stored as a securely hashed value; we never store plain-text passwords</li>
+              <li><strong className="text-text">Password</strong> — stored securely</li>
               <li><strong className="text-text">Brand colour preference</strong> — used to theme your public menu page</li>
               <li><strong className="text-text">Menu content</strong> — food categories, item names, prices, descriptions, and images you upload</li>
               <li><strong className="text-text">Payment reference messages</strong> — M-PESA transaction codes you submit for subscription verification</li>

@@ -73,8 +73,7 @@ export default function TermsPage() {
               Access to the platform requires a monthly subscription fee payable via M-PESA:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2">
-              <li><strong className="text-text">Basic Plan:</strong> KES 1,500/month — for menus with up to 90 food items</li>
-              <li><strong className="text-text">Advanced Plan:</strong> KES 2,000/month — for menus with more than 90 food items</li>
+              <li><strong className="text-text">Standard Plan:</strong> KES 1,999/month — for unlimited menus and categories</li>
             </ul>
             <p className="mt-3">
               Subscriptions are activated manually by our team upon payment verification. Your public menu will remain hidden until your subscription is active. We reserve the right to adjust pricing with reasonable notice.

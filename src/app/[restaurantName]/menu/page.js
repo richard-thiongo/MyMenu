@@ -123,7 +123,8 @@ export default function UnifiedMenuPage() {
     { revalidateOnFocus: true }
   );
 
-  const { food_items = [], primary_color, categories: categoryMeta = [], orders_enabled } = menuData || {};
+  const { food_items = [], primary_color, categories: categoryMeta = [] /*, orders_enabled */ } = menuData || {};
+  const orders_enabled = false;
   const themeColor = primary_color || null;
 
   const groupedItems = groupItemsByCategory(food_items);
@@ -164,6 +165,46 @@ export default function UnifiedMenuPage() {
   const [isHistoryBouncing, setIsHistoryBouncing] = useState(false);
 
   const keyboardOffset = useKeyboardOffset();
+
+  // ── Scroll Spy for Active Category ───────────────────────────────────────
+  const [activeCategory, setActiveCategory] = useState("");
+
+  useEffect(() => {
+    if (categories.length === 0) return;
+    if (!activeCategory) setActiveCategory(categories[0]);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const catName = entry.target.id.replace("category-", "");
+            setActiveCategory(catName);
+            const btn = document.getElementById(`pill-${catName}`);
+            const container = document.getElementById("category-pills-container");
+            if (btn && container) {
+              const btnCenter = btn.offsetLeft + btn.offsetWidth / 2;
+              const containerCenter = container.offsetWidth / 2;
+              container.scrollTo({
+                left: btnCenter - containerCenter,
+                behavior: "smooth",
+              });
+            }
+          }
+        });
+      },
+      { rootMargin: "-140px 0px -70% 0px", threshold: 0 }
+    );
+
+    // Small delay ensures DOM elements are rendered
+    setTimeout(() => {
+      categories.forEach((cat) => {
+        const el = document.getElementById(`category-${cat}`);
+        if (el) observer.observe(el);
+      });
+    }, 100);
+
+    return () => observer.disconnect();
+  }, [categories]);
 
   // ── On mount: restore active order + history ─────────────────────────────
   // Drag handlers for the floating cart button
@@ -626,22 +667,22 @@ export default function UnifiedMenuPage() {
         }
       `}</style>
 
-      {/* ── Header ───────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 border-b border-border bg-surface/90 px-4 py-3 sm:py-4 backdrop-blur-md">
+      {/* ── Restaurant Info (Non-sticky) ─────────────────────────────────── */}
+      <header className="px-4 py-4 pt-6">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-2">
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-extrabold text-primary-500 truncate">{restaurantName}</h1>
-            <p className="text-xs sm:text-sm text-text-muted font-medium">{greeting}</p>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-primary-500 truncate">{restaurantName}</h1>
+            <p className="text-sm text-text-muted font-medium">{greeting}</p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             {/* History button — glass overlay + history icon always visible */}
             {hasHistory && (
               <button
                 id="history-clock-btn"
                 onClick={() => setIsHistoryOpen(true)}
                 aria-label="View order history"
-                className={`relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full overflow-hidden shadow-md active:scale-95 ring-1 ring-border transition-all ${
+                className={`relative flex h-11 w-11 items-center justify-center rounded-full overflow-hidden shadow-md active:scale-95 ring-1 ring-border transition-all ${
                   isHistoryBouncing ? "history-trigger-anim" : ""
                 }`}
               >
@@ -670,20 +711,33 @@ export default function UnifiedMenuPage() {
             <ThemeToggle />
           </div>
         </div>
-
-        {/* Category pills */}
-        <div className="mx-auto max-w-2xl mt-3 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => scrollToCategory(cat)}
-              className="whitespace-nowrap rounded-full bg-surface-alt border border-border px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-text transition-colors hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200"
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </header>
+
+      {/* ── Sticky Category Pills ───────────────────────────────────────── */}
+      <div className="sticky top-0 z-30 border-b border-border bg-surface/95 pt-4 pb-3 backdrop-blur-md shadow-sm">
+        <div id="category-pills-container" className="mx-auto max-w-2xl flex gap-2 overflow-x-auto scrollbar-hide px-4 pb-1">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                id={`pill-${cat}`}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  scrollToCategory(cat);
+                }}
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${
+                  isActive
+                    ? "bg-primary-500 text-white shadow-md shadow-primary-500/30 scale-105 border-transparent"
+                    : "bg-surface-alt border border-border text-text hover:bg-primary-50 hover:text-primary-600 hover:border-primary-200"
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* ── Menu list ────────────────────────────────────────────────────── */}
       <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-3 sm:px-4 py-6">
