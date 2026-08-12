@@ -88,7 +88,7 @@ export default function DashboardCategories() {
     <div className="mx-auto max-w-6xl">
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text">Menu Categories</h1>
+          <h1 className="text-2xl font-bold text-text">Home</h1>
           <p className="mt-1 text-sm text-text-muted">
             Manage your menu sections. Click a category to add food items.
           </p>

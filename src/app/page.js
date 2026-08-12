@@ -131,7 +131,7 @@ export default function Home() {
       <main className="flex flex-1 flex-col">
 
         {/* ── HERO ── */}
-        <section className="relative overflow-hidden min-h-[85vh] flex items-center">
+        <section className="relative overflow-hidden min-h-[70vh] sm:min-h-[85vh] flex items-center">
           {/* Parallax Background */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-fixed bg-no-repeat"
@@ -142,18 +142,14 @@ export default function Home() {
           </div>
 
           <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-            <div className="reveal mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
               <FiStar className="h-4 w-4 text-yellow-400" />
               Digital menus for Kenya
             </div>
-            <h1 className="reveal delay-100 font-[family-name:var(--font-playfair)] text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl mb-6">
-              Your menu,
-              <span className="block text-primary-400">everywhere.</span>
+            <h1 className="font-[family-name:var(--font-playfair)] text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8 sm:mb-12">
+              Use us to get your menu <span className="text-blue-400">visible to everyone</span>
             </h1>
-            <p className="reveal delay-200 mx-auto max-w-xl text-lg text-white/80 mb-10">
-              Build a stunning digital menu in minutes. Get your own branded link — no website needed. Customers can scan to browse and order directly from their phones.
-            </p>
-            <div className="reveal delay-300 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link id="cta-explore" href="/signup" className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-primary-500 px-8 py-4 text-base font-bold text-white transition-all hover:bg-primary-600 hover:shadow-xl hover:shadow-primary-500/30 active:scale-95">
                 Get Started <FiArrowRight className="h-5 w-5" />
               </Link>
@@ -172,22 +168,22 @@ export default function Home() {
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">Who is it for?</h2>
             </div>
             <div className="grid sm:grid-cols-2 gap-8 items-stretch">
-              <div className="reveal reveal-scale relative overflow-hidden rounded-3xl shadow-2xl">
-                <Image src="/restaurant 1.jpg" alt="Restaurant" width={600} height={500} className="h-80 w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="text-xs font-bold uppercase tracking-widest text-primary-400 mb-1">For</p>
-                  <h3 className="text-2xl font-extrabold text-white">Restaurants &amp; Hotels</h3>
-                  <p className="mt-1 text-sm text-white/70">Full menus, digital table ordering, and status tracking.</p>
+              <div className="reveal relative group">
+                <div className="relative overflow-hidden rounded-3xl shadow-xl transition-all duration-500 group-hover:shadow-primary-500/20 group-hover:-translate-y-2 border border-border h-56 sm:h-72">
+                  <Image src="/restaurant 1.jpg" alt="Restaurant" fill sizes="(max-width: 768px) 100vw, 50vw" priority className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-black/40 transition-opacity duration-500 group-hover:bg-black/50" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-primary-400 transition-colors">Restaurants &amp; Hotels</h3>
+                  </div>
                 </div>
               </div>
-              <div className="reveal reveal-scale delay-200 relative overflow-hidden rounded-3xl shadow-2xl">
-                <Image src="/retaurant 2.jpg" alt="Cafe food" width={600} height={500} className="h-80 w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6">
-                  <p className="text-xs font-bold uppercase tracking-widest text-primary-400 mb-1">Also for</p>
-                  <h3 className="text-2xl font-extrabold text-white">Cafes, Bars &amp; Food Trucks</h3>
-                  <p className="mt-1 text-sm text-white/70">Fast setup, QR codes, and instant customer ordering.</p>
+              <div className="reveal delay-200 relative group">
+                <div className="relative overflow-hidden rounded-3xl shadow-xl transition-all duration-500 group-hover:shadow-primary-500/20 group-hover:-translate-y-2 border border-border h-56 sm:h-72">
+                  <Image src="/retaurant 2.jpg" alt="Cafe food" fill sizes="(max-width: 768px) 100vw, 50vw" priority className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-black/40 transition-opacity duration-500 group-hover:bg-black/50" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-primary-400 transition-colors">Cafes, Bars &amp; Food Trucks</h3>
+                  </div>
                 </div>
               </div>
             </div>
@@ -201,22 +197,20 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">What we offer</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">What do you get?</h2>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <ul className="space-y-4 max-w-2xl mx-auto text-lg text-text-muted">
               {[
-                { icon: FiGrid, title: "Interactive Menu", desc: "Show categories, food items, images, and prices in real-time." },
-                { icon: FiMonitor, title: "QR Code Generator", desc: "A clean scannable code generated automatically for tables." },
-                { icon: FiLink, title: "Your Own Link", desc: "Get a branded link like mymenu.co.ke/yourplace — share it anywhere. No website required." },
-                { icon: FiCreditCard, title: "Digital Ordering", desc: "Let customers order straight from their seats with real-time status updates." },
-              ].map(({ icon: Icon, title, desc }, i) => (
-                <div key={title} className={`reveal delay-${(i + 1) * 100} rounded-2xl border border-border bg-surface p-8 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/5 transition-all`}>
-                  <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-500/10">
-                    <Icon className="h-7 w-7 text-primary-500" />
+                { title: "Interactive Menu", desc: "Show categories, food items, images, and prices in real-time." },
+                { title: "QR Code Generator", desc: "A clean scannable code generated automatically for tables." },
+                { title: "Your Own Link", desc: "Get a branded link like kenyan.menu/yourplace, share it anywhere. No website required." },
+              ].map(({ title, desc }, i) => (
+                <li key={title} className={`reveal delay-${(i + 1) * 100} flex items-start gap-3`}>
+                  <FiCheck className="mt-1 h-6 w-6 shrink-0 text-primary-500" />
+                  <div>
+                    <strong className="text-text">{title}:</strong> {desc}
                   </div>
-                  <h3 className="text-lg font-bold text-text mb-2">{title}</h3>
-                  <p className="text-sm text-text-muted leading-relaxed">{desc}</p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
 
@@ -230,14 +224,14 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
                 {[
-                  { icon: FiGrid, label: "Table QR Stickers", sub: "Customers scan and browse instantly — no app needed." },
-                  { icon: FiInstagram, label: "Social Media Bios", sub: "Drop your link in Instagram or Facebook bio." },
-                  { icon: FiCreditCard, label: "Business Cards", sub: "Print your QR on cards and hand them out." },
-                  { icon: FiPrinter, label: "Posters &amp; Flyers", sub: "Put your menu anywhere people can scan it." },
-                ].map(({ icon: Icon, label, sub }, i) => (
+                  { label: "Table QR Stickers", sub: "Customers scan and browse instantly no app needed." },
+                  { label: "Social Media Bios", sub: "Drop your link in Instagram or Facebook bio." },
+                  { label: "Business Cards", sub: "Print your QR on cards and hand them out." },
+                  { label: "Posters &amp; Flyers", sub: "Put your menu anywhere people can scan it." },
+                ].map(({ label, sub }, i) => (
                   <div key={label} className={`reveal delay-${(i + 1) * 100} flex items-start gap-4`}>
-                    <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-500/10">
-                      <Icon className="h-5 w-5 text-primary-500" />
+                    <div className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white font-bold text-lg">
+                      {i + 1}
                     </div>
                     <div>
                       <h3 className="font-bold text-text mb-0.5" dangerouslySetInnerHTML={{ __html: label }} />
@@ -267,7 +261,7 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest text-primary-300 mb-4">Why it matters</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl sm:text-5xl font-extrabold text-white mb-6">Does your menu impress?</h2>
               <p className="text-white/75 text-lg leading-relaxed mb-8">
-                Customers decide in seconds. A clean, fast, visual menu keeps them interested — and coming back.
+                Customers decide in seconds. A clean, fast, visual menu keeps them interested and coming back.
               </p>
               <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-bold text-primary-700 hover:bg-primary-50 transition-all active:scale-95">
                 Make Yours Today <FiArrowRight className="h-5 w-5" />
@@ -329,15 +323,45 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-surface px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl flex flex-col items-center justify-between gap-4 sm:flex-row text-sm text-text-muted">
-          <div className="flex items-center gap-4">
-            <Link href="/terms" className="hover:text-primary-500 transition-colors">Terms and Conditions</Link>
-            <span className="text-border-strong">&middot;</span>
-            <Link href="/privacy" className="hover:text-primary-500 transition-colors">Privacy Policy</Link>
+      <footer className="bg-primary-500 px-4 py-16 sm:px-6 lg:px-8 text-white">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div>
+              <h3 className="font-bold text-white mb-4">Platform</h3>
+              <ul className="space-y-3 text-sm text-white/80">
+                <li><a href="#services" className="hover:text-white transition-colors">Services</a></li>
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#use-cases" className="hover:text-white transition-colors">Use Cases</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-white mb-4">Account</h3>
+              <ul className="space-y-3 text-sm text-white/80">
+                <li><Link href="/signin" className="hover:text-white transition-colors">Log In</Link></li>
+                <li><Link href="/signup" className="hover:text-white transition-colors">Sign Up</Link></li>
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-white mb-4">Legal</h3>
+              <ul className="space-y-3 text-sm text-white/80">
+                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
+                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
+              </ul>
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Image src="/logo.png" alt="Kenyan.menu logo" width={28} height={28} className="rounded-md bg-white p-0.5" />
+                <span className="font-logo font-bold text-xl text-white">Kenyan.menu</span>
+              </div>
+              <p className="text-sm text-white/80 leading-relaxed">
+                The modern digital menu platform for hospitality businesses in Kenya.
+              </p>
+            </div>
           </div>
-          <div>
-            &copy; {new Date().getFullYear()} Kenyan.menu — All rights reserved.
+          <div className="pt-8 border-t border-white/20 flex items-center justify-center text-sm text-white/80">
+            <p>&copy; {new Date().getFullYear()} Kenyan.menu. All rights reserved.</p>
           </div>
         </div>
       </footer>

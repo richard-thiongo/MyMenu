@@ -117,7 +117,7 @@ export default function CategoryDrillDown() {
           prefetch={true}
           href="/dashboard"
           className="mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-primary-500/20 bg-primary-500/10 text-primary-500 transition-all hover:bg-primary-500 hover:text-white hover:shadow-md"
-          title="Back to Categories"
+          title="Back to Home"
         >
           <FiArrowLeft size={24} />
         </Link>

@@ -63,7 +63,7 @@ export default function PaymentsPage() {
             <FiCreditCard className="h-6 w-6" />
             <div>
               <p className="font-medium">Your subscription is inactive or expired</p>
-              <p className="text-sm opacity-80">Your public menu is currently hidden. Please submit a payment to reactivate.</p>
+              <p className="text-sm opacity-80">No one will be able to see your menu. Please submit a payment to reactivate.</p>
             </div>
           </div>
         )}

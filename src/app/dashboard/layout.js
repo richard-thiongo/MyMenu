@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight, FiCreditCard, FiAlertCircle, FiClipboard } from "react-icons/fi";
+import { FiLogOut, FiCoffee, FiShare2, FiSettings, FiMenu, FiX, FiChevronLeft, FiChevronRight, FiCreditCard, FiAlertCircle, FiClipboard, FiBookOpen } from "react-icons/fi";
 import { LuQrCode } from "react-icons/lu";
 import useSWR from "swr";
 import useAuthStore from "@/hooks/useAuthStore";
@@ -78,10 +78,10 @@ export default function DashboardLayout({ children }) {
                       ? "bg-primary-500 text-white"
                       : "text-text-muted hover:text-text"
                     }`}
-                  title="Categories"
+                  title="Home"
                 >
                   <FiCoffee size={18} className="shrink-0" />
-                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Categories</span>
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Home</span>
                 </Link>
                 {/* <Link
                   href="/dashboard/orders"
@@ -125,6 +125,18 @@ export default function DashboardLayout({ children }) {
                 >
                   <FiCreditCard size={18} className="shrink-0" />
                   <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Payments</span>
+                </Link>
+                <Link
+                  href="/dashboard/guide"
+                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                    } ${pathname === "/dashboard/guide"
+                      ? "bg-primary-500 text-white"
+                      : "text-text-muted hover:text-text"
+                    }`}
+                  title="Guide"
+                >
+                  <FiBookOpen size={18} className="shrink-0" />
+                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Guide</span>
                 </Link>
                 <Link
                   href={`/${restaurantName}`}
@@ -201,7 +213,7 @@ export default function DashboardLayout({ children }) {
               <div className="mb-6 rounded-lg bg-amber-500/10 p-4 border border-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <FiAlertCircle className="h-5 w-5 shrink-0" />
-                  <p className="text-sm font-medium">Your subscription is inactive. Your public menu is currently hidden.</p>
+                  <p className="text-sm font-medium">Your subscription is inactive. No one will be able to see your menu.</p>
                 </div>
                 <Link href="/dashboard/payments" className="shrink-0 text-sm font-bold underline hover:text-amber-600 dark:hover:text-amber-300">
                   Verify Payment
@@ -249,6 +261,13 @@ export default function DashboardLayout({ children }) {
           >
             <FiCreditCard size={20} />
             <span className="text-[10px] font-medium uppercase tracking-wider">Billing</span>
+          </Link>
+          <Link
+            href="/dashboard/guide"
+            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/guide' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+          >
+            <FiBookOpen size={20} />
+            <span className="text-[10px] font-medium uppercase tracking-wider">Guide</span>
           </Link>
           <Link
             href="/dashboard/settings"
