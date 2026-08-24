@@ -32,10 +32,20 @@ export default function PaymentsPage() {
     showLoading("Submitting payment verification...");
 
     try {
-      await api.submitPayment({ paymentMessage });
+      const response = await api.submitPayment({ paymentMessage });
+      if (response?.data) {
+        useAuthStore.getState().login(
+          useAuthStore.getState().token,
+          useAuthStore.getState().refreshToken,
+          response.data.restaurant_name,
+          response.data.primary_color,
+          response.data.is_paid,
+          response.data.subscription_expires_at
+        );
+      }
       setIsSubmitted(true);
       setPaymentMessage("");
-      toast.success("Payment submitted for review!");
+      toast.success("Payment submitted successfully!");
     } catch (error) {
       showError(error.message || "Failed to submit payment. Please try again.");
     } finally {

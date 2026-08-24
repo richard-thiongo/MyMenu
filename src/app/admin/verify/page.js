@@ -38,10 +38,10 @@ function AdminVerifyContent() {
       });
   }, [token]);
 
-  const handleApprove = async () => {
+  const handleReject = async () => {
     setStatus("approving");
     try {
-      const res = await fetch(`${API_URL}/api/restaurants/admin/approve-payment`, {
+      const res = await fetch(`${API_URL}/api/restaurants/admin/reject-payment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
@@ -51,7 +51,7 @@ function AdminVerifyContent() {
         setStatus("approved");
       } else {
         setStatus("error");
-        setErrorMsg(json.message || "Approval failed.");
+        setErrorMsg(json.message || "Rejection failed.");
       }
     } catch {
       setStatus("error");
@@ -94,13 +94,13 @@ function AdminVerifyContent() {
 
           {status === "approved" && (
             <div className="p-10 flex flex-col items-center gap-4 text-center">
-              <div className="w-16 h-16 bg-green-500/15 rounded-full flex items-center justify-center">
-                <FiCheckCircle className="w-8 h-8 text-green-500" />
+              <div className="w-16 h-16 bg-red-500/15 rounded-full flex items-center justify-center">
+                <FiCheckCircle className="w-8 h-8 text-red-500" />
               </div>
               <div>
-                <p className="text-white font-bold text-xl">Subscription Activated!</p>
+                <p className="text-white font-bold text-xl">Payment Rejected!</p>
                 <p className="text-gray-400 text-sm mt-2">
-                  <span className="font-semibold text-green-400">{details?.restaurantName}</span>&apos;s public menu is now live for 31 days.
+                  <span className="font-semibold text-red-400">{details?.restaurantName}</span>&apos;s subscription has been revoked.
                 </p>
               </div>
             </div>
@@ -134,22 +134,22 @@ function AdminVerifyContent() {
               {/* Action */}
               <div className="p-6">
                 <p className="text-gray-400 text-sm mb-4 text-center">
-                  By clicking approve, you confirm that this payment is valid and the restaurant will receive a 31-day subscription.
+                  By clicking reject, you confirm that this payment is invalid and the restaurant's subscription will be revoked immediately.
                 </p>
                 <button
-                  onClick={handleApprove}
+                  onClick={handleReject}
                   disabled={status === "approving"}
-                  className="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-500 disabled:opacity-60 text-white font-bold py-4 rounded-xl transition-all duration-200 text-base shadow-lg shadow-green-900/30"
+                  className="w-full flex items-center justify-center gap-3 bg-red-600 hover:bg-red-500 disabled:opacity-60 text-white font-bold py-4 rounded-xl transition-all duration-200 text-base shadow-lg shadow-red-900/30"
                 >
                   {status === "approving" ? (
                     <>
                       <FiLoader className="animate-spin w-5 h-5" />
-                      Activating Subscription...
+                      Revoking Subscription...
                     </>
                   ) : (
                     <>
-                      <FiCheckCircle className="w-5 h-5" />
-                      ✅ Approve &amp; Activate Subscription
+                      <FiAlertCircle className="w-5 h-5" />
+                      ❌ Reject Payment &amp; Deactivate Subscription
                     </>
                   )}
                 </button>
