@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 import { groupItemsByCategory } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
-  FiCheck, FiX, FiRefreshCw, FiMinus, FiPlus, FiClock, FiTrash2,
+  FiCheck, FiX, FiRefreshCw, FiMinus, FiPlus, FiClock, FiTrash2, FiSearch
 } from "react-icons/fi";
 import { BiDish } from "react-icons/bi";
 import { LuHistory } from "react-icons/lu";
@@ -127,11 +127,28 @@ export default function UnifiedMenuPage() {
   const orders_enabled = false;
   const themeColor = primary_color || null;
 
-  const groupedItems = groupItemsByCategory(food_items);
-  const categories = categoryMeta.map((cat) => cat.category_name);
-  Object.keys(groupedItems).forEach((cat) => {
-    if (!categories.includes(cat)) categories.push(cat);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const filteredFoodItems = useMemo(() => {
+    if (!searchQuery.trim()) return food_items;
+    const lowerQuery = searchQuery.toLowerCase();
+    return food_items.filter(
+      (item) =>
+        item.food_name.toLowerCase().includes(lowerQuery) ||
+        (item.description && item.description.toLowerCase().includes(lowerQuery))
+    );
+  }, [food_items, searchQuery]);
+
+  const groupedItems = groupItemsByCategory(filteredFoodItems);
+  const allCategories = categoryMeta.map((cat) => cat.category_name);
+  Object.keys(groupItemsByCategory(food_items)).forEach((cat) => {
+    if (!allCategories.includes(cat)) allCategories.push(cat);
   });
+
+  const categories = searchQuery.trim() 
+    ? allCategories.filter(cat => groupedItems[cat] && groupedItems[cat].length > 0) 
+    : allCategories;
 
   const greeting = getGreeting();
 
@@ -670,12 +687,45 @@ export default function UnifiedMenuPage() {
       {/* ── Restaurant Info (Non-sticky) ─────────────────────────────────── */}
       <header className="px-4 py-4 pt-6">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-2">
-          <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-primary-500 truncate">{restaurantName}</h1>
-            <p className="text-sm text-text-muted font-medium">{greeting}</p>
-          </div>
+          {isSearchOpen ? (
+            <div className="flex-1 flex items-center gap-2">
+              <div className="relative flex-1">
+                <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
+                <input
+                  type="text"
+                  placeholder="Search menu..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="w-full pl-10 pr-4 py-2 rounded-full bg-surface-alt border border-border text-text focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                className="p-2 text-text-muted hover:text-text rounded-full"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-primary-500 truncate">{restaurantName}</h1>
+                <p className="text-sm text-text-muted font-medium">{greeting}</p>
+              </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                <button
+                  onClick={() => setIsSearchOpen(true)}
+                  className="p-2 text-text-muted hover:text-text hover:bg-surface-alt rounded-full transition-colors"
+                  aria-label="Search menu"
+                >
+                  <FiSearch size={20} />
+                </button>
+
             {/* History button — glass overlay + history icon always visible */}
             {hasHistory && (
               <button
@@ -708,8 +758,10 @@ export default function UnifiedMenuPage() {
                 </span>
               </button>
             )}
-            <ThemeToggle />
-          </div>
+                <ThemeToggle />
+              </div>
+            </>
+          )}
         </div>
       </header>
 
