@@ -50,9 +50,9 @@ export default function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 sm:gap-3">
-          <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg sm:h-10 sm:w-10" priority />
+          <Image src="/logo.png" alt="OurMenu.Click logo" width={32} height={32} className="rounded-lg sm:h-10 sm:w-10" priority />
           <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500 dark:text-white">
-            Kenyan.menu
+            OurMenu.Click
           </span>
         </div>
         
@@ -201,7 +201,7 @@ export default function Home() {
               {[
                 { title: "Interactive Menu", desc: "Show categories, food items, images, and prices in real-time." },
                 { title: "QR Code Generator", desc: "A clean scannable code generated automatically for tables." },
-                { title: "Your Own Link", desc: "Get a branded link like kenyan.menu/yourplace, share it anywhere. No website required." },
+                { title: "Your Own Link", desc: "Get a branded link like ourmenu.click/yourplace, share it anywhere. No website required." },
               ].map(({ title, desc }, i) => (
                 <li key={title} className={`reveal delay-${(i + 1) * 100} flex items-start gap-3`}>
                   <FiCheck className="mt-1 h-6 w-6 shrink-0 text-primary-500" />
@@ -352,8 +352,8 @@ export default function Home() {
             </div>
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Image src="/logo.png" alt="Kenyan.menu logo" width={28} height={28} className="rounded-md bg-white p-0.5" />
-                <span className="font-logo font-bold text-xl text-white">Kenyan.menu</span>
+                <Image src="/logo.png" alt="OurMenu.Click logo" width={28} height={28} className="rounded-md bg-white p-0.5" />
+                <span className="font-logo font-bold text-xl text-white">OurMenu.Click</span>
               </div>
               <p className="text-sm text-white/80 leading-relaxed">
                 The modern digital menu platform for hospitality businesses in Kenya.
@@ -361,7 +361,7 @@ export default function Home() {
             </div>
           </div>
           <div className="pt-8 border-t border-white/20 flex items-center justify-center text-sm text-white/80">
-            <p>&copy; {new Date().getFullYear()} Kenyan.menu. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} OurMenu.Click. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -3,8 +3,8 @@ import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 
 export const metadata = {
-  title: "Privacy Policy — Kenyan.menu",
-  description: "Learn how Kenyan.menu collects, uses, and protects your personal data in accordance with the Kenya Data Protection Act 2019.",
+  title: "Privacy Policy — OurMenu.Click",
+  description: "Learn how OurMenu.Click collects, uses, and protects your personal data in accordance with the Kenya Data Protection Act 2019.",
 };
 
 export default function PrivacyPage() {
@@ -14,9 +14,9 @@ export default function PrivacyPage() {
     <div className="min-h-screen bg-surface text-text">
       <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
-          <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg" />
+          <Image src="/logo.png" alt="OurMenu.Click logo" width={32} height={32} className="rounded-lg" />
           <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500">
-            Kenyan.menu
+            OurMenu.Click
           </span>
         </Link>
         <Link href="/signup" className="flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-primary-500 transition-colors">
@@ -38,7 +38,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-xl font-bold text-text mb-3">1. Who We Are (Data Controller)</h2>
             <p>
-              Kenyan.menu is the data controller for personal information collected through this platform. We are responsible for how your personal data is collected, stored, used, and protected, in accordance with the Kenya Data Protection Act No. 24 of 2019.
+              OurMenu.Click is the data controller for personal information collected through this platform. We are responsible for how your personal data is collected, stored, used, and protected, in accordance with the Kenya Data Protection Act No. 24 of 2019.
             </p>
             <div className="mt-3 rounded-xl border border-border bg-surface-alt p-5 space-y-1 text-sm">
               <p><strong className="text-text">Contact:</strong> kenyamenu8@gmail.com</p>

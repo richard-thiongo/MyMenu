@@ -68,7 +68,7 @@ function AdminVerifyContent() {
             <FiCheckCircle className="w-8 h-8 text-green-500" />
           </div>
           <h1 className="text-2xl font-bold text-white">Admin Payment Review</h1>
-          <p className="text-gray-400 mt-1 text-sm">Kenyan.menu · Admin Portal</p>
+          <p className="text-gray-400 mt-1 text-sm">OurMenu.Click · Admin Portal</p>
         </div>
 
         {/* Card */}

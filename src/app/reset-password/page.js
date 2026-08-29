@@ -53,7 +53,7 @@ function ResetPasswordForm() {
     return (
       <div className="flex min-h-screen flex-col bg-surface text-text">
         <header className="flex items-center justify-between px-6 py-4">
-          <Link href="/" className="font-logo text-3xl text-primary-500">Kenyan.menu</Link>
+          <Link href="/" className="font-logo text-3xl text-primary-500">OurMenu.Click</Link>
           <ThemeToggle />
         </header>
         <main className="flex flex-1 items-center justify-center px-4 py-12">
@@ -74,7 +74,7 @@ function ResetPasswordForm() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4">
         <Link href="/" className="font-logo text-3xl text-primary-500">
-          Kenyan.menu
+          OurMenu.Click
         </Link>
         <ThemeToggle />
       </header>

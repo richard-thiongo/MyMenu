@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4">
         <Link href="/" className="font-logo text-3xl text-primary-500">
-          Kenyan.menu
+          OurMenu.Click
         </Link>
         <ThemeToggle />
       </header>

@@ -32,9 +32,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
-  title: "Kenyan.menu | Create a Digital Menu for Your Restaurant",
+  title: "OurMenu.Click | Create a Digital Menu for Your Restaurant",
   description: "Build a stunning digital menu in minutes. Perfect for restaurants, hotels, cafes, and bars in Kenya. Generate QR codes and shareable links instantly.",
-  keywords: ["digital menu", "restaurant menu app", "QR code menu", "Kenya restaurant menu", "Kenyan.menu", "contactless menu"],
+  keywords: ["digital menu", "restaurant menu app", "QR code menu", "Kenya restaurant menu", "OurMenu.Click", "contactless menu"],
 };
 
 import KeyboardAvoidingWrapper from "@/components/KeyboardAvoidingWrapper";
@@ -71,7 +71,7 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
-              "name": "Kenyan.menu",
+              "name": "OurMenu.Click",
               "operatingSystem": "Web",
               "applicationCategory": "BusinessApplication",
               "offers": {
@@ -80,10 +80,10 @@ export default function RootLayout({ children }) {
                 "priceCurrency": "KES"
               },
               "description": "Digital menu platform for restaurants, hotels, and cafes in Kenya to generate QR codes and shareable links instantly.",
-              "url": "https://kenyan.menu",
+              "url": "https://ourmenu.click",
               "publisher": {
                 "@type": "Organization",
-                "name": "Kenyan.menu"
+                "name": "OurMenu.Click"
               }
             })
           }}

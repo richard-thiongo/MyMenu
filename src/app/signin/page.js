@@ -108,7 +108,7 @@ export default function SigninPage() {
             Welcome Back!
           </h1>
           <p className="text-lg text-white/80 leading-relaxed">
-            Access your dashboard to manage your digital menu, track orders, and grow your business with Kenyan.menu.
+            Access your dashboard to manage your digital menu, track orders, and grow your business with OurMenu.Click.
           </p>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function SigninPage() {
         {/* Header */}
         <header className="flex items-center justify-between px-6 py-6 lg:px-12 lg:py-8">
           <Link href="/" className="font-logo text-3xl text-primary-500 transition-transform hover:scale-105">
-            Kenyan.menu
+            OurMenu.Click
           </Link>
           <ThemeToggle />
         </header>

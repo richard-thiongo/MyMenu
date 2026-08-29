@@ -140,7 +140,7 @@ export default function SignupPage() {
         
         <div className="relative z-10 max-w-lg p-12 text-center">
           <h1 className="text-4xl font-extrabold text-white mb-6 font-[family-name:var(--font-playfair)] tracking-tight">
-            Join Kenyan.menu
+            Join OurMenu.Click
           </h1>
           <p className="text-lg text-white/80 leading-relaxed">
             Create your stunning digital menu in minutes, generate QR codes, and start receiving orders instantly.
@@ -153,7 +153,7 @@ export default function SignupPage() {
         {/* Header */}
         <header className="flex items-center justify-between px-6 py-6 lg:px-12 lg:py-8">
           <Link href="/" className="font-logo text-3xl text-primary-500 transition-transform hover:scale-105">
-            Kenyan.menu
+            OurMenu.Click
           </Link>
           <ThemeToggle />
         </header>
@@ -390,7 +390,7 @@ export default function SignupPage() {
                       <Link href="/terms" target="_blank" className="font-semibold text-primary-500 hover:underline">Terms and Conditions</Link>
                       {" "}and the{" "}
                       <Link href="/privacy" target="_blank" className="font-semibold text-primary-500 hover:underline">Privacy Policy</Link>.
-                      I consent to Kenyan.menu processing my business information as described therein, in accordance with the Kenya Data Protection Act 2019.
+                      I consent to OurMenu.Click processing my business information as described therein, in accordance with the Kenya Data Protection Act 2019.
                     </label>
                   </div>
                 </div>

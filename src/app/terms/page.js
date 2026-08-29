@@ -3,8 +3,8 @@ import Image from "next/image";
 import { FiArrowLeft } from "react-icons/fi";
 
 export const metadata = {
-  title: "Terms and Conditions — Kenyan.menu",
-  description: "Read the Terms and Conditions for using the Kenyan.menu platform.",
+  title: "Terms and Conditions — OurMenu.Click",
+  description: "Read the Terms and Conditions for using the OurMenu.Click platform.",
 };
 
 export default function TermsPage() {
@@ -14,9 +14,9 @@ export default function TermsPage() {
     <div className="min-h-screen bg-surface text-text">
       <header className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
-          <Image src="/logo.png" alt="Kenyan.menu logo" width={32} height={32} className="rounded-lg" />
+          <Image src="/logo.png" alt="OurMenu.Click logo" width={32} height={32} className="rounded-lg" />
           <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500">
-            Kenyan.menu
+            OurMenu.Click
           </span>
         </Link>
         <Link href="/signup" className="flex items-center gap-1.5 text-sm font-medium text-text-muted hover:text-primary-500 transition-colors">
@@ -35,14 +35,14 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-text mb-3">1. Acceptance of Terms</h2>
             <p>
-              By registering for or using the Kenyan.menu platform (&ldquo;the Service&rdquo;), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, do not use the Service. These terms apply to all users, including restaurant owners and their customers who view public menus.
+              By registering for or using the OurMenu.Click platform (&ldquo;the Service&rdquo;), you agree to be bound by these Terms and Conditions. If you do not agree to these terms, do not use the Service. These terms apply to all users, including restaurant owners and their customers who view public menus.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-text mb-3">2. The Service</h2>
             <p className="mb-3">
-              Kenyan.menu is a digital menu platform that allows hospitality businesses (restaurants, hotels, cafes, bars, food trucks, and similar establishments) registered in Kenya to:
+              OurMenu.Click is a digital menu platform that allows hospitality businesses (restaurants, hotels, cafes, bars, food trucks, and similar establishments) registered in Kenya to:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Create and manage digital food and beverage menus</li>
@@ -95,7 +95,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-text mb-3">6. Content Ownership</h2>
             <p>
-              You retain ownership of all content you upload to the platform (menu items, images, descriptions). By uploading content, you grant Kenyan.menu a non-exclusive, royalty-free licence to store, display, and serve that content as necessary to operate the Service. You represent and warrant that you have the right to use and upload all content you submit.
+              You retain ownership of all content you upload to the platform (menu items, images, descriptions). By uploading content, you grant OurMenu.Click a non-exclusive, royalty-free licence to store, display, and serve that content as necessary to operate the Service. You represent and warrant that you have the right to use and upload all content you submit.
             </p>
           </section>
 
@@ -109,7 +109,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-text mb-3">8. Limitation of Liability</h2>
             <p>
-              To the fullest extent permitted by Kenyan law, Kenyan.menu shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Service, including loss of revenue, data, or business opportunity. The platform is provided &ldquo;as is&rdquo; without warranties of uninterrupted or error-free operation.
+              To the fullest extent permitted by Kenyan law, OurMenu.Click shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Service, including loss of revenue, data, or business opportunity. The platform is provided &ldquo;as is&rdquo; without warranties of uninterrupted or error-free operation.
             </p>
           </section>
 
