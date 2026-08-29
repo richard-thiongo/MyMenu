@@ -33,21 +33,21 @@ const dmSans = DM_Sans({
 
 export const metadata = {
   metadataBase: new URL("https://ourmenu.click"),
-  title: "OurMenu.Click | Create a Digital Menu for Your Restaurant",
-  description: "Build a stunning digital menu in minutes. Perfect for restaurants, hotels, cafes, and bars in Kenya. Generate QR codes and shareable links instantly.",
-  keywords: ["digital menu", "restaurant menu app", "QR code menu", "Kenya restaurant menu", "OurMenu.Click", "contactless menu"],
+  title: "Digital Menu for Restaurants | OurMenu",
+  description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
+  keywords: ["digital menu", "restaurant menu app", "QR code menu", "OurMenu", "contactless menu"],
   openGraph: {
-    title: "OurMenu.Click | Create a Digital Menu",
-    description: "Build a stunning digital menu in minutes. Generate QR codes and shareable links instantly.",
+    title: "Digital Menu for Restaurants | OurMenu",
+    description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
     url: "https://ourmenu.click",
-    siteName: "OurMenu.Click",
+    siteName: "OurMenu",
     locale: "en_KE",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "OurMenu.Click | Create a Digital Menu",
-    description: "Build a stunning digital menu in minutes. Generate QR codes and shareable links instantly.",
+    title: "Digital Menu for Restaurants | OurMenu",
+    description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
   }
 };
 

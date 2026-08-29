@@ -1,0 +1,29 @@
+# OurMenu - Digital Menu Platform for Restaurants
+
+## Overview
+OurMenu is a platform designed to help restaurants, hotels, cafes, and bars digitize their menus. It allows hospitality businesses to easily create, manage, and publish their menus online without needing any technical expertise.
+
+## Core Features
+1. **Digital Menu Creation**: Restaurant owners can add dishes, prices, and high-quality photos to build a visually appealing online menu.
+2. **Instant QR Codes**: The platform automatically generates a scannable QR code that restaurants can print and place on tables.
+3. **Shareable Links**: Restaurants receive a direct, shareable link to their menu that can be added to social media bios or shared with customers.
+4. **Real-time Updates**: Menu items, prices, and availability can be updated instantly without the need to reprint physical menus.
+5. **Contactless Menus**: Customers simply scan the QR code with their smartphone camera to instantly view the menu on their own devices.
+
+## Target Audience
+The platform is built specifically for the hospitality industry, primarily targeting:
+- Restaurants
+- Hotels
+- Cafes
+- Bars
+- Food Trucks
+
+## How it Works
+1. A restaurant signs up for an OurMenu account.
+2. The restaurant inputs their categories, food items, prices, and uploads images.
+3. OurMenu generates a dedicated public webpage for that restaurant's menu.
+4. The restaurant downloads their unique QR code and places it on their tables.
+5. Customers visit the restaurant, scan the code, and read the menu on their phone.
+
+## Technical Context
+OurMenu provides a fast, modern, and accessible interface optimized for mobile devices, ensuring that customers have a smooth experience regardless of their internet speed or device type.
