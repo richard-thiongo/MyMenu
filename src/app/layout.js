@@ -32,9 +32,23 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://ourmenu.click"),
   title: "OurMenu.Click | Create a Digital Menu for Your Restaurant",
   description: "Build a stunning digital menu in minutes. Perfect for restaurants, hotels, cafes, and bars in Kenya. Generate QR codes and shareable links instantly.",
   keywords: ["digital menu", "restaurant menu app", "QR code menu", "Kenya restaurant menu", "OurMenu.Click", "contactless menu"],
+  openGraph: {
+    title: "OurMenu.Click | Create a Digital Menu",
+    description: "Build a stunning digital menu in minutes. Generate QR codes and shareable links instantly.",
+    url: "https://ourmenu.click",
+    siteName: "OurMenu.Click",
+    locale: "en_KE",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OurMenu.Click | Create a Digital Menu",
+    description: "Build a stunning digital menu in minutes. Generate QR codes and shareable links instantly.",
+  }
 };
 
 import KeyboardAvoidingWrapper from "@/components/KeyboardAvoidingWrapper";
