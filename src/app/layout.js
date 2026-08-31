@@ -33,11 +33,11 @@ const dmSans = DM_Sans({
 
 export const metadata = {
   metadataBase: new URL("https://ourmenu.click"),
-  title: "Digital Menu for Restaurants | OurMenu",
+  title: "QR Code Menu | Digital Menu for Restaurants | OurMenu",
   description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
   keywords: ["digital menu", "restaurant menu app", "QR code menu", "OurMenu", "contactless menu"],
   openGraph: {
-    title: "Digital Menu for Restaurants | OurMenu",
+    title: "QR Code Menu | Digital Menu for Restaurants | OurMenu",
     description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
     url: "https://ourmenu.click",
     siteName: "OurMenu",
@@ -46,7 +46,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Digital Menu for Restaurants | OurMenu",
+    title: "QR Code Menu | Digital Menu for Restaurants | OurMenu",
     description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
   }
 };
@@ -55,11 +55,11 @@ import KeyboardAvoidingWrapper from "@/components/KeyboardAvoidingWrapper";
 
 export default function RootLayout({ children }) {
   return (
-      <html
-        lang="en"
-        suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${playfair.variable} ${dmSans.variable} h-full antialiased`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} ${playfair.variable} ${dmSans.variable} h-full antialiased`}
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
