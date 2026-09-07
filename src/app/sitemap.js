@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = 'https://ourmenu.click';
+  const baseUrl = 'https://ourmenu.click/';
 
   // These are the public pages AI should index
   return [

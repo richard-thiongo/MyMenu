@@ -32,14 +32,14 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://ourmenu.click"),
+  metadataBase: new URL("https://ourmenu.click/"),
   title: "QR Code Menu | Digital Menu for Restaurants | OurMenu",
   description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
   keywords: ["digital menu", "restaurant menu app", "QR code menu", "OurMenu", "contactless menu"],
   openGraph: {
     title: "QR Code Menu | Digital Menu for Restaurants | OurMenu",
     description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
-    url: "https://ourmenu.click",
+    url: "https://ourmenu.click/",
     siteName: "OurMenu",
     locale: "en_KE",
     type: "website",
@@ -48,6 +48,9 @@ export const metadata = {
     card: "summary_large_image",
     title: "QR Code Menu | Digital Menu for Restaurants | OurMenu",
     description: "Create a digital menu for your restaurant. Add dishes, prices and photos, publish your menu online and let customers scan a QR code to view it.",
+  },
+  alternates: {
+    canonical: "/",
   }
 };
 
@@ -94,7 +97,7 @@ export default function RootLayout({ children }) {
                 "priceCurrency": "KES"
               },
               "description": "Digital menu platform for restaurants, hotels, and cafes in Kenya to generate QR codes and shareable links instantly.",
-              "url": "https://ourmenu.click",
+              "url": "https://ourmenu.click/",
               "publisher": {
                 "@type": "Organization",
                 "name": "OurMenu.Click"
