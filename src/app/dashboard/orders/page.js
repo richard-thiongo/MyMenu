@@ -1,48 +1,30 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import useSWR from "swr";
 import { api } from "@/lib/api";
-import { FiCheck, FiRefreshCw, FiClock, FiAlertCircle } from "react-icons/fi";
-import Skeleton from "@/components/Skeleton";
-import useAuthStore from "@/hooks/useAuthStore";
-import { socket } from "@/lib/socket";
+import { FiCheck, FiSave, FiAlertCircle } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function OrdersPage() {
   const [ordersEnabled, setOrdersEnabled] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState("");
   const [isToggling, setIsToggling] = useState(false);
-  const [confirmingOrderId, setConfirmingOrderId] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [saveMessage, setSaveMessage] = useState("");
 
-  const { data: orders, error, isLoading, mutate } = useSWR(
-    "/api/orders/restaurant/today",
-    api.getTodaysOrders
-  );
-
-  // Use a ref or state for initial load of ordersEnabled
   useEffect(() => {
-    // Fetch profile to get ordersEnabled state initially
     api.getProfile().then(res => {
       if (res && res.data) {
         setOrdersEnabled(!!res.data.orders_enabled);
-        
-        // Connect to socket and join restaurant room
-        socket.connect();
-        socket.emit("join_restaurant_room", res.data.restaurant_id);
+        setWhatsappNumber(res.data.whatsappnumber || "");
       }
-    }).catch(console.error);
-
-    const onNewOrder = (order) => {
-      // Re-fetch the orders list when a new order arrives
-      mutate();
-    };
-
-    socket.on("new_order", onNewOrder);
-
-    return () => {
-      socket.off("new_order", onNewOrder);
-      socket.disconnect();
-    };
-  }, [mutate]);
+      setIsLoading(false);
+    }).catch(err => {
+      console.error(err);
+      setIsLoading(false);
+    });
+  }, []);
 
   const handleToggleOrders = async () => {
     setIsToggling(true);
@@ -50,7 +32,6 @@ export default function OrdersPage() {
     try {
       await api.updateProfile({ orders_enabled: newState });
       setOrdersEnabled(newState);
-      // We also update the auth store or we could just leave it local to this page.
     } catch (err) {
       console.error("Failed to toggle orders", err);
       alert("Failed to toggle orders: " + err.message);
@@ -59,25 +40,31 @@ export default function OrdersPage() {
     }
   };
 
-  const handleConfirmOrder = async (orderId) => {
-    setConfirmingOrderId(orderId);
+  const handleSaveWhatsapp = async () => {
+    setIsSaving(true);
+    setSaveMessage("");
     try {
-      await api.updateOrderStatus(orderId, 'confirmed');
-      mutate(); // Refresh the list
+      await api.updateProfile({ whatsappnumber: whatsappNumber });
+      setSaveMessage("WhatsApp number saved successfully!");
+      setTimeout(() => setSaveMessage(""), 3000);
     } catch (err) {
-      console.error("Failed to update status", err);
-      alert("Failed to confirm order.");
+      console.error("Failed to save WhatsApp number", err);
+      alert("Failed to save WhatsApp number: " + err.message);
     } finally {
-      setConfirmingOrderId(null);
+      setIsSaving(false);
     }
   };
 
+  if (isLoading) {
+    return <div className="p-6 text-text-muted">Loading settings...</div>;
+  }
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 max-w-2xl">
       {/* Toggle Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-surface-alt rounded-2xl border border-border shadow-sm gap-4">
         <div>
-          <h2 className="text-xl font-bold text-text">Accept Orders</h2>
+          <h2 className="text-xl font-bold text-text">Accept Orders via WhatsApp</h2>
           <p className="text-sm text-text-muted mt-1">Enable or disable digital ordering for your customers.</p>
         </div>
         <button
@@ -92,90 +79,46 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <h3 className="text-2xl font-bold text-text">Today's Orders</h3>
-        <button 
-          onClick={() => mutate()} 
-          className="flex items-center gap-2 text-sm font-semibold text-primary-500 hover:text-primary-600 bg-primary-500/10 px-3 py-1.5 rounded-lg"
-        >
-          <FiRefreshCw size={14} /> Refresh
-        </button>
-      </div>
-
-      {isLoading ? (
-        <div className="flex flex-col gap-4">
-          <Skeleton className="h-24 w-full rounded-xl" />
-          <Skeleton className="h-24 w-full rounded-xl" />
-        </div>
-      ) : error ? (
-        <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 flex items-center gap-3">
-          <FiAlertCircle size={24} />
-          <p className="font-medium">Failed to load today's orders.</p>
-        </div>
-      ) : !orders || orders.data.length === 0 ? (
-        <div className="p-12 text-center bg-surface-alt rounded-2xl border border-border border-dashed">
-          <p className="text-text-muted text-lg font-medium">No orders yet today.</p>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {orders.data.map(order => (
-            <div key={order.id} className="bg-surface rounded-2xl border border-border p-5 flex flex-col shadow-sm">
-              <div className="flex justify-between items-start mb-4 border-b border-border pb-3">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-text-muted">Table</span>
-                  <p className="text-lg font-extrabold text-primary-500">{order.table_number}</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-text-muted block">{new Date(order.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                  <span className={`inline-block mt-1 text-xs font-bold px-2 py-1 rounded-md ${order.status === 'pending' ? 'bg-amber-500/10 text-amber-500' : 'bg-green-500/10 text-green-500'}`}>
-                    {order.status === 'pending' ? 'PENDING' : 'CONFIRMED'}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto mb-4">
-                <ul className="flex flex-col gap-2">
-                  {order.items?.map((item, idx) => (
-                    <li key={idx} className="text-sm">
-                      <div className="flex items-start gap-2">
-                        <span className="font-bold text-text">{item.quantity}x</span>
-                        <div>
-                          <p className="text-text font-medium">{item.food_name}</p>
-                          {item.special_instructions && (
-                            <p className="text-xs text-text-muted italic block">Note: {item.special_instructions}</p>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {order.status === 'pending' && (
-                <button
-                  onClick={() => handleConfirmOrder(order.id)}
-                  disabled={confirmingOrderId === order.id}
-                  className={`w-full mt-auto bg-primary-500 text-white font-bold py-3 rounded-xl flex justify-center items-center gap-2 transition-all shadow-md shadow-primary-500/20 ${
-                    confirmingOrderId === order.id 
-                      ? 'opacity-75 cursor-not-allowed' 
-                      : 'hover:bg-primary-600 active:scale-95'
-                  }`}
-                >
-                  {confirmingOrderId === order.id ? (
-                    <>
-                      <FiRefreshCw className="animate-spin" size={18} /> Confirming...
-                    </>
-                  ) : (
-                    <>
-                      <FiCheck size={18} /> Confirm Order
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-          ))}
+      {ordersEnabled && !whatsappNumber && (
+        <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-700 dark:text-amber-400 flex items-start gap-3">
+          <FiAlertCircle size={20} className="mt-0.5 shrink-0" />
+          <p className="font-medium text-sm">
+            Orders are enabled, but you haven't set a WhatsApp number. Customers won't be able to place orders until you add your number below.
+          </p>
         </div>
       )}
+
+      {/* WhatsApp Number Section */}
+      <div className="p-6 bg-surface rounded-2xl border border-border shadow-sm">
+        <h3 className="text-lg font-bold text-text mb-2 flex items-center gap-2">
+          <FaWhatsapp className="text-[#25D366]" size={22} /> WhatsApp Number
+        </h3>
+        <p className="text-sm text-text-muted mb-4">
+          Enter the WhatsApp number where you want to receive customer orders (e.g., 0712345678 or 0123456789).
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="text"
+            value={whatsappNumber}
+            onChange={(e) => setWhatsappNumber(e.target.value)}
+            placeholder="0700000000"
+            className="flex-1 rounded-lg border border-border bg-surface-alt p-3 text-text focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          />
+          <button
+            onClick={handleSaveWhatsapp}
+            disabled={isSaving}
+            className="rounded-lg bg-primary-500 px-6 py-3 font-bold text-white shadow-md hover:bg-primary-600 disabled:opacity-50 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+          >
+            {isSaving ? "Saving..." : <><FiSave /> Save Number</>}
+          </button>
+        </div>
+        {saveMessage && (
+          <p className="mt-3 text-sm font-medium text-green-500 flex items-center gap-1">
+            <FiCheck /> {saveMessage}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

@@ -19,6 +19,7 @@ import {
   FiStar,
   FiMenu,
   FiX,
+  FiBookOpen,
 } from "react-icons/fi";
 
 function useReveal() {
@@ -62,6 +63,7 @@ export default function Home() {
           <a href="#features" className="hover:text-primary-500 transition-colors">Features</a>
           <a href="#use-cases" className="hover:text-primary-500 transition-colors">Use Cases</a>
           <a href="#pricing" className="hover:text-primary-500 transition-colors">Pricing</a>
+          <Link href="/guide" className="hover:text-primary-500 transition-colors">Guide</Link>
         </nav>
 
         <div className="flex items-center gap-4">
@@ -106,6 +108,7 @@ export default function Home() {
               <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors">Features</a>
               <a href="#use-cases" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors">Use Cases</a>
               <a href="#pricing" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors">Pricing</a>
+              <Link href="/guide" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors">Guide</Link>
             </nav>
 
             <div className="mt-auto flex flex-col gap-4 border-t border-border pt-6">
@@ -250,6 +253,24 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── HOW DOES IT WORK? (GUIDE) ── */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-alt scroll-mt-20 border-t border-b border-border">
+          <div className="mx-auto max-w-5xl">
+            <div className="reveal text-center mb-12">
+              <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Learn the ropes</p>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl mb-4">How does it work?</h2>
+              <p className="text-text-muted max-w-2xl mx-auto text-lg">
+                Setting up your menu is incredibly easy and takes just a few minutes. Check out our comprehensive guide to see exactly what the dashboard looks like and how to manage your digital presence.
+              </p>
+            </div>
+            <div className="reveal reveal-scale flex justify-center">
+              <Link href="/guide" className="inline-flex items-center gap-3 rounded-2xl bg-primary-500 px-8 py-5 font-bold text-white hover:bg-primary-600 transition-all active:scale-95 shadow-lg shadow-primary-500/30 text-lg">
+                <FiBookOpen className="h-6 w-6" /> Read the Setup Guide <FiArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ── WHY DOES IT MATTER? ── */}
         <section className="relative overflow-hidden py-28 px-4 sm:px-6 lg:px-8">
           <div className="absolute inset-0">
@@ -269,6 +290,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
 
         {/* ── HOW MUCH DOES IT COST? ── */}
         <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
@@ -333,6 +355,7 @@ export default function Home() {
                 <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
                 <li><a href="#use-cases" className="hover:text-white transition-colors">Use Cases</a></li>
                 <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><Link href="/guide" className="hover:text-white transition-colors">Guide</Link></li>
               </ul>
             </div>
             <div>
