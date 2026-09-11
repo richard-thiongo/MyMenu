@@ -205,6 +205,7 @@ export default function Home() {
                 { title: "Interactive Menu", desc: "Show categories, food items, images, and prices in real-time." },
                 { title: "QR Code Generator", desc: "A clean scannable code generated automatically for tables." },
                 { title: "Your Own Link", desc: "Get a branded link like ourmenu.click/yourplace, share it anywhere. No website required." },
+                { title: "WhatsApp Ordering", desc: "Customers can order directly from your menu via WhatsApp." },
               ].map(({ title, desc }, i) => (
                 <li key={title} className={`reveal delay-${(i + 1) * 100} flex items-start gap-3`}>
                   <FiCheck className="mt-1 h-6 w-6 shrink-0 text-primary-500" />
