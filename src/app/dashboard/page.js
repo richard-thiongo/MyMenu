@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import useSWR, { preload } from "swr";
 import toast from "react-hot-toast";
-import { FiPlus, FiFolder, FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiCopy, FiCheck, FiDownload, FiX } from "react-icons/fi";
+import { LuQrCode } from "react-icons/lu";
+import { QRCodeCanvas } from "qrcode.react";
 import { api } from "@/lib/api";
+import useAuthStore from "@/hooks/useAuthStore";
 import Skeleton from "@/components/Skeleton";
 import EmptyState from "@/components/EmptyState";
 import CategoryModal from "@/components/CategoryModal";
@@ -26,17 +29,126 @@ const foodItemsFetcher = async () => {
 // Preload food items immediately so navigating into a category is instant
 preload("/api/food-items", foodItemsFetcher);
 
+// --- QR Code Modal ---
+function QrModal({ restaurantName, onClose }) {
+  const [url, setUrl] = useState("");
+  const qrRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && restaurantName) {
+      setUrl(`${window.location.origin}/${encodeURIComponent(restaurantName)}`);
+    }
+  }, [restaurantName]);
+
+  const handleDownload = () => {
+    if (!qrRef.current) return;
+    const qrCanvas = qrRef.current.querySelector("canvas");
+    if (!qrCanvas) return;
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const padding = 20;
+    const textSpace = 70; // Increased space for two lines of text
+    canvas.width = qrCanvas.width + padding * 2;
+    canvas.height = qrCanvas.height + padding * 2 + textSpace;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(qrCanvas, padding, padding);
+
+    const displayUrl = url.replace(/^https?:\/\//, '');
+
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+
+    // Draw Restaurant Name
+    ctx.font = "bold 22px sans-serif";
+    ctx.textBaseline = "top";
+    ctx.fillText(restaurantName, canvas.width / 2, padding + qrCanvas.height + 10);
+
+    // Draw URL
+    ctx.font = "14px sans-serif";
+    ctx.fillStyle = "#555555";
+    ctx.fillText(displayUrl, canvas.width / 2, padding + qrCanvas.height + 40);
+
+    const pngUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = pngUrl;
+    link.download = `${restaurantName}_Menu_QR.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface p-6 shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-text flex items-center gap-2">
+            <LuQrCode className="text-primary-500" />
+            Your QR Code
+          </h2>
+          <button
+            onClick={onClose}
+            className="rounded-full p-2 text-text-muted transition-colors hover:bg-surface-elevated hover:text-text"
+            aria-label="Close"
+          >
+            <FiX size={20} />
+          </button>
+        </div>
+
+        <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl mb-4">
+          <div ref={qrRef}>
+            {url ? (
+              <QRCodeCanvas value={url} size={200} level="H" includeMargin={true} />
+            ) : (
+              <div className="h-[200px] w-[200px] bg-gray-100 animate-pulse rounded-lg flex items-center justify-center text-gray-400 text-sm">
+                Loading...
+              </div>
+            )}
+          </div>
+        </div>
+
+        <button
+          onClick={handleDownload}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-600 transition-colors shadow-md"
+        >
+          <FiDownload size={16} />
+          Download QR Code
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardCategories() {
+  const { restaurantName } = useAuthStore();
   const { data: categories, error, isLoading, mutate } = useSWR("/api/categories", categoriesFetcher, {
-    revalidateOnFocus: false,       // don't refetch when tab regains focus
-    revalidateOnReconnect: false,   // don't refetch on network reconnect
-    dedupingInterval: 30000,        // reuse cached data for 30 seconds
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 30000,
   });
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [confirmState, setConfirmState] = useState({ isOpen: false, id: null, name: "" });
-  
+  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [url, setUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && restaurantName) {
+      setUrl(`${window.location.origin}/${encodeURIComponent(restaurantName)}`);
+    }
+  }, [restaurantName]);
+
+  const handleCopy = () => {
+    if (!url) return;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const handleOpenModal = (category = null) => {
     setEditingCategory(category);
     setIsModalOpen(true);
@@ -57,21 +169,21 @@ export default function DashboardCategories() {
         toast.success("Category created!");
       }
       handleCloseModal();
-      mutate(); // Refresh SWR cache
+      mutate();
     } catch (err) {
       toast.error(err.message || "Failed to save category");
     }
   };
 
   const handleDeleteCategory = (id, name, e) => {
-    e.preventDefault(); // prevent navigation since card is a Link
+    e.preventDefault();
     setConfirmState({ isOpen: true, id, name });
   };
 
   const { showLoading, hideLoading, showError } = useStatus();
 
   const handleConfirmDelete = async () => {
-    setConfirmState({ isOpen: false, id: null, name: "" }); // Close confirm modal first
+    setConfirmState({ isOpen: false, id: null, name: "" });
     showLoading("Deleting category...");
     try {
       await api.deleteCategory(confirmState.id);
@@ -86,11 +198,47 @@ export default function DashboardCategories() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+      {/* Share section */}
+      <div className="mb-6">
+        <p className="text-sm font-medium text-text-muted mb-2">Here is the link to share your menu:</p>
+        <div className="flex items-center gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 truncate rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-primary-500 hover:underline focus:outline-none"
+          >
+            {url}
+          </a>
+          <button
+            onClick={handleCopy}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-500 text-white hover:bg-primary-600 transition-colors shadow-sm"
+            title="Copy link"
+          >
+            {copied ? <FiCheck size={18} /> : <FiCopy size={18} />}
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-8 flex items-center gap-4">
+        <p className="text-sm font-medium text-text-muted">And also your QR code is here:</p>
+        <button
+          onClick={() => setIsQrOpen(true)}
+          className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-elevated hover:text-primary-500 transition-colors shadow-sm dark:bg-blue-600 dark:border-blue-600 dark:text-white dark:hover:bg-blue-700"
+          title="View QR Code"
+        >
+          <LuQrCode size={20} className="text-primary-500 dark:text-white" />
+          <span>View QR</span>
+        </button>
+      </div>
+
+      {/* Categories header */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text">Home</h1>
+          <h2 className="text-xl font-bold text-text">Menu Categories</h2>
           <p className="mt-1 text-sm text-text-muted">
-            Manage your menu sections. Click a category to add food items.
+            Click a category to add food items.
           </p>
         </div>
         <button
@@ -109,7 +257,7 @@ export default function DashboardCategories() {
           ))}
         </div>
       ) : error ? (
-        <EmptyState 
+        <EmptyState
           title="Failed to load"
           description={error.message || "Could not fetch categories"}
         />
@@ -123,11 +271,11 @@ export default function DashboardCategories() {
               className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-border bg-surface-alt p-6 transition-all hover:border-primary-400 hover:shadow-lg hover:shadow-primary-500/10"
             >
               {cat.image_url && (
-                <img 
-                  src={cat.image_url} 
-                  alt={cat.category_name} 
+                <img
+                  src={cat.image_url}
+                  alt={cat.category_name}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover opacity-10 transition-opacity group-hover:opacity-20" 
+                  className="absolute inset-0 h-full w-full object-cover opacity-10 transition-opacity group-hover:opacity-20"
                 />
               )}
               <div className="relative z-10 flex items-start justify-between">
@@ -163,14 +311,13 @@ export default function DashboardCategories() {
           ))}
         </div>
       ) : (
-        <EmptyState 
+        <EmptyState
           title="No Categories Yet"
           description="You haven't added any categories to your menu. Click the Add Category button to get started."
           icon={FiFolder}
         />
       )}
 
-      {/* Modal is mounted conditionally inside the component to destroy state on close, or we can use the key trick. Here we just render it if open */}
       {isModalOpen && (
         <CategoryModal
           isOpen={isModalOpen}
@@ -187,6 +334,10 @@ export default function DashboardCategories() {
         title="Delete Category"
         description={`Are you sure you want to delete "${confirmState.name}"? This cannot be undone.`}
       />
+
+      {isQrOpen && (
+        <QrModal restaurantName={restaurantName} onClose={() => setIsQrOpen(false)} />
+      )}
     </div>
   );
 }

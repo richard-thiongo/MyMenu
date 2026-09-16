@@ -51,7 +51,7 @@ export default function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-border bg-surface/80 px-4 py-4 backdrop-blur-md sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 sm:gap-3">
-          <Image src="/logo.png" alt="OurMenu.Click logo" width={32} height={32} className="rounded-lg sm:h-10 sm:w-10" priority />
+          <Image src="/logo.png" alt="OurMenu.Click logo" width={32} height={32} className="rounded-lg bg-white p-1 sm:h-10 sm:w-10" priority />
           <span className="font-logo text-2xl sm:text-3xl tracking-tight text-primary-500 dark:text-white">
             OurMenu.Click
           </span>
@@ -164,8 +164,13 @@ export default function Home() {
         </section>
 
         {/* ── WHO IS IT FOR? ── */}
-        <section id="services" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
-          <div className="mx-auto max-w-5xl">
+        <section id="services" className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
+          {/* Decorative Solid Shapes */}
+          <div className="absolute -top-10 -right-10 h-64 w-64 rounded-full bg-blue-100 dark:bg-blue-900/50 pointer-events-none animate-[bounce_8s_ease-in-out_infinite]" />
+          <div className="absolute bottom-10 -left-16 h-48 w-48 rounded-3xl bg-indigo-100 dark:bg-indigo-900/50 pointer-events-none animate-[bounce_10s_ease-in-out_infinite]" />
+          <div className="absolute top-1/2 left-1/4 h-24 w-24 rounded-full bg-sky-200 dark:bg-sky-900/40 pointer-events-none animate-[bounce_6s_ease-in-out_infinite]" />
+          <div className="absolute bottom-1/4 right-1/4 h-32 w-32 rounded-[2rem] bg-cyan-100 dark:bg-cyan-900/30 pointer-events-none animate-[bounce_12s_ease-in-out_infinite]" />
+          <div className="relative mx-auto max-w-5xl">
             <div className="reveal mb-16 text-center">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Services</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">Who is it for?</h2>
@@ -194,8 +199,12 @@ export default function Home() {
         </section>
 
         {/* ── WHAT DO WE OFFER? ── */}
-        <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-alt scroll-mt-20">
-          <div className="mx-auto max-w-5xl">
+        <section id="features" className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-surface-alt scroll-mt-20">
+          <div className="absolute top-1/3 left-10 h-40 w-40 rounded-full bg-cyan-200 dark:bg-cyan-900/50 pointer-events-none animate-[bounce_9s_ease-in-out_infinite]" />
+          <div className="absolute bottom-10 right-20 h-56 w-56 rounded-[40px] bg-blue-200 dark:bg-blue-900/50 pointer-events-none animate-[bounce_11s_ease-in-out_infinite]" />
+          <div className="absolute top-10 right-1/4 h-20 w-20 rounded-full bg-indigo-100 dark:bg-indigo-900/40 pointer-events-none animate-[bounce_7s_ease-in-out_infinite]" />
+          <div className="absolute bottom-1/3 left-1/4 h-28 w-28 rounded-2xl bg-purple-100 dark:bg-purple-900/40 pointer-events-none animate-[bounce_10s_ease-in-out_infinite]" />
+          <div className="relative mx-auto max-w-5xl">
             <div className="reveal mb-16 text-center">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">What we offer</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">What do you get?</h2>
@@ -219,8 +228,12 @@ export default function Home() {
         </section>
 
         {/* ── WHERE TO USE IT? ── */}
-        <section id="use-cases" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
-          <div className="mx-auto max-w-5xl">
+        <section id="use-cases" className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
+          <div className="absolute top-20 right-1/4 h-32 w-32 rounded-xl bg-purple-200 dark:bg-purple-900/50 pointer-events-none animate-[bounce_12s_ease-in-out_infinite]" />
+          <div className="absolute bottom-10 left-1/4 h-48 w-48 rounded-full bg-sky-200 dark:bg-sky-900/50 pointer-events-none animate-[bounce_8s_ease-in-out_infinite]" />
+          <div className="absolute top-1/2 left-10 h-24 w-24 rounded-full bg-blue-100 dark:bg-blue-900/30 pointer-events-none animate-[bounce_6s_ease-in-out_infinite]" />
+          <div className="absolute bottom-20 right-10 h-40 w-40 rounded-[2rem] bg-indigo-200 dark:bg-indigo-900/40 pointer-events-none animate-[bounce_14s_ease-in-out_infinite]" />
+          <div className="relative mx-auto max-w-5xl">
             <div className="reveal mb-16 text-center">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Use cases</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">Where can you use it?</h2>
@@ -255,8 +268,14 @@ export default function Home() {
         </section>
 
         {/* ── HOW DOES IT WORK? (GUIDE) ── */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-alt scroll-mt-20 border-t border-b border-border">
-          <div className="mx-auto max-w-5xl">
+        <section className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-surface-alt scroll-mt-20 border-t border-b border-border">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none gap-20 opacity-50">
+            <div className="h-64 w-64 rounded-full bg-blue-200 dark:bg-blue-900/50 animate-[bounce_9s_ease-in-out_infinite]" />
+            <div className="h-48 w-48 rounded-3xl bg-indigo-200 dark:bg-indigo-900/50 animate-[bounce_11s_ease-in-out_infinite]" />
+            <div className="absolute top-10 left-1/4 h-32 w-32 rounded-full bg-cyan-200 dark:bg-cyan-900/40 animate-[bounce_7s_ease-in-out_infinite]" />
+            <div className="absolute bottom-10 right-1/4 h-40 w-40 rounded-[3rem] bg-purple-200 dark:bg-purple-900/40 animate-[bounce_13s_ease-in-out_infinite]" />
+          </div>
+          <div className="relative mx-auto max-w-5xl">
             <div className="reveal text-center mb-12">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Learn the ropes</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl mb-4">How does it work?</h2>
@@ -294,8 +313,12 @@ export default function Home() {
 
 
         {/* ── HOW MUCH DOES IT COST? ── */}
-        <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
-          <div className="mx-auto max-w-4xl text-center">
+        <section id="pricing" className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-surface scroll-mt-20">
+          <div className="absolute top-10 left-10 h-40 w-40 rounded-full bg-cyan-200 dark:bg-cyan-900/50 pointer-events-none animate-[bounce_8s_ease-in-out_infinite]" />
+          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-[3rem] bg-blue-200 dark:bg-blue-900/50 pointer-events-none animate-[bounce_10s_ease-in-out_infinite]" />
+          <div className="absolute top-1/3 right-1/4 h-24 w-24 rounded-full bg-indigo-100 dark:bg-indigo-900/40 pointer-events-none animate-[bounce_6s_ease-in-out_infinite]" />
+          <div className="absolute bottom-1/4 left-1/4 h-32 w-32 rounded-[2rem] bg-purple-100 dark:bg-purple-900/30 pointer-events-none animate-[bounce_12s_ease-in-out_infinite]" />
+          <div className="relative mx-auto max-w-4xl text-center">
             <div className="reveal mb-16">
               <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Pricing</p>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text sm:text-4xl">How much does it cost?</h2>
@@ -325,8 +348,12 @@ export default function Home() {
         </section>
 
         {/* ── NEED HELP? ── */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-surface-alt border-t border-border">
-          <div className="reveal mx-auto max-w-xl text-center">
+        <section className="relative overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-surface-alt border-t border-border">
+          <div className="absolute top-10 right-20 h-32 w-32 rounded-2xl bg-purple-200 dark:bg-purple-900/50 pointer-events-none animate-[bounce_11s_ease-in-out_infinite]" />
+          <div className="absolute bottom-10 left-20 h-40 w-40 rounded-full bg-blue-200 dark:bg-blue-900/50 pointer-events-none animate-[bounce_9s_ease-in-out_infinite]" />
+          <div className="absolute top-1/2 left-1/3 h-20 w-20 rounded-full bg-cyan-200 dark:bg-cyan-900/30 pointer-events-none animate-[bounce_7s_ease-in-out_infinite]" />
+          <div className="absolute bottom-20 right-1/3 h-28 w-28 rounded-3xl bg-indigo-200 dark:bg-indigo-900/40 pointer-events-none animate-[bounce_10s_ease-in-out_infinite]" />
+          <div className="relative reveal mx-auto max-w-xl text-center">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-3">Support</p>
             <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-text mb-3">Need help?</h2>
             <p className="text-text-muted mb-10">We are here for you. Reach out anytime.</p>

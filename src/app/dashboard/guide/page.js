@@ -24,9 +24,9 @@ export default function GuidePage() {
             The dashboard is divided into several main areas accessible from the sidebar (or bottom bar on mobile):
           </p>
           <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li><strong>Home (Categories):</strong> Add and manage your menu sections (e.g., Starters, Mains, Drinks).</li>
-            <li><strong>Settings:</strong> Update your brand colors, restaurant details, and password.</li>
-            <li><strong>Payments (Billing):</strong> Check your subscription status and plan limits.</li>
+            <li><strong>Home (Categories):</strong> Add and manage your menu sections (e.g., Starters, Mains, Drinks). You can also find your sharing link and QR Code here.</li>
+            <li><strong>Settings:</strong> Update your brand colors, WhatsApp ordering, restaurant details, and password.</li>
+            <li><strong>Billing (Inside Settings):</strong> Manage your subscription status and plan limits via the Billing card in your settings.</li>
           </ul>
         </section>
 
@@ -64,9 +64,9 @@ export default function GuidePage() {
             You don't need to print physical menus anymore! 
           </p>
           <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li><strong>Share Button:</strong> Look for the "Share" button at the top of your dashboard.</li>
+            <li><strong>Home Page:</strong> You will find your sharing link and QR Code directly at the top of the home page of your dashboard.</li>
             <li><strong>Public Link:</strong> Copy your unique link and share it on your social media (Instagram bio, Facebook page) or via WhatsApp.</li>
-            <li><strong>QR Code:</strong> Click <strong>Download QR Code</strong> to save a high-quality image. You can print this and place it on your tables for customers to scan.</li>
+            <li><strong>QR Code:</strong> Click <strong>View QR</strong> to open and download a high-quality image of your QR Code. You can print this and place it on your tables for customers to scan.</li>
           </ul>
         </section>
 
@@ -84,6 +84,7 @@ export default function GuidePage() {
           <ul className="list-disc pl-5 space-y-2 text-text-muted">
             <li>Navigate to the <strong>Settings</strong> page.</li>
             <li>Use the color picker to select your brand's primary color. Your public menu will instantly update to use this color for buttons, headers, and accents.</li>
+            <li>Enable <strong>WhatsApp Ordering</strong> by providing your number and toggling it ON to receive orders directly.</li>
             <li>You can also reset your password from the settings page if needed.</li>
           </ul>
         </section>
@@ -100,7 +101,7 @@ export default function GuidePage() {
             If your public menu is hidden, it means your subscription might have expired or you haven't activated it yet.
           </p>
           <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li>Go to the <strong>Payments / Billing</strong> tab.</li>
+            <li>Go to the <strong>Settings</strong> page and click on the <strong>Billing</strong> card.</li>
             <li>You can see your current plan, how many items you've used, and instructions on how to pay via M-Pesa.</li>
             <li>Follow the instructions provided to activate or renew your plan.</li>
           </ul>

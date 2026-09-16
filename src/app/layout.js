@@ -93,7 +93,7 @@ export default function RootLayout({ children }) {
               "applicationCategory": "BusinessApplication",
               "offers": {
                 "@type": "Offer",
-                "price": "1500.00",
+                "price": "1999.00",
                 "priceCurrency": "KES"
               },
               "description": "Digital menu platform for restaurants, hotels, and cafes in Kenya to generate QR codes and shareable links instantly.",

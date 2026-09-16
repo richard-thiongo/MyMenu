@@ -35,8 +35,7 @@ export default function PublicGuidePage() {
             </p>
             <ul className="list-disc pl-5 space-y-2 text-text-muted">
               <li><strong>Menu Management:</strong> Add and organize your menu categories (e.g., Starters, Mains, Drinks).</li>
-              <li><strong>Settings:</strong> Update your brand colors, restaurant name, and login credentials.</li>
-              <li><strong>Orders:</strong> Instantly enable WhatsApp ordering directly from your menu.</li>
+              <li><strong>Settings:</strong> Update your brand colors, login credentials, and enable WhatsApp ordering.</li>
             </ul>
           </section>
 
@@ -73,9 +72,10 @@ export default function PublicGuidePage() {
               Want customers to order directly to your phone? We've got you covered.
             </p>
             <ul className="list-disc pl-5 space-y-2 text-text-muted">
-              <li>Navigate to the <strong>Orders</strong> page in your dashboard.</li>
-              <li>Toggle "Accept Orders via WhatsApp" to ON.</li>
-              <li>Enter your restaurant's WhatsApp number.</li>
+              <li>Navigate to the <strong>Settings</strong> page in your dashboard.</li>
+              <li>Open the <strong>WhatsApp Ordering</strong> section.</li>
+              <li>Toggle "Accept Orders" to ON.</li>
+              <li>Enter your restaurant's WhatsApp number and click Save.</li>
               <li>Instantly, "Order" buttons will appear next to your food items, and your customers can send beautifully formatted orders straight to your WhatsApp!</li>
             </ul>
           </section>
@@ -110,7 +110,7 @@ export default function PublicGuidePage() {
             </p>
             <ul className="list-disc pl-5 space-y-2 text-text-muted">
               <li>Create your menu for <strong>free</strong>. You only pay a tiny, highly affordable fee (less than the cost of a good cup of coffee!) when you're ready to share it with the public.</li>
-              <li>When you're ready, visit the <strong>Billing</strong> tab to activate your subscription directly via M-Pesa.</li>
+              <li>When you're ready, visit the <strong>Billing</strong> section inside your Settings to activate your subscription directly via M-Pesa.</li>
               <li>Track your active subscription status and expiry dates right from your dashboard.</li>
             </ul>
           </section>
