@@ -225,11 +225,11 @@ export default function DashboardCategories() {
         <p className="text-sm font-medium text-text-muted">And also your QR code is here:</p>
         <button
           onClick={() => setIsQrOpen(true)}
-          className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium text-text hover:bg-surface-elevated hover:text-primary-500 transition-colors shadow-sm dark:bg-blue-600 dark:border-blue-600 dark:text-white dark:hover:bg-blue-700"
-          title="View QR Code"
+          className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm"
+          title="See QR Code"
         >
-          <LuQrCode size={20} className="text-primary-500 dark:text-white" />
-          <span>View QR</span>
+          <LuQrCode size={20} className="text-white" />
+          <span>See QR</span>
         </button>
       </div>
 
