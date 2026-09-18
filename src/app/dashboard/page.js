@@ -209,7 +209,7 @@ export default function DashboardCategories() {
             rel="noopener noreferrer"
             className="flex-1 truncate rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-medium text-primary-500 hover:underline focus:outline-none"
           >
-            {url}
+            {url.replace(/^https?:\/\/(www\.)?/, '')}
           </a>
           <button
             onClick={handleCopy}
