@@ -9,13 +9,14 @@ const useAuthStore = create(
       token: null,
       refreshToken: null,
       restaurantName: null,
+      username: null,
       primaryColor: null,
       isPaid: false,
       subscriptionExpiresAt: null,
 
-      login: (token, refreshToken, restaurantName, primaryColor, isPaid, subscriptionExpiresAt) =>
-        set({ token, refreshToken, restaurantName, primaryColor: primaryColor || null, isPaid: isPaid || false, subscriptionExpiresAt: subscriptionExpiresAt || null }),
-      logout: () => set({ token: null, refreshToken: null, restaurantName: null, primaryColor: null, isPaid: false, subscriptionExpiresAt: null }),
+      login: (token, refreshToken, restaurantName, username, primaryColor, isPaid, subscriptionExpiresAt) =>
+        set({ token, refreshToken, restaurantName, username: username || null, primaryColor: primaryColor || null, isPaid: isPaid || false, subscriptionExpiresAt: subscriptionExpiresAt || null }),
+      logout: () => set({ token: null, refreshToken: null, restaurantName: null, username: null, primaryColor: null, isPaid: false, subscriptionExpiresAt: null }),
       updateTokens: (token, refreshToken) => set({ token, refreshToken }),
     }),
     {

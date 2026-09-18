@@ -30,15 +30,15 @@ const foodItemsFetcher = async () => {
 preload("/api/food-items", foodItemsFetcher);
 
 // --- QR Code Modal ---
-function QrModal({ restaurantName, onClose }) {
+function QrModal({ restaurantName, username, onClose }) {
   const [url, setUrl] = useState("");
   const qrRef = useRef(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && restaurantName) {
-      setUrl(`${window.location.origin}/${encodeURIComponent(restaurantName)}`);
+    if (typeof window !== "undefined" && username) {
+      setUrl(`${window.location.origin}/${encodeURIComponent(username)}`);
     }
-  }, [restaurantName]);
+  }, [username]);
 
   const handleDownload = () => {
     if (!qrRef.current) return;
@@ -122,7 +122,7 @@ function QrModal({ restaurantName, onClose }) {
 }
 
 export default function DashboardCategories() {
-  const { restaurantName } = useAuthStore();
+  const { restaurantName, username } = useAuthStore();
   const { data: categories, error, isLoading, mutate } = useSWR("/api/categories", categoriesFetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -137,10 +137,10 @@ export default function DashboardCategories() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && restaurantName) {
-      setUrl(`${window.location.origin}/${encodeURIComponent(restaurantName)}`);
+    if (typeof window !== "undefined" && username) {
+      setUrl(`${window.location.origin}/${encodeURIComponent(username)}`);
     }
-  }, [restaurantName]);
+  }, [username]);
 
   const handleCopy = () => {
     if (!url) return;
@@ -336,7 +336,7 @@ export default function DashboardCategories() {
       />
 
       {isQrOpen && (
-        <QrModal restaurantName={restaurantName} onClose={() => setIsQrOpen(false)} />
+        <QrModal restaurantName={restaurantName} username={username} onClose={() => setIsQrOpen(false)} />
       )}
     </div>
   );

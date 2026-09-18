@@ -35,8 +35,9 @@ export default function UnifiedMenuPage() {
     { revalidateOnFocus: true }
   );
 
-  const { food_items = [], primary_color, categories: categoryMeta = [], orders_enabled = false, whatsappnumber } = menuData || {};
+  const { food_items = [], primary_color, categories: categoryMeta = [], orders_enabled = false, whatsappnumber, restaurant_name: realRestaurantName } = menuData || {};
   const themeColor = primary_color || null;
+  const displayRestaurantName = realRestaurantName || restaurantName;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -149,8 +150,10 @@ export default function UnifiedMenuPage() {
   };
 
   useEffect(() => {
-    document.title = `${restaurantName} | Menu`;
-  }, [restaurantName]);
+    if (displayRestaurantName) {
+      document.title = `${displayRestaurantName} | Menu`;
+    }
+  }, [displayRestaurantName]);
 
   // ── Cart helpers ─────────────────────────────────────────────────────────
   const totalCartItems = useMemo(
@@ -384,7 +387,7 @@ export default function UnifiedMenuPage() {
           ) : (
             <>
               <div className="min-w-0">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-primary-500 truncate">{restaurantName}</h1>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-primary-500 truncate">{displayRestaurantName}</h1>
                 <p className="text-sm text-text-muted font-medium">{greeting}</p>
               </div>
 

@@ -1,104 +1,133 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
+// Deterministic pseudo-random from a seed string
+function seededRandom(seed, index) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(31, h) + seed.charCodeAt(i) | 0;
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b) ^ index * 2654435761;
+  return ((h ^ (h >>> 16)) >>> 0) / 0xFFFFFFFF;
+}
+
+const SPLASHES = [
+  { w: 420, h: 340, blur: 90, opacity: 0.18 },
+  { w: 260, h: 260, blur: 70, opacity: 0.12 },
+  { w: 340, h: 200, blur: 80, opacity: 0.14 },
+  { w: 180, h: 300, blur: 60, opacity: 0.10 },
+];
+
 export default function WelcomePage() {
   const params = useParams();
-  const rawRestaurantName = params?.restaurantName ? (Array.isArray(params.restaurantName) ? params.restaurantName[0] : params.restaurantName) : "";
+  const rawRestaurantName = params?.restaurantName
+    ? Array.isArray(params.restaurantName)
+      ? params.restaurantName[0]
+      : params.restaurantName
+    : "";
   const restaurantName = rawRestaurantName ? decodeURIComponent(rawRestaurantName) : "";
 
   const { data: menuData, error } = useSWR(
     restaurantName ? `public-menu/${restaurantName}` : null,
     () => fetcher(restaurantName),
-    {
-      revalidateOnFocus: false,
-    }
+    { revalidateOnFocus: false }
   );
 
-  const { primary_color } = menuData || {};
-  const themeColor = primary_color || "#1800ad";
+  const { primary_color, restaurant_name: realRestaurantName } = menuData || {};
+  const themeColor = primary_color || "#6366f1";
+  const displayRestaurantName = realRestaurantName || restaurantName;
 
   useEffect(() => {
-    if (restaurantName) {
-      document.title = `${restaurantName} | Welcome`;
+    if (displayRestaurantName) {
+      document.title = `${displayRestaurantName} | Welcome`;
     }
+  }, [displayRestaurantName]);
+
+  // Generate stable splash positions seeded by the restaurant name
+  const splashes = useMemo(() => {
+    const seed = restaurantName || "default";
+    return SPLASHES.map((s, i) => ({
+      ...s,
+      top: `${seededRandom(seed, i * 3 + 0) * 80}%`,
+      left: `${seededRandom(seed, i * 3 + 1) * 80}%`,
+      rotate: `${seededRandom(seed, i * 3 + 2) * 60 - 30}deg`,
+    }));
   }, [restaurantName]);
 
   return (
-    <div
-      className="relative flex min-h-screen flex-col items-center justify-center text-white px-4 text-center bg-cover bg-center bg-no-repeat overflow-hidden"
-      style={{ backgroundImage: "url('/wecome.jpg')" }}
-    >
-      {/* Inject theme color for CSS var usage */}
-      <style>{`:root { --theme-primary: ${themeColor}; }`}</style>
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-950 px-6 text-center transition-colors duration-300 overflow-hidden">
 
-      {/* Dark overlay base */}
-      <div className="absolute inset-0 bg-black/75" />
+      {/* Color splashes */}
+      {splashes.map((s, i) => (
+        <div
+          key={i}
+          className="pointer-events-none absolute rounded-full"
+          style={{
+            top: s.top,
+            left: s.left,
+            width: s.w,
+            height: s.h,
+            background: themeColor,
+            opacity: s.opacity,
+            filter: `blur(${s.blur}px)`,
+            transform: `rotate(${s.rotate})`,
+          }}
+        />
+      ))}
 
-      {/* Brand color radial glow — subtle accent from the bottom-center */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse 80% 50% at 50% 110%, ${themeColor}55 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Top vignette for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
-
-      {/* Content wrapper to stay above overlay */}
-      <div className="relative z-10 flex flex-col items-center w-full">
-        {error ? (
-          <div className="flex flex-col items-center gap-4">
-            <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold drop-shadow-md">Oops!</h1>
-            <p className="text-lg text-white/80 drop-shadow-sm">
-              {error?.status === 403
-                ? "This menu is currently unavailable."
-                : "We couldn't find this menu. Please check the link."}
-            </p>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center max-w-lg mx-auto animate-in fade-in zoom-in duration-500">
-
-            {/* Glassmorphism name card */}
-            <div
-              className="mb-8 px-8 py-5 rounded-2xl border border-white/10 backdrop-blur-sm"
-              style={{ background: `${themeColor}22` }}
-            >
-              <h1
-                className="font-[family-name:var(--font-playfair)] text-5xl sm:text-6xl font-extrabold tracking-tight drop-shadow-lg"
-              >
-                {restaurantName}
-              </h1>
-            </div>
-
-            <p className="mb-12 text-lg sm:text-xl font-normal text-white/75 leading-relaxed drop-shadow-md max-w-sm">
-              Welcome to {restaurantName}! We're glad you're here.{" "}
-              <br className="hidden sm:block" />
-              Browse our menu and enjoy.
-            </p>
-
-            <Link
-              href={`/${encodeURIComponent(restaurantName)}/menu`}
-              className="group flex items-center gap-3 rounded-full px-8 py-4 text-lg font-bold text-white shadow-2xl transition-all hover:scale-105 active:scale-95"
-              style={{
-                background: themeColor,
-                boxShadow: `0 8px 32px ${themeColor}66`,
-              }}
-            >
-              View our menu
-              <FiArrowRight className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        )}
+      {/* Theme toggle pinned top-right */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
       </div>
+
+      {error ? (
+        <div className="relative z-10 flex flex-col items-center gap-4">
+          <h1 className="font-[family-name:var(--font-playfair)] text-3xl font-extrabold text-gray-900 dark:text-white">
+            Oops!
+          </h1>
+          <p className="text-base text-gray-500 dark:text-gray-400">
+            {error?.status === 403
+              ? "This menu is currently unavailable."
+              : "We couldn't find this menu. Please check the link."}
+          </p>
+        </div>
+      ) : (
+        <div className="relative z-10 flex flex-col items-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+          {/* Restaurant name */}
+          <p
+            className="text-sm font-semibold uppercase tracking-widest"
+            style={{ color: themeColor }}
+          >
+            {displayRestaurantName}
+          </p>
+
+          {/* Main heading */}
+          <h1 className="font-[family-name:var(--font-playfair)] text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white leading-snug max-w-xs sm:max-w-sm">
+            Hey! Want to see what we have today?
+          </h1>
+
+          {/* CTA button */}
+          <Link
+            href={`/${encodeURIComponent(restaurantName)}/menu`}
+            className="flex items-center gap-3 rounded-xl px-10 py-4 text-base font-bold text-white shadow-lg transition-all hover:brightness-110 hover:shadow-xl active:scale-95"
+            style={{
+              backgroundColor: themeColor,
+              boxShadow: `0 6px 24px ${themeColor}44`,
+            }}
+          >
+            Yes, let&apos;s go
+            <FiArrowRight size={18} />
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

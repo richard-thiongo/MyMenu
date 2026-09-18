@@ -11,7 +11,7 @@ import AuthGuard from "@/components/AuthGuard";
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { restaurantName, primaryColor, logout, isPaid, subscriptionExpiresAt } = useAuthStore();
+  const { restaurantName, username, primaryColor, logout, isPaid, subscriptionExpiresAt } = useAuthStore();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
@@ -30,6 +30,7 @@ export default function DashboardLayout({ children }) {
           // (e.g. restaurantName showing a hex color due to a previous login() arg mismatch)
           useAuthStore.setState({
             restaurantName: res.data.restaurant_name ?? useAuthStore.getState().restaurantName,
+            username: res.data.username ?? useAuthStore.getState().username,
             primaryColor: res.data.primary_color ?? useAuthStore.getState().primaryColor,
             isPaid: res.data.is_paid,
             subscriptionExpiresAt: res.data.subscription_expires_at,
@@ -96,7 +97,7 @@ export default function DashboardLayout({ children }) {
                   <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Guide</span>
                 </Link>
                 <Link
-                  href={`/${restaurantName}`}
+                  href={`/${username || restaurantName}`}
                   target="_blank"
                   className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium text-text-muted hover:bg-primary-500/10 hover:text-primary-500 transition-all duration-200 ${isCollapsed ? "justify-center" : "gap-3"
                     }`}

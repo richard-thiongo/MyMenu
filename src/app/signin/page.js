@@ -61,10 +61,11 @@ export default function SigninPage() {
         const token = res.data.token;
         const refreshToken = res.data.refreshToken;
         const name = res.data.restaurant?.restaurant_name || formData.restaurant_name;
+        const username = res.data.restaurant?.username || null;
         const primaryColor = res.data.restaurant?.primary_color || null;
         const isPaid = res.data.restaurant?.is_paid || false;
         const subExp = res.data.restaurant?.subscription_expires_at || null;
-        login(token, refreshToken, name, primaryColor, isPaid, subExp);
+        login(token, refreshToken, name, username, primaryColor, isPaid, subExp);
 
         if (rememberMe) {
           localStorage.setItem("mymenu-remembered-credentials", JSON.stringify({

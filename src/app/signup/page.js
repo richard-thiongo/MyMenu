@@ -14,6 +14,7 @@ import { useStatus } from "@/providers/StatusProvider";
 
 const STEPS = [
   { label: "Name" },
+  { label: "Link" },
   { label: "Location" },
   { label: "Color" },
   { label: "Email" },
@@ -29,10 +30,11 @@ export default function SignupPage() {
   }, [token, router]);
 
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   const [formData, setFormData] = useState({
     restaurant_name: "",
+    username: "",
     restaurant_email: "",
     location: "",
     password: "",
@@ -53,8 +55,9 @@ export default function SignupPage() {
 
   const handleNextStep = () => {
     if (currentStep === 1 && !formData.restaurant_name) { showError("Enter your restaurant name."); return; }
-    if (currentStep === 2 && !formData.location) { showError("Enter your location."); return; }
-    if (currentStep === 4) {
+    if (currentStep === 2 && !formData.username) { showError("Enter a username for your link."); return; }
+    if (currentStep === 3 && !formData.location) { showError("Enter your location."); return; }
+    if (currentStep === 5) {
       if (!formData.restaurant_email) { showError("Enter your email."); return; }
       if (!emailValidator.validate(formData.restaurant_email)) { showError("Enter a valid email."); return; }
     }
@@ -153,17 +156,19 @@ export default function SignupPage() {
             <div className="mb-6">
               <h2 className="text-2xl font-extrabold text-text tracking-tight">
                 {currentStep === 1 && "Restaurant Name"}
-                {currentStep === 2 && "Location"}
-                {currentStep === 3 && "Brand Color"}
-                {currentStep === 4 && "Email"}
-                {currentStep === 5 && "Set Password"}
+                {currentStep === 2 && "Your Link"}
+                {currentStep === 3 && "Location"}
+                {currentStep === 4 && "Brand Color"}
+                {currentStep === 5 && "Email"}
+                {currentStep === 6 && "Set Password"}
               </h2>
               <p className="text-sm text-text-muted mt-1">
-                {currentStep === 1 && "No spaces allowed."}
-                {currentStep === 2 && "Your city or area."}
-                {currentStep === 3 && "Pick your menu theme color."}
-                {currentStep === 4 && "Used for account recovery."}
-                {currentStep === 5 && "At least 8 characters."}
+                {currentStep === 1 && "What's the name of your restaurant?"}
+                {currentStep === 2 && "Choose your custom menu link."}
+                {currentStep === 3 && "Your city or area."}
+                {currentStep === 4 && "Pick your menu theme color."}
+                {currentStep === 5 && "Used for account recovery."}
+                {currentStep === 6 && "At least 8 characters."}
               </p>
             </div>
 
@@ -183,7 +188,7 @@ export default function SignupPage() {
                       autoFocus
                       required
                       className="block w-full rounded-lg border border-border bg-surface px-10 py-3 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                      placeholder="e.g. KenyaCafe"
+                      placeholder="Restaurant Name (e.g. Kenya Cafe)"
                       value={formData.restaurant_name}
                       onChange={(e) => setFormData({ ...formData, restaurant_name: e.target.value })}
                       disabled={isLoading}
@@ -194,6 +199,35 @@ export default function SignupPage() {
 
               {/* STEP 2 */}
               {currentStep === 2 && (
+                <div className="animate-in fade-in slide-in-from-right-4 duration-300 space-y-4">
+                  {formData.username && (
+                    <p className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 px-3 py-2 rounded-lg border border-green-200 dark:border-green-500/20 flex items-center gap-2">
+                      <FiCheck size={14} />
+                      {typeof window !== 'undefined' ? window.location.host : 'mymenu.app'}/{formData.username}
+                    </p>
+                  )}
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <FiUser className="h-5 w-5 text-text-muted" />
+                    </div>
+                    <input
+                      id="username"
+                      name="username"
+                      type="text"
+                      autoFocus
+                      required
+                      className="block w-full rounded-lg border border-border bg-surface px-10 py-3 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder="Username for your link (e.g. kenyacafe)"
+                      value={formData.username}
+                      onChange={(e) => setFormData({ ...formData, username: e.target.value.replace(/\s+/g, '').toLowerCase() })}
+                      disabled={isLoading}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 3 */}
+              {currentStep === 3 && (
                 <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -215,8 +249,8 @@ export default function SignupPage() {
                 </div>
               )}
 
-              {/* STEP 3 */}
-              {currentStep === 3 && (
+              {/* STEP 4 */}
+              {currentStep === 4 && (
                 <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                   <button
                     type="button"
@@ -236,8 +270,8 @@ export default function SignupPage() {
                 </div>
               )}
 
-              {/* STEP 4 */}
-              {currentStep === 4 && (
+              {/* STEP 5 */}
+              {currentStep === 5 && (
                 <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -259,8 +293,8 @@ export default function SignupPage() {
                 </div>
               )}
 
-              {/* STEP 5 */}
-              {currentStep === 5 && (
+              {/* STEP 6 */}
+              {currentStep === 6 && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
