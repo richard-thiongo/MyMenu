@@ -115,9 +115,9 @@ export default function DashboardLayout({ children }) {
 
                   {/* Desktop Tooltip */}
                   {showTooltip && (
-                    <div className={`absolute z-[60] animate-in slide-in-from-left-4 fade-in duration-300 w-64 rounded-2xl bg-surface-elevated p-4 shadow-2xl border border-border pointer-events-auto ${isCollapsed ? 'left-20 top-0' : 'left-full ml-4 top-0'}`}>
+                    <div className={`absolute z-[60] animate-in slide-in-from-left-4 fade-in duration-300 w-64 rounded-2xl bg-surface-elevated p-4 shadow-[0_0_40px_rgba(0,0,0,0.15)] border border-black/10 dark:border-white/10 pointer-events-auto ${isCollapsed ? 'left-20 top-0' : 'left-full ml-4 top-0'}`}>
                       {/* Caret pointing left */}
-                      <div className="absolute top-4 -left-2 h-4 w-4 rotate-45 border-b border-l border-border bg-surface-elevated"></div>
+                      <div className="absolute top-4 -left-2 h-4 w-4 rotate-45 border-b border-l border-black/10 dark:border-white/10 bg-surface-elevated"></div>
                       
                       <button
                         onClick={(e) => { e.preventDefault(); setIsTooltipDismissed(true); }}
@@ -237,9 +237,9 @@ export default function DashboardLayout({ children }) {
 
             {/* Mobile Tooltip */}
             {showTooltip && (
-              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[60] animate-in slide-in-from-bottom-4 fade-in duration-300 w-64 rounded-2xl bg-surface-elevated p-4 shadow-2xl border border-border pointer-events-auto">
+              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[60] animate-in slide-in-from-bottom-4 fade-in duration-300 w-64 rounded-2xl bg-surface-elevated p-4 shadow-[0_0_40px_rgba(0,0,0,0.15)] border border-black/10 dark:border-white/10 pointer-events-auto">
                 {/* Caret pointing down */}
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-4 w-4 rotate-45 border-b border-r border-border bg-surface-elevated"></div>
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-4 w-4 rotate-45 border-b border-r border-black/10 dark:border-white/10 bg-surface-elevated"></div>
                 
                 <button
                   onClick={(e) => { e.preventDefault(); setIsTooltipDismissed(true); }}

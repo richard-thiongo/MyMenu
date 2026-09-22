@@ -80,7 +80,7 @@ const SECTIONS = [
           <li>
             Open the <strong>WhatsApp Ordering</strong> section.
           </li>
-          <li>Toggle &quot;Accept Orders&quot; to ON.</li>
+          <li>Switch &quot;Accept Orders&quot; to ON.</li>
           <li>
             Enter your restaurant&apos;s WhatsApp number and click Save.
           </li>

@@ -3,20 +3,22 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 
 export const ThemeContext = createContext({
-  theme: "light",
+  theme: "dark",
   toggleTheme: () => {},
 });
 
 export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("mymenu-theme");
     if (stored === "dark" || stored === "light") {
       setTheme(stored);
+    } else {
+      const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      setTheme(prefersLight ? "light" : "dark");
     }
-    // Default is light — no system preference check
     setMounted(true);
   }, []);
 

@@ -328,7 +328,7 @@ export default function SettingsPage() {
                 type="button"
                 onClick={handleToggleOrders}
                 disabled={isToggling}
-                className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${ordersEnabled ? "bg-[#25D366]" : "bg-surface-elevated"}`}
+                className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 ${ordersEnabled ? "bg-[#25D366]" : "bg-black/20 dark:bg-white/10"}`}
               >
                 <span className="sr-only">Toggle Orders</span>
                 <span className={`pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${ordersEnabled ? "translate-x-6" : "translate-x-0"}`} />

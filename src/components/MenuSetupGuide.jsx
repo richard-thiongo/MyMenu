@@ -50,7 +50,7 @@ const STEPS = [
     icon: FiShoppingCart,
     label: "Ordering",
     title: "Activate WhatsApp ordering",
-    body: 'Go to Settings and open the "WhatsApp Orders" card. Toggle "Accept Orders" ON and enter your WhatsApp number, then hit Save.',
+    body: 'Go to Settings and open the "WhatsApp Orders" card. Switch "Accept Orders" ON and enter your WhatsApp number, then hit Save.',
     detail:
       'Once enabled, an "Order" button appears next to every item. Customers tap it and a beautifully formatted order lands straight in your WhatsApp — zero third-party apps!',
     tip: "You can disable ordering at any time from the same Settings screen.",
