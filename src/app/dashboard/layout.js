@@ -208,7 +208,7 @@ export default function DashboardLayout({ children }) {
                   <FiAlertCircle className="h-5 w-5 shrink-0" />
                   <p className="text-sm font-medium">Your subscription is inactive. No one will be able to see your menu.</p>
                 </div>
-                <Link href="/dashboard/settings" className="shrink-0 text-sm font-bold underline hover:text-amber-600 dark:hover:text-amber-300">
+                <Link href="/dashboard/settings#billing" className="shrink-0 text-sm font-bold underline hover:text-amber-600 dark:hover:text-amber-300">
                   Verify Payment
                 </Link>
               </div>

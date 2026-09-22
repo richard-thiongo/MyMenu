@@ -120,6 +120,31 @@ export default function SettingsPage() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  useEffect(() => {
+    const checkHash = () => {
+      if (typeof window !== "undefined" && window.location.hash === "#billing") {
+        const btn = document.getElementById("settings-card-subscription-billing");
+        if (btn) {
+          btn.scrollIntoView({ behavior: "smooth", block: "center" });
+          btn.classList.add("ring-4", "ring-amber-500", "ring-offset-2", "animate-pulse");
+          setTimeout(() => {
+            btn.classList.remove("ring-4", "ring-amber-500", "ring-offset-2", "animate-pulse");
+            // Remove hash so it can be re-triggered
+            window.history.replaceState(null, "", window.location.pathname + window.location.search);
+          }, 3000);
+        }
+      }
+    };
+
+    // Delay slightly to ensure DOM mounts if navigating from another page
+    const timer = setTimeout(checkHash, 100);
+    window.addEventListener("hashchange", checkHash);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("hashchange", checkHash);
+    };
+  }, []);
+
   const handleToggleOrders = async () => {
     setIsToggling(true);
     const newState = !ordersEnabled;
