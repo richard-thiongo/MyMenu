@@ -1,8 +1,212 @@
 "use client";
 
-import { FiBookOpen, FiCheckCircle, FiEdit3, FiShare2, FiSettings, FiCreditCard } from "react-icons/fi";
+import { useState } from "react";
+import {
+  FiBookOpen,
+  FiCheckCircle,
+  FiEdit3,
+  FiShare2,
+  FiSettings,
+  FiCreditCard,
+  FiChevronDown,
+} from "react-icons/fi";
+import Link from "next/link";
+
+const SECTIONS = [
+  {
+    id: "dashboard",
+    icon: FiBookOpen,
+    title: "1. The Dashboard",
+    content: (
+      <>
+        <p className="text-text-muted mb-4">
+          Once you create your free account, you&apos;ll be greeted by your
+          powerful yet simple dashboard. Here, you have complete control over
+          what your customers see when they scan your QR code or visit your
+          link.
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-text-muted">
+          <li>
+            <strong>Menu Management:</strong> Add and organize your menu
+            categories (e.g., Starters, Mains, Drinks).
+          </li>
+          <li>
+            <strong>Settings:</strong> Update your brand colors, login
+            credentials, and enable WhatsApp ordering.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    id: "building",
+    icon: FiEdit3,
+    title: "2. Building Your Menu",
+    content: (
+      <>
+        <h3 className="font-semibold text-text mb-2">Creating Categories</h3>
+        <p className="text-text-muted mb-4">
+          Setting up your menu structure takes seconds. Just click{" "}
+          <strong>Add Category</strong>, type a name, and hit save. Your
+          customers will see these sections neatly organized.
+        </p>
+        <h3 className="font-semibold text-text mb-2">Adding Food Items</h3>
+        <p className="text-text-muted">
+          Inside any category, you can add food items. Upload a mouth-watering
+          image, enter a title, description, and price. Sold out of a dish? No
+          problem. Simply toggle it off in the dashboard, and an &quot;Out of
+          stock&quot; badge will instantly appear on your public menu. No more
+          crossing out items on printed menus!
+        </p>
+      </>
+    ),
+  },
+  {
+    id: "whatsapp",
+    icon: FiSettings,
+    title: "3. Accept WhatsApp Orders",
+    content: (
+      <>
+        <p className="text-text-muted mb-4">
+          Want customers to order directly to your phone? We&apos;ve got you
+          covered.
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-text-muted">
+          <li>
+            Navigate to the <strong>Settings</strong> page in your dashboard.
+          </li>
+          <li>
+            Open the <strong>WhatsApp Ordering</strong> section.
+          </li>
+          <li>Toggle &quot;Accept Orders&quot; to ON.</li>
+          <li>
+            Enter your restaurant&apos;s WhatsApp number and click Save.
+          </li>
+          <li>
+            Instantly, &quot;Order&quot; buttons will appear next to your food
+            items, and your customers can send beautifully formatted orders
+            straight to your WhatsApp!
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    id: "sharing",
+    icon: FiShare2,
+    title: "4. Sharing Your Menu",
+    content: (
+      <>
+        <p className="text-text-muted mb-4">
+          Ditch the expensive printed menus. Getting your menu to your customers
+          is effortless:
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-text-muted">
+          <li>
+            <strong>Your Unique Link:</strong> Your menu lives at a beautiful,
+            short link (e.g.,{" "}
+            <code className="rounded bg-surface-elevated px-1 py-0.5 text-xs font-mono">
+              ourmenu.click/YourRestaurant
+            </code>
+            ). Perfect for Instagram bios, Facebook pages, or sending to
+            customers.
+          </li>
+          <li>
+            <strong>Custom QR Code:</strong> Access your automatically generated
+            QR code in the dashboard. Download it, print it, and place it on
+            tables. Customers just scan it with their phone cameras to see your
+            menu!
+          </li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    id: "billing",
+    icon: FiCreditCard,
+    title: "5. Simple Billing",
+    content: (
+      <>
+        <p className="text-text-muted mb-4">
+          We make billing completely transparent and hassle-free.
+        </p>
+        <ul className="list-disc pl-5 space-y-2 text-text-muted">
+          <li>
+            Create your menu for <strong>free</strong>. You only pay a tiny,
+            highly affordable fee (less than the cost of a good cup of coffee!)
+            when you&apos;re ready to share it with the public.
+          </li>
+          <li>
+            When you&apos;re ready, visit the <strong>Billing</strong> section
+            inside your Settings to activate your subscription directly via
+            M-Pesa.
+          </li>
+          <li>
+            Track your active subscription status and expiry dates right from
+            your dashboard.
+          </li>
+        </ul>
+      </>
+    ),
+  },
+];
+
+function AccordionItem({ section, isOpen, onToggle }) {
+  const Icon = section.icon;
+
+  return (
+    <div
+      className={`overflow-hidden rounded-xl border transition-all duration-200 ${
+        isOpen
+          ? "border-primary-500/40 bg-surface-alt shadow-md shadow-primary-500/5"
+          : "border-border bg-surface-alt"
+      }`}
+    >
+      {/* Trigger */}
+      <button
+        onClick={onToggle}
+        className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-surface-elevated"
+        aria-expanded={isOpen}
+      >
+        <div
+          className={`shrink-0 rounded-lg p-2 transition-colors ${
+            isOpen
+              ? "bg-primary-500 text-white"
+              : "bg-primary-500/10 text-primary-500"
+          }`}
+        >
+          <Icon size={20} />
+        </div>
+        <h2 className="flex-1 text-base font-bold text-text">{section.title}</h2>
+        <FiChevronDown
+          size={18}
+          className={`shrink-0 text-text-muted transition-transform duration-300 ${
+            isOpen ? "rotate-180 text-primary-500" : ""
+          }`}
+        />
+      </button>
+
+      {/* Collapsible body */}
+      <div
+        className={`grid transition-all duration-300 ease-in-out ${
+          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="border-t border-border px-5 py-5">
+            {section.content}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function GuidePage() {
+  const [openId, setOpenId] = useState("dashboard");
+
+  const toggle = (id) => setOpenId((prev) => (prev === id ? null : id));
+
   return (
     <div className="mx-auto max-w-4xl py-6">
       <div className="mb-8">
@@ -10,110 +214,23 @@ export default function GuidePage() {
         <p className="text-text-muted">A comprehensive guide on managing your digital menu.</p>
       </div>
 
-      <div className="space-y-8">
-        {/* Section 1: Dashboard Overview */}
-        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-primary-500/10 text-primary-500 rounded-lg">
-              <FiBookOpen size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-text">1. Getting Started</h2>
-          </div>
-          <p className="text-text-muted mb-4">
-            Welcome to your dashboard! Here, you can completely control what your customers see when they scan your QR code or visit your link. 
-            The dashboard is divided into several main areas accessible from the sidebar (or bottom bar on mobile):
-          </p>
-          <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li><strong>Home (Categories):</strong> Add and manage your menu sections (e.g., Starters, Mains, Drinks). You can also find your sharing link and QR Code here.</li>
-            <li><strong>Settings:</strong> Update your brand colors, WhatsApp ordering, restaurant details, and password.</li>
-            <li><strong>Billing (Inside Settings):</strong> Manage your subscription status and plan limits via the Billing card in your settings.</li>
-          </ul>
-        </section>
+      <div className="space-y-3">
+        {SECTIONS.map((section) => (
+          <AccordionItem
+            key={section.id}
+            section={section}
+            isOpen={openId === section.id}
+            onToggle={() => toggle(section.id)}
+          />
+        ))}
+      </div>
 
-        {/* Section 2: Adding Categories and Items */}
-        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-primary-500/10 text-primary-500 rounded-lg">
-              <FiEdit3 size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-text">2. Building Your Menu</h2>
-          </div>
-          
-          <h3 className="font-semibold text-text mb-2">Adding Categories</h3>
-          <p className="text-text-muted mb-4">
-            Before adding food, you need categories. Go to <strong>Home</strong> and click the <strong>Add Category</strong> button. 
-            Give your category a name and an optional description. Once created, click on the category card to open it.
-          </p>
-
-          <h3 className="font-semibold text-text mb-2">Adding Food Items</h3>
-          <p className="text-text-muted mb-4">
-            Inside a category, click <strong>Add Item</strong>. You can upload an image, enter the name, description, and price. 
-            You can also toggle whether an item is <strong>Available</strong> or not. Unavailable items will display an "Out of stock" badge to your customers.
-          </p>
-        </section>
-
-        {/* Section 3: Sharing */}
-        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-primary-500/10 text-primary-500 rounded-lg">
-              <FiShare2 size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-text">3. Sharing Your Menu</h2>
-          </div>
-          <p className="text-text-muted mb-4">
-            You don't need to print physical menus anymore! 
-          </p>
-          <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li><strong>Home Page:</strong> You will find your sharing link and QR Code directly at the top of the home page of your dashboard.</li>
-            <li><strong>Public Link:</strong> Copy your unique link and share it on your social media (Instagram bio, Facebook page) or via WhatsApp.</li>
-            <li><strong>QR Code:</strong> Click <strong>View QR</strong> to open and download a high-quality image of your QR Code. You can print this and place it on your tables for customers to scan.</li>
-          </ul>
-        </section>
-
-        {/* Section 4: Settings */}
-        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-primary-500/10 text-primary-500 rounded-lg">
-              <FiSettings size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-text">4. Customization & Settings</h2>
-          </div>
-          <p className="text-text-muted mb-4">
-            Make the menu match your brand's identity:
-          </p>
-          <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li>Navigate to the <strong>Settings</strong> page.</li>
-            <li>Use the color picker to select your brand's primary color. Your public menu will instantly update to use this color for buttons, headers, and accents.</li>
-            <li>Enable <strong>WhatsApp Ordering</strong> by providing your number and toggling it ON to receive orders directly.</li>
-            <li>You can also reset your password from the settings page if needed.</li>
-          </ul>
-        </section>
-
-        {/* Section 5: Billing */}
-        <section className="bg-surface border border-border rounded-xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-primary-500/10 text-primary-500 rounded-lg">
-              <FiCreditCard size={24} />
-            </div>
-            <h2 className="text-xl font-bold text-text">5. Managing Your Subscription</h2>
-          </div>
-          <p className="text-text-muted mb-4">
-            If your public menu is hidden, it means your subscription might have expired or you haven't activated it yet.
-          </p>
-          <ul className="list-disc pl-5 space-y-2 text-text-muted">
-            <li>Go to the <strong>Settings</strong> page and click on the <strong>Billing</strong> card.</li>
-            <li>You can see your current plan, how many items you've used, and instructions on how to pay via M-Pesa.</li>
-            <li>Follow the instructions provided to activate or renew your plan.</li>
-          </ul>
-        </section>
-
-        {/* Closing */}
-        <div className="mt-8 p-6 bg-primary-500/10 border border-primary-500/20 rounded-xl flex items-center gap-4">
-          <FiCheckCircle className="text-primary-500 shrink-0" size={32} />
-          <div>
-            <h3 className="font-bold text-text text-lg">You're all set!</h3>
-            <p className="text-text-muted text-sm">If you need any extra help, feel free to reach out to our support team.</p>
-          </div>
+      {/* Closing */}
+      <div className="mt-8 p-6 bg-primary-500/10 border border-primary-500/20 rounded-xl flex items-center gap-4">
+        <FiCheckCircle className="text-primary-500 shrink-0" size={32} />
+        <div>
+          <h3 className="font-bold text-text text-lg">You're all set!</h3>
+          <p className="text-text-muted text-sm">If you need any extra help, feel free to reach out to our support team.</p>
         </div>
       </div>
     </div>

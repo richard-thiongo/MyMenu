@@ -328,10 +328,10 @@ export default function Home() {
               <div className="reveal reveal-scale w-full max-w-md rounded-3xl border-2 border-primary-500 bg-surface p-8 hover:border-primary-500/40 hover:shadow-xl transition-all">
                 <h3 className="text-xl font-bold text-text mb-1">Standard Plan</h3>
                 <div className="flex items-end gap-2 mt-4 mb-1">
-                  <span className="text-4xl font-extrabold text-text">1,999 KES</span>
+                  <span className="text-4xl font-extrabold text-text">1,499 KES</span>
                   <span className="text-text-muted mb-1">/mo</span>
                 </div>
-                <p className="text-sm text-primary-500 font-semibold mb-8">~ $15 USD / month</p>
+                <p className="text-sm text-primary-500 font-semibold mb-8">~ $11 USD / month</p>
                 <ul className="space-y-3 mb-10">
                   {["Unlimited scans", "Branded QR Code", "Unlimited food items", "Unlimited categories", "Real-time updates"].map((f) => (
                     <li key={f} className="flex items-center gap-3 text-sm font-medium text-text-muted">

@@ -13,6 +13,7 @@ import Skeleton from "@/components/Skeleton";
 import EmptyState from "@/components/EmptyState";
 import CategoryModal from "@/components/CategoryModal";
 import ConfirmModal from "@/components/ConfirmModal";
+import MenuSetupGuide from "@/components/MenuSetupGuide";
 import { useStatus } from "@/providers/StatusProvider";
 
 // SWR fetcher
@@ -135,6 +136,17 @@ export default function DashboardCategories() {
   const [isQrOpen, setIsQrOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [guideComplete, setGuideComplete] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("menu_guide_complete") === "true";
+    }
+    return false;
+  });
+
+  const handleCompleteGuide = () => {
+    localStorage.setItem("menu_guide_complete", "true");
+    setGuideComplete(true);
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined" && username) {
@@ -196,6 +208,8 @@ export default function DashboardCategories() {
     }
   };
 
+  // Guide is now shown on-demand in a modal, not taking over the whole screen
+
   return (
     <div className="mx-auto max-w-6xl">
 
@@ -221,16 +235,18 @@ export default function DashboardCategories() {
         </div>
       </div>
 
-      <div className="mb-8 flex items-center gap-4">
-        <p className="text-sm font-medium text-text-muted">And also your QR code is here:</p>
-        <button
-          onClick={() => setIsQrOpen(true)}
-          className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm"
-          title="See QR Code"
-        >
-          <LuQrCode size={20} className="text-white" />
-          <span>See QR</span>
-        </button>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <p className="text-sm font-medium text-text-muted">And also your QR code is here:</p>
+          <button
+            onClick={() => setIsQrOpen(true)}
+            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm"
+            title="See QR Code"
+          >
+            <LuQrCode size={20} className="text-white" />
+            <span>See QR</span>
+          </button>
+        </div>
       </div>
 
       {/* Categories header */}
@@ -313,7 +329,7 @@ export default function DashboardCategories() {
       ) : (
         <EmptyState
           title="No Categories Yet"
-          description="You haven't added any categories to your menu. Click the Add Category button to get started."
+          description="Click the Add a Category button above to create your first menu section."
           icon={FiFolder}
         />
       )}

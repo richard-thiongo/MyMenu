@@ -3,10 +3,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiLogOut, FiCoffee, FiSettings, FiAlertCircle, FiBookOpen, FiShare2 } from "react-icons/fi";
+import useSWR from "swr";
+import { FiLogOut, FiCoffee, FiSettings, FiAlertCircle, FiBookOpen, FiShare2, FiX } from "react-icons/fi";
 import useAuthStore from "@/hooks/useAuthStore";
 import ThemeToggle from "@/components/ThemeToggle";
 import AuthGuard from "@/components/AuthGuard";
+import { api } from "@/lib/api";
+
+const categoriesFetcher = async () => {
+  const res = await api.getCategories();
+  return res.data || [];
+};
 
 export default function DashboardLayout({ children }) {
   const pathname = usePathname();
@@ -15,7 +22,15 @@ export default function DashboardLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
+  const { data: categories, isLoading, error } = useSWR("/api/categories", categoriesFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 30000,
+  });
 
+  const [isTooltipDismissed, setIsTooltipDismissed] = useState(false);
+
+  const showTooltip = !isLoading && !error && (!categories || categories.length === 0) && !isTooltipDismissed;
 
   const handleLogout = () => {
     logout();
@@ -84,18 +99,56 @@ export default function DashboardLayout({ children }) {
                   <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Settings</span>
                 </Link>
 
-                <Link
-                  href="/dashboard/guide"
-                  className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
-                    } ${pathname === "/dashboard/guide"
-                      ? "bg-primary-500 text-white"
-                      : "text-text-muted hover:text-text"
-                    }`}
-                  title="Guide"
-                >
-                  <FiBookOpen size={18} className="shrink-0" />
-                  <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Guide</span>
-                </Link>
+                <div className="relative">
+                  <Link
+                    href="/dashboard/guide"
+                    className={`flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-primary-500/10 hover:text-primary-500 ${isCollapsed ? "justify-center" : "gap-3"
+                      } ${pathname === "/dashboard/guide"
+                        ? "bg-primary-500 text-white"
+                        : "text-text-muted hover:text-text"
+                      }`}
+                    title="Guide"
+                  >
+                    <FiBookOpen size={18} className="shrink-0" />
+                    <span className={`truncate ${isCollapsed ? 'hidden' : 'block'}`}>Guide</span>
+                  </Link>
+
+                  {/* Desktop Tooltip */}
+                  {showTooltip && (
+                    <div className={`absolute z-[60] animate-in slide-in-from-left-4 fade-in duration-300 w-64 rounded-2xl bg-surface-elevated p-4 shadow-2xl border border-border pointer-events-auto ${isCollapsed ? 'left-20 top-0' : 'left-full ml-4 top-0'}`}>
+                      {/* Caret pointing left */}
+                      <div className="absolute top-4 -left-2 h-4 w-4 rotate-45 border-b border-l border-border bg-surface-elevated"></div>
+                      
+                      <button
+                        onClick={(e) => { e.preventDefault(); setIsTooltipDismissed(true); }}
+                        className="absolute right-3 top-3 text-text-muted hover:text-text transition-colors"
+                        aria-label="Close"
+                      >
+                        <FiX size={16} />
+                      </button>
+                      
+                      <p className="mb-4 pr-6 text-sm text-text leading-relaxed font-medium">
+                        See the guide to know how to get set up
+                      </p>
+                      
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={(e) => { e.preventDefault(); setIsTooltipDismissed(true); }}
+                          className="rounded-full px-3 py-1.5 text-xs font-medium text-text-muted hover:bg-surface-alt transition-colors"
+                        >
+                          Dismiss
+                        </button>
+                        <Link
+                          href="/dashboard/guide"
+                          onClick={() => setIsTooltipDismissed(true)}
+                          className="rounded-full bg-primary-500/10 text-primary-500 px-3 py-1.5 text-xs font-semibold hover:bg-primary-500 hover:text-white transition-colors"
+                        >
+                          See Guide
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <Link
                   href={`/${username || restaurantName}`}
                   target="_blank"
@@ -173,14 +226,51 @@ export default function DashboardLayout({ children }) {
             <span className="text-[10px] font-medium uppercase tracking-wider">Menu</span>
           </Link>
 
+          <div className="relative flex flex-col items-center">
+            <Link
+              href="/dashboard/guide"
+              className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/guide' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
+            >
+              <FiBookOpen size={20} />
+              <span className="text-[10px] font-medium uppercase tracking-wider">Guide</span>
+            </Link>
 
-          <Link
-            href="/dashboard/guide"
-            className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/guide' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}
-          >
-            <FiBookOpen size={20} />
-            <span className="text-[10px] font-medium uppercase tracking-wider">Guide</span>
-          </Link>
+            {/* Mobile Tooltip */}
+            {showTooltip && (
+              <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-[60] animate-in slide-in-from-bottom-4 fade-in duration-300 w-64 rounded-2xl bg-surface-elevated p-4 shadow-2xl border border-border pointer-events-auto">
+                {/* Caret pointing down */}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-4 w-4 rotate-45 border-b border-r border-border bg-surface-elevated"></div>
+                
+                <button
+                  onClick={(e) => { e.preventDefault(); setIsTooltipDismissed(true); }}
+                  className="absolute right-3 top-3 text-text-muted hover:text-text transition-colors"
+                  aria-label="Close"
+                >
+                  <FiX size={16} />
+                </button>
+                
+                <p className="mb-4 pr-6 text-sm text-text leading-relaxed font-medium">
+                  See the guide to know how to get set up
+                </p>
+                
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={(e) => { e.preventDefault(); setIsTooltipDismissed(true); }}
+                    className="rounded-full px-3 py-1.5 text-xs font-medium text-text-muted hover:bg-surface-alt transition-colors"
+                  >
+                    Dismiss
+                  </button>
+                  <Link
+                    href="/dashboard/guide"
+                    onClick={() => setIsTooltipDismissed(true)}
+                    className="rounded-full bg-primary-500/10 text-primary-500 px-3 py-1.5 text-xs font-semibold hover:bg-primary-500 hover:text-white transition-colors"
+                  >
+                    See Guide
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
           <Link
             href="/dashboard/settings"
             className={`flex flex-col items-center gap-1 p-2 transition-colors ${pathname === '/dashboard/settings' ? 'text-primary-500' : 'text-text-muted hover:text-text'}`}

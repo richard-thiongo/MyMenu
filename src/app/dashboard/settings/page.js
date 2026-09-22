@@ -442,7 +442,7 @@ export default function SettingsPage() {
             {/* How to Pay */}
             <div>
               <p className="text-sm font-semibold text-text mb-3">
-                How to Pay — <span className="text-blue-500 font-bold">Ksh 1,999/month</span>
+                How to Pay — <span className="text-blue-500 font-bold">Ksh 1,499/month</span>
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-xl border border-border bg-surface-alt p-4">
