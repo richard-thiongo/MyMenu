@@ -152,7 +152,7 @@ export default function SigninPage() {
                     type="text"
                     required
                     className="block w-full rounded-lg border border-border bg-surface px-10 py-3 text-text placeholder-text-muted focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                    placeholder="Enter your restaurant name"
+                    placeholder="e.g. Kenya Cafe"
                     value={formData.restaurant_name}
                     onChange={(e) => setFormData({ ...formData, restaurant_name: e.target.value })}
                     disabled={isLoading}
