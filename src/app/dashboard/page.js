@@ -49,7 +49,7 @@ function QrModal({ restaurantName, username, onClose }) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     const padding = 20;
-    const textSpace = 70; // Increased space for two lines of text
+    const textSpace = 50; 
     canvas.width = qrCanvas.width + padding * 2;
     canvas.height = qrCanvas.height + padding * 2 + textSpace;
 
@@ -59,18 +59,13 @@ function QrModal({ restaurantName, username, onClose }) {
 
     const displayUrl = url.replace(/^https?:\/\//, '');
 
-    ctx.fillStyle = "#000000";
     ctx.textAlign = "center";
 
-    // Draw Restaurant Name
-    ctx.font = "bold 22px sans-serif";
-    ctx.textBaseline = "top";
-    ctx.fillText(restaurantName, canvas.width / 2, padding + qrCanvas.height + 10);
-
     // Draw URL
-    ctx.font = "14px sans-serif";
+    ctx.font = "16px sans-serif";
     ctx.fillStyle = "#555555";
-    ctx.fillText(displayUrl, canvas.width / 2, padding + qrCanvas.height + 40);
+    ctx.textBaseline = "top";
+    ctx.fillText(displayUrl, canvas.width / 2, padding + qrCanvas.height + 10);
 
     const pngUrl = canvas.toDataURL("image/png");
     const link = document.createElement("a");
@@ -108,6 +103,11 @@ function QrModal({ restaurantName, username, onClose }) {
               </div>
             )}
           </div>
+          {url && (
+            <div className="mt-2 text-center text-[16px] font-medium text-[#555555] break-all max-w-[240px]">
+              {url.replace(/^https?:\/\//, '')}
+            </div>
+          )}
         </div>
 
         <button

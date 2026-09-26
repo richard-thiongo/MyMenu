@@ -44,14 +44,16 @@ export default function ShareMenuModal({ isOpen, onClose, restaurantName }) {
     // 2. Draw the QR Code
     ctx.drawImage(qrCanvas, padding, padding);
     
-    // 3. Draw the restaurant name below the QR Code
-    ctx.fillStyle = "#000000"; // text color
-    ctx.font = "bold 22px sans-serif";
+    const displayUrl = url.replace(/^https?:\/\//, '');
+
+    // 3. Draw the URL below the QR Code
+    ctx.fillStyle = "#555555"; // text color
+    ctx.font = "16px sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     
     // Center the text horizontally, and place it below the QR code
-    ctx.fillText(restaurantName, canvas.width / 2, padding + qrCanvas.height + 10);
+    ctx.fillText(displayUrl, canvas.width / 2, padding + qrCanvas.height + 10);
     
     // Generate the download link from the composite canvas
     const pngUrl = canvas.toDataURL("image/png");
@@ -90,6 +92,11 @@ export default function ShareMenuModal({ isOpen, onClose, restaurantName }) {
               <div className="h-[200px] w-[200px] bg-gray-100 animate-pulse rounded-lg flex items-center justify-center text-gray-400">Loading...</div>
             )}
           </div>
+          {url && (
+            <div className="mt-2 text-center text-[16px] font-medium text-[#555555] break-all max-w-[240px]">
+              {url.replace(/^https?:\/\//, '')}
+            </div>
+          )}
           <button
             onClick={handleDownload}
             className="mt-6 flex items-center gap-2 rounded-lg bg-surface-alt border border-border px-4 py-2 text-sm font-medium text-text hover:bg-surface-elevated transition-colors"

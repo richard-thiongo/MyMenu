@@ -14,6 +14,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import Skeleton from "@/components/Skeleton";
 import MenuDivider from "@/components/MenuDivider";
 import useKeyboardOffset from "@/hooks/useKeyboardOffset";
+import toast from "react-hot-toast";
 
 const fetcher = (restaurantName) => api.getRestaurantMenu(restaurantName);
 
@@ -79,6 +80,66 @@ export default function UnifiedMenuPage() {
   const [cartPos, setCartPos] = useState(null);
   const dragRef = useRef({ active: false, startX: 0, startY: 0, originX: 0, originY: 0, moved: false });
   const keyboardOffset = useKeyboardOffset();
+
+  // ── PWA Install Prompt ───────────────────────────────────────────────────
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      
+      toast(
+        (t) => (
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-primary-100 p-2 text-primary-600 shrink-0">
+                <FiArrowRight size={20} className="rotate-90" />
+              </div>
+              <div>
+                <p className="font-semibold text-text">Install our App</p>
+                <p className="text-sm text-text-muted">For a better menu experience</p>
+              </div>
+            </div>
+            <div className="flex gap-2 w-full mt-1">
+              <button
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  e.prompt();
+                  e.userChoice.then((choiceResult) => {
+                    setDeferredPrompt(null);
+                  });
+                }}
+                className="flex-1 rounded-lg bg-primary-500 py-2 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
+              >
+                Install
+              </button>
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="flex-1 rounded-lg border border-border py-2 text-sm font-semibold text-text hover:bg-surface-elevated transition-colors"
+              >
+                Not Now
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          duration: 5000,
+          position: 'bottom-center',
+          id: 'pwa-install-prompt',
+          style: {
+            minWidth: '320px',
+            padding: '16px',
+            borderRadius: '16px',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+          },
+        }
+      );
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
 
   // ── Scroll Spy for Active Category ───────────────────────────────────────
   const [activeCategory, setActiveCategory] = useState("");
