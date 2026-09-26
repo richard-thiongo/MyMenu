@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import useSWR, { preload } from "swr";
 import toast from "react-hot-toast";
-import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiCopy, FiCheck, FiDownload, FiX } from "react-icons/fi";
+import { FiPlus, FiFolder, FiEdit2, FiTrash2, FiCopy, FiCheck, FiDownload, FiX, FiArrowRight } from "react-icons/fi";
 import { LuQrCode } from "react-icons/lu";
 import { QRCodeCanvas } from "qrcode.react";
 import { api } from "@/lib/api";
@@ -147,6 +147,65 @@ export default function DashboardCategories() {
     localStorage.setItem("menu_guide_complete", "true");
     setGuideComplete(true);
   };
+
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      
+      toast(
+        (t) => (
+          <div className="flex flex-col gap-3 w-full">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-primary-100 p-2 text-primary-600 shrink-0">
+                <FiArrowRight size={20} className="rotate-90" />
+              </div>
+              <div>
+                <p className="font-semibold text-text">Install our App</p>
+                <p className="text-sm text-text-muted">For a better dashboard experience</p>
+              </div>
+            </div>
+            <div className="flex gap-2 w-full mt-1">
+              <button
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  e.prompt();
+                  e.userChoice.then((choiceResult) => {
+                    setDeferredPrompt(null);
+                  });
+                }}
+                className="flex-1 rounded-lg bg-primary-500 py-2 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
+              >
+                Install
+              </button>
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="flex-1 rounded-lg border border-border py-2 text-sm font-semibold text-text hover:bg-surface-elevated transition-colors"
+              >
+                Not Now
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          duration: 5000,
+          position: 'bottom-center',
+          id: 'pwa-install-prompt',
+          style: {
+            minWidth: '320px',
+            padding: '16px',
+            borderRadius: '16px',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+          },
+        }
+      );
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && username) {
